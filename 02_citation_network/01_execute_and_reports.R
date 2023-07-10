@@ -1,0 +1,104 @@
+# 20220526 Last updated
+
+####################################################
+# CITATION NETWORK
+####################################################
+
+# Special cases: When we need reports on a subset of articles:
+# The object "ABS_criteria_converter" comes from the file "ABS_criteria_converter.Rdata" generated from "02-select subset of ABS articles.R"
+
+#dataset_minimal <- dataset_minimal[ABS_criteria_converter[dataset_minimal$UT],]
+#dataset <- dataset[ABS_criteria_converter[dataset$UT],]
+
+# OR load environment "restart.Rdata" to restart the analysis.
+
+####################################################
+# Reports
+####################################################
+# Keep track of time
+st <- Sys.time()
+
+# Data preparation 
+for (i in c(0:cno$recursive_level)) {
+  
+  level_report <<- i
+  print(paste("...Starting reports for level", as.character(level_report), sep=" "))
+  
+  # Get the level path and create the directory
+  output_folder_level <- file.path(output_folder_reports, paste("level", as.character(level_report), sep = ""))
+  dir.create(output_folder_level) 
+  
+  # Get the right dataset for the corresponding level
+  if (i == 0) {source("02_citation_network/04_data_scope_level0.R")}
+  if (i == 1) {source("02_citation_network/04_data_scope_level1.R")}
+  if (i == 2) {source("02_citation_network/04_data_scope_level2.R")}
+  if (i == 3) {source("02_citation_network/04_data_scope_level3.R")}
+  
+  
+  # update report names
+  # PROJECT <- paste(PROJECTNAME, "_", as.character(i), sep = "")
+  # Docker container Ubuntu (Comment it out in Windows): 
+  # PROJECT <- paste("/var/container/", PROJECT, sep = "")
+  rn = list()
+  rn$PROJECTarticlereport <- file.path(output_folder_level, "article_report.csv") 
+  rn$PROJECTrcs <- file.path(output_folder_level, "rcs.csv")
+  rn$PROJECTrcs2 <- file.path(output_folder_level, "rcs2.csv")
+  rn$PROJECTrcsviz <- file.path(output_folder_level, "rcs_viz.html")
+  rn$PROJECTKeywords <- file.path(output_folder_level, "ALL_Cluster_keywords.rdata")
+  rn$PROJECTKeywords_report <- file.path(output_folder_level, "keywords_report.csv")
+  rn$PROJECTenviron <- file.path(output_folder_level, "environ.rdata")
+  
+  # Number of clusters
+  K <- length(unique(myDataCorrect$X_C))
+  
+  # Document report
+  print("Making article summary")
+  source("03_reports/01_document_report_with_abstract.R")
+
+  # Get detail reports reports by feature by cluster
+  print("Clusters reports")
+  source("03_reports/04_cluster_reports.R")
+  
+  # RCS
+  print("Computing RCS")
+  source("03_reports/02_rcs.R")
+  
+  # Keywords for heatmap # Now, do it for all.
+  print("Heatmap keywords")
+  source("03_reports/05_heatmap_keywords_part_1.R")
+  if (!exists("papersText")) {
+    source("03_reports/05_heatmap_keywords_part_2.R")
+  }
+  source("03_reports/05_heatmap_keywords_part_3.R")
+
+  # Keywords explorer
+  # This takes a lot of time when there are too many clusters like in level 2 and 3.
+  if (level_report <= 4) {
+    print("Citations to topic model visual")
+    use_tfidf <- TRUE
+    source("04_utils/zz_createJSON_cnet.R")
+    source("03_reports/06_citation_to_topic_model_converter.R")
+    source("03_reports/07_prob_exclu_keywords.R")
+  }
+
+  # Create the Keywords report
+  if (level_report <= 4) {
+    print("Keywords report")
+    source("03_reports/08_all_keywords_report.R")
+    # Optional views
+    #source("03_reports/09_keywords_per_clusters.R")
+    source("03_reports/10_rcs_keywords.R")
+  }
+  
+  # Overlays (Only for WOS data)
+  if (params$dataset_source == "wos") {
+    source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
+  }
+
+  # Save complete environment by level
+   print("Saving image")
+   save.image(rn$PROJECTenviron)
+  # Time per level
+  time_taken <- Sys.time() - st
+  print(time_taken)
+}
