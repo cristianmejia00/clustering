@@ -20,15 +20,12 @@ getwd()
 # Load libraries
 source("04_utils/02_libraries.R")
 
-##########################################################
 # Input Folder
 input_folder <- "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics"
 
-##########################################################
 # Load input settings file
 source("settings.R")
 
-##########################################################
 # Load data
 load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
 
@@ -38,6 +35,7 @@ load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
 #table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum
 #table(dataset$X_C) %>% sort(decreasing = TRUE) %>%  plot()
 # Update the threshold in settings file.
+
 
 ##########################################################
 # Document classification (Get clusters or Get topics)
@@ -67,6 +65,13 @@ if (params$type_of_analysis == "citation_network" & (addons$page_rank | addons$e
 #save objects
 if (params$type_of_analysis == "topic_model") {
   dataset <- myDataCorrect
+  save(dataset, file = file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
+}
+
+if (params$type_of_analysis == "citation_network") {
+  dataset <- merge(dataset, dataset_minimal[,c('X_N', 'level0')])
+  setnames(dataset, 'X_C', 'fukan_X_C')
+  setnames(dataset, 'level0', 'X_C')
   save(dataset, file = file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
 }
 

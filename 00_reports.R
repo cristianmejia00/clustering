@@ -24,15 +24,15 @@ source("settings.R")
 
 ##########################################################
 # Load data and adjust
-load(file.path(input_folder, analysis_metadata$query_id, "news_dataset.rdata"))
+load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
 
 # Special filtering for palm oil news 
-dataset$X_C <- dataset$cluster
-dataset$cluster_code <- dataset$cluster
-dataset$X_C_name <- as.character(dataset$X_C)
-dataset$related_topics <- dataset$X_C_name
-dataset <- dataset[dataset$X_C > 0,]
-dataset$X_E <- dataset$score
+# dataset$X_C <- dataset$cluster
+# dataset$cluster_code <- dataset$cluster
+# dataset$X_C_name <- as.character(dataset$X_C)
+# dataset$related_topics <- dataset$X_C_name
+# dataset <- dataset[dataset$X_C > 0,]
+# dataset$X_E <- dataset$score
 myDataCorrect <- dataset
 
 # facet_dataset <- dataset

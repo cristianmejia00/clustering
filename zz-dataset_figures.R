@@ -32,7 +32,8 @@ ggsave(file.path(output_folder_reports, "stats", "fig_yearly_trends.jpg"))
 ################################################################################
 # CLUSTER SIZE
 ################################################################################
-stats_size <- dataset$level0 %>% table %>% data.frame() %>% setNames(c("Cluster", "Articles"))
+# Sometimes 'X_C' others 'level0'?
+stats_size <- dataset$X_C %>% table %>% data.frame() %>% setNames(c("Cluster", "Articles"))
 write.csv(stats_size, file=file.path(output_folder_reports, "stats", "data_cluster_size.csv"), row.names = FALSE)
 
 ggplot(stats_size, aes(x=Cluster, y=Articles)) + 
