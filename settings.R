@@ -1,10 +1,10 @@
 ## Metadata
 analysis_metadata <- list(
-  project_name = "Q259-palm-oil-tm-hdbscan",
-  query_id = "Q259-palm-oil-2-topics", #This is the Folder name. Equivalent to Fukan's dataset
+  project_name = "Q249-future-of-employment",
+  query_id = "Q249", #This is the Folder name. Equivalent to Fukan's dataset
   project_id = "001", #Equivalent to Fukan's analysis (i.e. the order inside dataset)
-  date = "2023-06-30",
-  project_description = "Factiva news, entity recognition, and tm with hdbscan",
+  date = "2023-07-13",
+  project_description = "Citation network of future of employment research",
   created_by = "cristianmejia00@gmail.com",
   notes = "NA",
   fukan_url = "NA"
@@ -12,10 +12,10 @@ analysis_metadata <- list(
 
 ## General Parameters
 params <- list(
-  type_of_dataset = "news", # "papers", "patents" or "news" 
-  unit_of_analysis = "topic", #topic, cluster facet, firm, country, institution, author, etc.
-  type_of_analysis = "topic_model", #"topic_model" or "citation_network" 
-  dataset_source = "factiva", #wos, derwent, factiva (dimensions = wos)
+  type_of_dataset = "papers", # "papers", "patents" or "news" 
+  unit_of_analysis = "cluster", #topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "citation_network", #"topic_model" or "citation_network" 
+  dataset_source = "wos", #wos, derwent, factiva (dimensions = wos)
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -31,8 +31,23 @@ cno <- list(
   # If FALSE, we compute a new "_C" column based on the algorithm of choice.
   using_initial_column_C_from_fukan = TRUE,
   
+  # Either...
+  # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
+  # - Number of cluster to consider from the Fukan System solution (1+)
+  threshold = 27,
+  
+  # Cluster scope
+  scope = "all", #"all" OR "cl99" OR "cl_99"
+  
   # Report for up to this level
   recursive_level = 0, #if (vcount(g1) < 30000) {0} else {1} #0,1,2, OR 3
+  
+  ### Options for clustering or recursive clustering.
+  ### The following options are useful for any of these conditions
+  ### - We want recursive clustering
+  ### - we want clustering at level0, either because:
+  ###   - we don't want to use Fukan System X_C
+  ###   - We have a WOS dataset without X_C
   
   #Top max clusters to analyze per iteration
   max_clusters = 100,
@@ -47,15 +62,7 @@ cno <- list(
   remove_zero = FALSE,
   
   # Algorithm to use
-  algor = "louvain", #"louvain", OR "newman" OR "infomap"
-  
-  # Cluster scope
-  scope = "all", #"all" OR "cl99" OR "cl_99"
-  
-  # Either...
-  # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
-  # - Number of cluster to consider from the Fukan System solution (1+)
-  threshold = 7 
+  algor = "louvain" #"louvain", OR "newman" OR "infomap"
 )
 
 ## Topic Model options

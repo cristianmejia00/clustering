@@ -7,7 +7,22 @@ list_of_clusters <- myDataCorrect$X_C %>% unique %>% sort
 # Get the available columns
 available_columns <- colnames(myDataCorrect)
 
+## DEFINITIONS
 
+## A long table means that there are 3 columns:
+## X_C
+## The comparative column which is a factor (e.g. PY,Journals,Countries,etc.)
+## The value
+
+## A wide table means it is a matrix:
+## X_C is the rows
+## The values of the comparative column which is a factor (e.g. PY,Journals,Countries,etc.) represents
+## as many columns needed
+## The intersection is the value (e.g. of cluster 1 (row) vs Country US(column))
+
+## A numerical report
+## Takes a numeric column and computes
+## min, 1q, mean, media, 3q, max, NAs
 
 ##################################################################
 ## Auxiliary functions:
@@ -15,6 +30,8 @@ available_columns <- colnames(myDataCorrect)
 format_long_table <- function(a_table, a_cluster_id, top) {
   # Creates summary tables properly formatted
   # By removing NAs and adjusting for the items found
+  
+
   
   ## Update the table to remove possible NAs
   a_table <- a_table[!is.na(a_table)] 
