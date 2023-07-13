@@ -122,10 +122,11 @@ unified_keywords <- rbind.fill(
 ) # , top_papers_df, ngrams_per_cluster_df)
 
 
-setnames(unified_keywords, c("term", "freq", "cluster", "type", "normalized"), c("Term", "Freq", "Cluster", "Type", "Normalized"))
+# setnames(unified_keywords, c("term", "freq", "cluster", "type", "normalized"), c("Term", "Freq", "Cluster", "Type", "Normalized"))
 
 # Write report
 write.csv(unified_keywords,
   file = rn$PROJECTKeywords_report,
+  col.names = c("Term", "Freq", "Cluster", "Type", "Normalized"),
   row.names = FALSE
 )
