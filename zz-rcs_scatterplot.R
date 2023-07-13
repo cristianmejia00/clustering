@@ -96,14 +96,17 @@ p
 #################################################################
 # STATIC PLOTS
 
-
+colnames(rcs)
 ################################################################# 
 # Ave. Year x Cites STATIC PLOTS
-p <- ggplot(rcs_tmp, aes(x=cluster_year, y=sum_cites)) + geom_point() + xlab("Average Publication Year") + ylab("Sum Citations")
+p <- ggplot(rcs_tmp, aes(x=cluster_year, y=ave_cites)) + 
+  geom_point() + 
+  xlab("Average Publication Year") + 
+  ylab("Average Citations")
 #p + geom_text(aes(label=gsub("---|-0", "", cluster_code)))
-p <- p + geom_point(aes(color=main_cluster, size=sum_cites))
+p <- p + geom_point(aes(color=main_cluster, size=ave_cites))
 p <- p + geom_text_repel(aes(label=gsub("---|-0", "", cluster_code)))
-p <- p + theme(legend.position="none")
+p <- p + theme_bw() + theme(legend.position="none")
 p
 ggsave(file.path(output_folder_level, "fig_clusters_year_x_cites.jpg"))
 
@@ -114,7 +117,7 @@ p <- ggplot(rcs_tmp, aes(x=cluster_year, y=cluster_size)) + geom_point() + xlab(
 #p + geom_text(aes(label=gsub("---|-0", "", cluster_code)))
 p <- p + geom_point(aes(color=main_cluster, size=cluster_size))
 p <- p + geom_text_repel(aes(label=gsub("---|-0", "", cluster_code)))
-p <- p + theme(legend.position="none")
+p <- p + theme_bw() + theme(legend.position="none")
 p
 ggsave(file.path(output_folder_level, "fig_clusters_year_x_size.jpg"))
 
@@ -138,6 +141,28 @@ K <- length(unique(dataset_tmp$X_C))
 if (K > 20) {
   bp <- bp + theme(axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust=1))
 }
-bp
+bp + theme_bw() 
 ggsave(file.path(output_folder_level, "fig_clusters_PY_boxplot.jpg"))
 
+
+##################################################################
+# Z9 boxplots Plots:
+##################################################################
+# Boxplots sorted from the most recent to oldest
+# Based on medians; ties are broken with the mean
+Z9_compound_mean <- tapply(dataset_tmp$Z9, dataset_tmp$X_C, mean, na.rm=TRUE)
+Z9_compound_median <- tapply(dataset_tmp$Z9, dataset_tmp$X_C, median, na.rm = TRUE)
+
+# Plots
+Z9_long <- dataset_tmp[,c("X_C", "Z9")]
+Z9_long$X_C <- as.character(Z9_long$X_C)
+Z9_long$X_C <-factor(Z9_long$X_C, levels = as.character(order(Z9_compound_median, Z9_compound_mean)))
+
+bp <- ggplot(Z9_long, aes(x = X_C, y = Z9)) + geom_boxplot(width = 0.7, fill = "deepskyblue3") + xlab("Cluster") + ylab("Ave. Year") 
+#bp + coord_flip()
+K <- length(unique(dataset_tmp$X_C))
+if (K > 20) {
+  bp <- bp + theme(axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust=1))
+}
+bp + theme_bw() 
+ggsave(file.path(output_folder_level, "fig_clusters_Z9_boxplot.jpg"))

@@ -33,7 +33,7 @@ load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
 # dataset$related_topics <- dataset$X_C_name
 # dataset <- dataset[dataset$X_C > 0,]
 # dataset$X_E <- dataset$score
-myDataCorrect <- dataset
+#myDataCorrect <- dataset
 
 # facet_dataset <- dataset
 # 
