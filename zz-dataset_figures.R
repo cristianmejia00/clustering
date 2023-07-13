@@ -10,6 +10,7 @@ library(glue)
 dataset = dataset
 rp <- data.frame("top_items" = 20)
 document_label <- toTitleCase(params$type_of_dataset)
+output_folder_reports <- output_folder_reports
 
 # SYSTEM
 dir.create(file.path(output_folder_reports, "stats")) 
