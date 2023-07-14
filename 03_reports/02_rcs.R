@@ -36,7 +36,7 @@ values = lapply(id_com, function(g) {
                                           dmax, sum_cites, ave_cites, cluster_size)
                         return(row)})
   
-  valid_fields <- c("AU", "Countries", "DE", "WC", "SO", "Institutions")
+  valid_fields <- rp$categorical_long_reports
   valid_fields <- valid_fields[valid_fields %in% colnames(cluster_data)]
   
   tt <- c()

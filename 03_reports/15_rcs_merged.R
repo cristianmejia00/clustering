@@ -56,7 +56,7 @@ rcs_merged$unique_keywords <- rcs_keywords$Unique.Keywords[match(rcs_merged$clus
 rcs_merged$frequent_keywords <- rcs_keywords$Frequent.Keywords[match(rcs_merged$cluster, rcs_keywords$Cluster)]
 
 # Rest of columns
-for (i in c('DE','WC','SO','Countries','Institutions','AU')) {
+for (i in rp$categorical_long_reports) {
   if (i %in% colnames(rcs_core)) {
     rcs_merged[[i]] <- rcs_core[match(rcs_merged$cluster, rcs_core$cluster), i]
   }

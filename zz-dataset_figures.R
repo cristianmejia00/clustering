@@ -13,6 +13,7 @@ rp <- data.frame("top_items" = 20)
 document_label <- toTitleCase(params$type_of_dataset)
 output_folder_reports <- output_folder_reports
 subfolder <- 'dataset_stats'
+available_columns <- available_columns
 
 # SYSTEM
 dir.create(file.path(output_folder_reports, subfolder)) 
@@ -52,12 +53,19 @@ create_report_and_figure <- function(column_data,
 ################################################################################
 # TEXT COLUMNS TRENDS
 ################################################################################
-create_report_and_figure(dataset$Countries, item_label = "Countries", document_label = document_label)
-create_report_and_figure(dataset$SO, item_label = 'Journals', document_label = document_label)
-create_report_and_figure(dataset$Institutions, item_label = 'Institutions', document_label = document_label)
-create_report_and_figure(dataset$AU, item_label = 'Authors', document_label = document_label)
-create_report_and_figure(dataset$WC, item_label = 'Categories', document_label = document_label)
-create_report_and_figure(dataset$DE, item_label = 'Keywords', document_label = document_label)
+column_labels = c('Countries' = 'Countries',
+                 'SO' = 'Journals',
+                 'Institutions' = 'Institutions',
+                 'AU' = 'Authors',
+                 'WC' = 'Categories',
+                 'DE' = 'Author Keywords',
+                 'sentiment_factor' = 'Sentiment')
+
+for (i in rp$categorical_long_reports) {
+  if (i %in% available_columns) {
+    create_report_and_figure(dataset[[i]], item_label = column_labels[i], document_label = document_label)
+  }
+}
 
 ################################################################################
 # YEARLY TRENDS
