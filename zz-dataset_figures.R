@@ -1,5 +1,6 @@
 # 2023/07/13
 # Dataset-level stats
+# All bar charts in this dataset.
 
 
 # Load plotting library
@@ -11,10 +12,10 @@ dataset = dataset
 rp <- data.frame("top_items" = 20)
 document_label <- toTitleCase(params$type_of_dataset)
 output_folder_reports <- output_folder_reports
+subfolder <- 'dataset_stats'
 
 # SYSTEM
-dir.create(file.path(output_folder_reports, "stats")) 
-
+dir.create(file.path(output_folder_reports, subfolder)) 
 
 # UTILS
 create_report_and_figure <- function(column_data,
@@ -34,7 +35,7 @@ create_report_and_figure <- function(column_data,
     data.frame() %>% 
     setNames(c('Item', 'Documents'))
   write.csv(stats_column, 
-            file = file.path(output_folder_reports, "stats", glue("dataset_{tolower(item_label)}.csv")), 
+            file = file.path(output_folder_reports, subfolder, glue("dataset_{tolower(item_label)}.csv")), 
             row.names = FALSE)
   
   
@@ -45,7 +46,7 @@ create_report_and_figure <- function(column_data,
     scale_x_discrete(name = item_label, limits=rev) +
     scale_y_continuous(name = document_label) +
     theme_bw()
-  ggsave(file.path(output_folder_reports, "stats", glue("fig_{tolower(item_label)}.jpg")))
+  ggsave(file.path(output_folder_reports, subfolder, glue("fig_{tolower(item_label)}.jpg")))
 }
 
 ################################################################################
@@ -68,12 +69,12 @@ yearly_trends <- dataset$PY %>%
   setNames(c("Year", "Articles"))
 yearly_trends
 yearly_trends <- yearly_trends[order(yearly_trends$Year, decreasing = TRUE),]
-write.csv(yearly_trends, file=file.path(output_folder_reports, "stats", "data_yearly_trends.csv"), row.names = FALSE)
+write.csv(yearly_trends, file=file.path(output_folder_reports, subfolder, "data_yearly_trends.csv"), row.names = FALSE)
 
 ggplot(yearly_trends[1:15,], aes(x=Year, y=Articles)) + 
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_reports, "stats", "fig_yearly_trends.jpg"))
+ggsave(file.path(output_folder_reports, subfolder, "fig_yearly_trends.jpg"))
 
 ################################################################################
 # CLUSTER SIZE
@@ -83,16 +84,16 @@ stats_size <- dataset$X_C %>%
   table %>% 
   data.frame() %>% 
   setNames(c("Item", "Documents"))
-write.csv(stats_size, file=file.path(output_folder_reports, "stats", "data_cluster_size.csv"), row.names = FALSE)
+write.csv(stats_size, file=file.path(output_folder_reports, subfolder, "data_cluster_size.csv"), row.names = FALSE)
 
 ggplot(stats_size, aes(x=Cluster, y=Articles)) + 
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") + 
   theme_bw() +
   coord_flip() +
   scale_x_discrete(limits=rev)
-ggsave(file.path(output_folder_reports, "stats", "fig_cluster_size_h.jpg"))
+ggsave(file.path(output_folder_reports, subfolder, "fig_cluster_size_h.jpg"))
 
 ggplot(stats_size, aes(x=Cluster, y=Articles)) + 
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_reports, "stats", "fig_cluster_size_v.jpg"))
+ggsave(file.path(output_folder_reports, subfolder, "fig_cluster_size_v.jpg"))

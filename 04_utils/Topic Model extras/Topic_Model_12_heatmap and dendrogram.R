@@ -23,9 +23,9 @@ library(heatmaps3)
 library(SnowballC)
 
 # Helper function
-withStem <- function (list_of_keywords) {
+withStem <- function(list_of_keywords) {
   for (i in 1:length(list_of_keywords)) {
-    stemWords <- sapply(list_of_keywords[[i]]$TERM, function (x) {
+    stemWords <- sapply(list_of_keywords[[i]]$TERM, function(x) {
       wordStem(x, language = "en")
     })
     list_of_keywords[[i]]$TERM <- unname(stemWords)
@@ -46,12 +46,12 @@ withStem <- function (list_of_keywords) {
 # x_axis <- fukan_Keywords_to_list(choose.dir())
 # x_axis <- withStem(x_axis)
 
-x_axis <- ALL_Topics#read_from_others_csv(file.choose()) %>% keywords_to_list
-y_axis <- ALL_Topics#read_from_others_csv(file.choose()) %>% keywords_to_list
+x_axis <- ALL_Topics # read_from_others_csv(file.choose()) %>% keywords_to_list
+y_axis <- ALL_Topics # read_from_others_csv(file.choose()) %>% keywords_to_list
 
 # Labeling (A short name for each topic model)
-x_label <- "titech" 
-y_label <- "titech" 
+x_label <- "titech"
+y_label <- "titech"
 
 # Select the min and max similarity values to show (between 0 to 1; 1 highest similarity)
 # If changed, always run "# Select the dots to show"
@@ -59,7 +59,7 @@ min_appear <- 0
 max_appear <- 1
 
 # Select dot size (pixels)
-size = 5
+size <- 5
 
 ###########################################
 # Reports
@@ -76,8 +76,12 @@ bpdata$stats
 bpdata$out
 
 # Select the dots to show
-appears <- sapply (round(h_edges$value, 3), function(x) {
-  if (x >= min_appear & x <= max_appear) {1} else {0} 
+appears <- sapply(round(h_edges$value, 3), function(x) {
+  if (x >= min_appear & x <= max_appear) {
+    1
+  } else {
+    0
+  }
 })
 
 # Heatmap visualization
@@ -98,22 +102,24 @@ heatmap
 # The only condition is that it needs to be formated with the topics as rows.
 
 # Plug the table
-input_table <- h_matrix #t(theta) #h_matrix #t(phi)
+input_table <- h_matrix # t(theta) #h_matrix #t(phi)
 row.names(input_table) <- c(1:K)
 distance_matrix <- dist(input_table, method = "euclidean")
 
 # Hierarchical clustering
-clusterWC = hclust(distance_matrix, method = "ward.D") 
+clusterWC <- hclust(distance_matrix, method = "ward.D")
 
 # Plot the dendrogram
-par(cex = 0.5) #Change label size
+par(cex = 0.5) # Change label size
 plot(clusterWC, hang = -1)
 
 # Assign points to clusters
-ck = 10
-clusterGroups = cutree(clusterWC, k = ck)
+ck <- 10
+clusterGroups <- cutree(clusterWC, k = ck)
 table(clusterGroups)
-if (is.null(names(clusterGroups))) {names(clusterGroups) <- c(1:k)}
+if (is.null(names(clusterGroups))) {
+  names(clusterGroups) <- c(1:k)
+}
 names(clusterGroups)
 
 # Find which cluster "Multidisciplinary Sciences" is in.
@@ -121,11 +127,11 @@ names(clusterGroups)
 
 # Create a list of clusters, with their contents
 clusterContents <- lapply(c(1:ck), function(x) {
-  names(clusterGroups[clusterGroups==x])
+  names(clusterGroups[clusterGroups == x])
 })
 
 # Write in file for easy exploration
-df <- data.frame(V1 = rep(NA, max(sapply(clusterContents, length)))) #Create a df of NA to handle the uneven length of clusters
+df <- data.frame(V1 = rep(NA, max(sapply(clusterContents, length)))) # Create a df of NA to handle the uneven length of clusters
 for (i in 1:ck) {
   df[1:length(clusterContents[[i]]), i] <- clusterContents[[i]]
 }
@@ -133,13 +139,15 @@ write.csv(df, file = "fromProbableWords_megaclusters-10.csv", na = "", row.names
 
 # # load code of A2R function from online or locale
 source("http://addictedtor.free.fr/packages/A2R/lastVersion/R/code.R")
-#source("dendrogram_plotter.R")
+# source("dendrogram_plotter.R")
 # colored dendrogram
-#op = par(bg = "#EFEFEF")
-#op = par(cex = 0.4)
-A2Rplot(clusterWC, k = ck, boxes = FALSE, col.up = "gray50",
-        col.down = sample(rainbow(ck)))
+# op = par(bg = "#EFEFEF")
+# op = par(cex = 0.4)
+A2Rplot(clusterWC,
+  k = ck, boxes = FALSE, col.up = "gray50",
+  col.down = sample(rainbow(ck))
+)
 
-#par = op
+# par = op
 
 # check: http://gastonsanchez.com/visually-enforced/how-to/2012/10/03/Dendrograms/

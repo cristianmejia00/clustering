@@ -103,9 +103,12 @@ addons <- list(
 rp <- list(
   top_documents = 0, #0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ##0 means ALL # Select the number of top `documents`field`` to show in the clusters report
-  text_columns =  c("TI", "AB")  # Column(s) with text contents to merge and analyze
+  text_columns =  c("TI", "AB"),  # Column(s) with text contents to merge and analyze
+  categorical_long_reports <- c("AU", "WC", "SO", "Countries", "Institutions", "sentiment_factor"), #Columns in the dataset for long-form summary
+  categorical_simple_wide_reports <- c("PY", "sentiment_factor"), #Columns in the dataset without ';' for matrix type summary
+  categorical_multi_wide_reports <- c("WC", "Countries", "Institutions"), #Columns in the dataset with ';' for matrix type summary
+  numerical_reports <- c("PY", "Z9", "sentiment") #Numeric columns in the dataset for summary (min, max, mean, median, sd)
 )
-
 
 # Activate stopwords
 article_StopWords <- c("analysis", "paper", "na", "say", "will", "can", "article", "use", "press", "release",
