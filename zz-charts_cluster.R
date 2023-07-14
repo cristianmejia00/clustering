@@ -29,9 +29,6 @@ r_citations <- read.csv(file.path(dd, 'report_Z9.csv'))
 
 
 # Cluster-level
-
-
-
 plot_cluster_data <- function(plot_data, cluster_number) {
   plot_data <- subset(plot_data, Cluster != 0)
   cluster_data <- subset(plot_data, Cluster == cluster_number)
@@ -82,6 +79,3 @@ pdf("ggplot.pdf", paper = 'a4')
 print(do.call("grid.arrange", c(my_charts, ncol=4)))     # Plot 1 --> in the first page of PDF
 #print(myplot2)     # Plot 2 ---> in the second page of the PDF
 dev.off() 
-
-?gtable
-?ggsave
