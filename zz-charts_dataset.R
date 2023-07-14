@@ -12,7 +12,7 @@ dataset = dataset
 rp <- data.frame("top_items" = 20)
 document_label <- toTitleCase(params$type_of_dataset)
 output_folder_reports <- output_folder_reports
-subfolder <- 'dataset_stats'
+subfolder <- 'charts_dataset'
 available_columns <- available_columns
 
 # SYSTEM

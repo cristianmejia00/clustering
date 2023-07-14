@@ -34,4 +34,7 @@ if (params$type_of_analysis == "citation_network") {
 
 ## Save the report
 write.csv(as.data.frame.list(general_summary) %>% t(), 
-          file=file.path(input_folder, analysis_metadata$query_id, "stats", "general_summary.csv"))
+          file=file.path(input_folder, 
+                         analysis_metadata$query_id, 
+                         analysis_metadata$project_id, 
+                         "general_summary.csv"))

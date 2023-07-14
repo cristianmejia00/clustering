@@ -1,3 +1,9 @@
+# Note on 2023-07-14
+# This code should be removed after cleaning the chart codes.
+# We are computing the same reports there. 
+
+
+
 # Sentiment Analysis
 # 2022-05-11
 
