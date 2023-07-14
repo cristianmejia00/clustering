@@ -59,6 +59,9 @@ if (params$type_of_dataset == "news") {
   source(file.path(getwd(), "02_topic_model", "01_1_execute_and_reports.R"))
 }
 
+# Dataset merged RCS
+source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
+
 # Dataset figures
 source(file.path(getwd(), "zz-dataset_figures.R"))
 
