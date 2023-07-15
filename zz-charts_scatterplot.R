@@ -30,15 +30,14 @@ if (exists("topic_names")) {
 # Global inputs
 
 output_folder_level <- output_folder_level
-subfolder <- 'chart_cluster'
-column_labels <- column_labels
+subfolder_clusters <- 'charts_clusters'
+column_labels <- rp$column_labels
 
 load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
 rcs_merged <- read.csv(file.path(output_folder_level, 'rcs_merged.csv'))
-#column_labels <- read.csv(file.path(output_folder_level, 'column_labels.csv'))
 
 # System
-dir.create(file.path(output_folder_level, subfolder))
+dir.create(file.path(output_folder_level, subfolder_clusters))
 
 # Preparation
 # Convert the colimn_labels to a named vector
@@ -119,26 +118,26 @@ plot_scatter <- function(rcs_data,
 # - years x size
 # - size x citations
 
-# Only for datasets with sentiment
+# Only for datasets with sentiment:
 # - years x sentiment
 # - citations x sentiment
 # - size x sentiment
-plot_scatter(rcs_tmp, 'X_C_name', 'PY_Mean', 'Z9_Mean', 'main_cluster', 'documents', column_labels['PY'], column_labels['Z9'])
-ggsave(file.path(output_folder_level, subfolder, "fig_scatter_clusters_PY_x_Z9.jpg"))
+plot_scatter(rcs_tmp, 'X_C_name', 'PY_Mean', 'Z9_Mean', 'main_cluster', 'documents', 'Ave. Publication Year', 'Ave. Citations')
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_PY_x_Z9.jpg"))
 
-plot_scatter(rcs_tmp, 'X_C_name', 'PY_Mean', 'documents', 'main_cluster', 'Z9_Mean', column_labels['PY'], 'Documents')
-ggsave(file.path(output_folder_level, subfolder, "fig_scatter_clusters_PY_x_size.jpg"))
+plot_scatter(rcs_tmp, 'X_C_name', 'PY_Mean', 'documents', 'main_cluster', 'Z9_Mean', 'Ave. Publication Year', 'Documents')
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_PY_x_size.jpg"))
 
-plot_scatter(rcs_tmp, 'X_C_name', 'documents', 'Z9_Mean', 'main_cluster', 'PY_Mean', 'Documents', column_labels['Z9'])
-ggsave(file.path(output_folder_level, subfolder, "fig_scatter_clusters_size_x_Z9.jpg"))
+plot_scatter(rcs_tmp, 'X_C_name', 'documents', 'Z9_Mean', 'main_cluster', 'PY_Mean', 'Documents', 'Ave. Citations')
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_size_x_Z9.jpg"))
 
 if ('sentiment_Mean' %in% colnames(rcs_merged)) {
   plot_scatter(rcs_tmp, 'X_C_name', 'PY_Mean', 'sentiment_Mean', 'main_cluster', 'documents', column_labels['PY'], column_labels['sentiment'])
-  ggsave(file.path(output_folder_level, subfolder, "fig_scatter_clusters_year_x_sentiment.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_year_x_sentiment.jpg"))
   
   plot_scatter(rcs_tmp, 'X_C_name', 'Z9_Mean', 'sentiment_Mean', 'main_cluster', 'documents', column_labels['Z9'], column_labels['sentiment'])
-  ggsave(file.path(output_folder_level, subfolder, "fig_scatter_clusters_Z9_x_sentiment.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_Z9_x_sentiment.jpg"))
   
   plot_scatter(rcs_tmp, 'X_C_name', 'documents', 'sentiment_Mean', 'main_cluster', 'documents', 'Documents', column_labels['sentiment'])
-  ggsave(file.path(output_folder_level, "fig_scatter_clusters_size_x_sentiment.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_size_x_sentiment.jpg"))
 }

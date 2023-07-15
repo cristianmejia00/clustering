@@ -25,8 +25,6 @@ r_journals <- read.csv(file.path(dd, 'report_SO.csv'))
 r_institutions <- read.csv(file.path(dd, 'report_Institutions.csv'))
 r_categories <- read.csv(file.path(dd, 'report_WC.csv'))
 
-r_citations <- read.csv(file.path(dd, 'report_Z9.csv'))
-
 
 # Cluster-level
 plot_cluster_data <- function(plot_data, cluster_number) {

@@ -9,27 +9,17 @@ library(glue)
 
 # INPUT
 dataset = dataset
-rp <- data.frame("top_items" = 20)
 document_label <- toTitleCase(params$type_of_dataset)
-output_folder_reports <- output_folder_reports
-subfolder <- 'charts_dataset'
+output_folder_level <- output_folder_level
+subfolder_dataset <- 'charts_dataset'
+subfolder_clusters <- 'charts_clusters'
 available_columns <- available_columns
-column_labels = c('Countries' = 'Countries',
-                  'SO' = 'Journals',
-                  'Institutions' = 'Institutions',
-                  'AU' = 'Authors',
-                  'WC' = 'Categories',
-                  'DE' = 'Author Keywords',
-                  'sentiment_factor' = 'Sentiment',
-                  'PY' = 'Publication Years',
-                  'Z9' = 'Citations',
-                  'score' = 'Score',
-                  'sentiment' = 'Sentiment')
-
+column_labels = rp$column_labels
 
 
 # SYSTEM
-dir.create(file.path(output_folder_reports, subfolder)) 
+dir.create(file.path(output_folder_level, subfolder_dataset)) 
+dir.create(file.path(output_folder_level, subfolder_clusters)) 
 
 ##################################################################
 ##################################################################
@@ -61,7 +51,7 @@ create_report_and_barchart <- function(column_data,
     data.frame() %>% 
     setNames(c('Item', 'Documents'))
   write.csv(stats_column, 
-            file = file.path(output_folder_reports, subfolder, glue("dataset_{tolower(item_label)}.csv")), 
+            file = file.path(output_folder_level, subfolder_dataset, glue("dataset_{tolower(item_label)}.csv")), 
             row.names = FALSE)
   
   
@@ -72,7 +62,7 @@ create_report_and_barchart <- function(column_data,
     scale_x_discrete(name = item_label, limits=rev) +
     scale_y_continuous(name = document_label) +
     theme_bw()
-  ggsave(file.path(output_folder_reports, subfolder, glue("fig_{tolower(item_label)}.jpg")))
+  ggsave(file.path(output_folder_level, subfolder_dataset, glue("fig_{tolower(item_label)}.jpg")))
 }
 
 ################################################################################
@@ -94,12 +84,12 @@ yearly_trends <- dataset$PY %>%
   setNames(c("Year", "Articles"))
 yearly_trends
 yearly_trends <- yearly_trends[order(yearly_trends$Year, decreasing = TRUE),]
-write.csv(yearly_trends, file=file.path(output_folder_reports, subfolder, "data_yearly_trends.csv"), row.names = FALSE)
+write.csv(yearly_trends, file=file.path(output_folder_level, subfolder_dataset, "data_yearly_trends.csv"), row.names = FALSE)
 
 ggplot(yearly_trends[1:15,], aes(x=Year, y=Articles)) + 
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_reports, subfolder, "fig_yearly_trends.jpg"))
+ggsave(file.path(output_folder_level, subfolder_dataset, "fig_yearly_trends.jpg"))
 
 ################################################################################
 # CLUSTER SIZE
@@ -109,19 +99,19 @@ stats_size <- dataset$X_C %>%
   table %>% 
   data.frame() %>% 
   setNames(c("Item", "Documents"))
-write.csv(stats_size, file=file.path(output_folder_reports, subfolder, "data_cluster_size.csv"), row.names = FALSE)
+write.csv(stats_size, file=file.path(output_folder_level, subfolder_clusters, "data_cluster_size.csv"), row.names = FALSE)
 
 ggplot(stats_size, aes(x=Cluster, y=Articles)) + 
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") + 
   theme_bw() +
   coord_flip() +
   scale_x_discrete(limits=rev)
-ggsave(file.path(output_folder_reports, subfolder, "fig_cluster_size_h.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_h.jpg"))
 
 ggplot(stats_size, aes(x=Cluster, y=Articles)) + 
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_reports, subfolder, "fig_cluster_size_v.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_v.jpg"))
 
 
 ##################################################################
@@ -169,5 +159,5 @@ plot_boxplots <- function(dataset,
 
 for (i in rp$numerical_reports) {
   plot_boxplots(dataset_tmp, value_column = i, category_column = 'X_C', value_label = column_labels[i], category_label = 'Clusters')
-  ggsave(file.path(output_folder_level, subfolder, "fig_clusters_PY_boxplot.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.jpg")))
 }

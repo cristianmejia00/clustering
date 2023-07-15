@@ -20,14 +20,13 @@ getwd()
 # Load libraries
 source("04_utils/02_libraries.R")
 
-# Input Folder
-input_folder <- "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics"
-
 # Load input settings file
 source("settings.R")
 
 # Load data
-load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
+load(file.path(analysis_metadata$input_folder, 
+               analysis_metadata$query_id, 
+               "dataset.rdata"))
 
 # Auxiliary code to find the right number of clusters. And update the threshold.
 # Get the clusters collecting 90% of papers or the top 10, whatever is the smallest number.
