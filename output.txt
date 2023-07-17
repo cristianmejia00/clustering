@@ -1,0 +1,34 @@
+---
+title: "Citation_network of Future of Employment Papers"
+author: Cristian Mejia
+date: 2023-07-17
+format: 
+  html:
+    toc: true
+    toc-title: Contents
+    toc-depth: 2
+editor: visual
+---
+
+## Data and Methods
+
+### Data
+| Query           |          |
+| Database        | WOS  |
+| Documents       | |
+| Date retrieved  | 2023-07-13          |
+| Fukan Analysis  |                        |
+| ID              | Q249-future-of-employment  |
+: Metadata
+
+### Methods
+
+## Results
+Figure 1: Citation network of Future Scenarios, illustrating clusters of related research.
+
+In this network, clusters are visually differentiated by color, with labels indicating their size based on the number of documents. Proximity between clusters reflects topical relatedness, with closer clusters indicating greater thematic similarity, while distant clusters suggest topical divergence.
+
+### Overview
+
+### Clustering
+

@@ -1,0 +1,75 @@
+---
+title: "Citation_network of Future of Employment Papers"
+author: Cristian Mejia
+date: 2023-07-17
+format: 
+  html:
+    toc: true
+    toc-title: Contents
+    toc-depth: 2
+editor: visual
+---
+```{r}
+#| echo: false
+library(dplyr)
+library(data.table)
+library(DT)
+
+source("settings.R")
+
+bibliometrics_folder <- analysis_metadata$input_folder
+dataset_folder <- analysis_metadata$query_id
+analysis_folder <- analysis_metadata$project_id
+
+main_path <- file.path(bibliometrics_folder,
+                       dataset_folder,
+                       analysis_folder,
+                       "level0")
+
+rcs_merged <- read.csv(file.path(main_path, "rcs_merged.csv"))
+```
+## Data and Methods
+
+### Data
+| Query           |          |
+|-----------------|-----------------------------------|
+| Database        | WOS  |
+| Documents       | |
+| Date retrieved  | 2023-07-13          |
+| Fukan Analysis  |                        |
+| ID              | Q249-future-scenario  |
+: Metadata
+
+### Methods
+
+## Results
+### Overview
+
+
+
+
+### Clustering
+Figure 1: Citation network of Future Scenarios, illustrating clusters of related research.
+
+In this network, clusters are visually differentiated by color, with labels indicating their size based on the number of documents. Proximity between clusters reflects topical relatedness, with closer clusters indicating greater thematic similarity, while distant clusters suggest topical divergence.
+
+```{r}
+#| echo: false
+tmp <- rcs_merged[c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label")]
+if (all(TRUE)) {
+  tmp$cluster_name <- sapply(rcs_merged$frequent_keywords, function(x) {
+    k <- strsplit(x, "; ") %>% unlist()
+    k <- k[c(1:min(5, length(k)))]
+    k <- paste(k, collapse = "; ")
+  })
+  tmp$cluster_name[nrow(tmp)] <- "Others"
+}
+tmp$PY_Mean <- round(tmp$PY_Mean, 1)
+tmp$Z9_Mean <- round(tmp$Z9_Mean, 1)
+setnames(tmp, 
+         c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label"),
+         c("Cluster", "Documents", "Documents %", "Year Median", "Year Mean", "Cites Median", "Cites Mean", "Label"))
+datatable(tmp)
+```
+
+

@@ -1,14 +1,17 @@
 ## Metadata
 analysis_metadata <- list(
   input_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_name = "Q249-future-of-employment",
+  theme = 'future scenario',
+  project_name = "Q249-future-scenario",
   query_id = "Q249", #This is the Folder name. Equivalent to Fukan's dataset
   project_id = "001", #Equivalent to Fukan's analysis (i.e. the order inside dataset)
   date = "2023-07-13",
-  project_description = "Citation network of future of employment research",
+  project_description = "Citation network of future scenario research",
   created_by = "cristianmejia00@gmail.com",
   notes = "NA",
-  fukan_url = "NA"
+  fukan_url = "NA",
+  query = "",
+  downloaded_documents = ""
 )
 
 ## General Parameters
