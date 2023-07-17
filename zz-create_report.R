@@ -19,5 +19,3 @@ citation_keys <- sapply(c(1:nrow(dataset)), function(x) {
 
 citation_keys[duplicated(citation_keys)] <- paste(citation_keys[duplicated(citation_keys)], c(1:length(citation_keys[duplicated(citation_keys)])), collapse = '')
 dataset$citation_key <- citation_keys
-
-

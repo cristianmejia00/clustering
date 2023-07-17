@@ -170,6 +170,8 @@ quarto_document <- glue('
 {qt$results_table}
 
 ')
+
+
 # Write the file
 fileConn<-file("output.qmd")
 writeLines(quarto_document, fileConn)

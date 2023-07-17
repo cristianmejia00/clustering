@@ -113,3 +113,4 @@ prompt_figure_caption <- function(topic){
     )
   )
 }
+
