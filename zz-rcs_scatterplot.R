@@ -1,5 +1,27 @@
 # 20220915
+# Deprecated code.
+# As of 20230714 use zz-charts_scatterplot instead.
 
+
+# We plot 4 scatterplots
+# - years x citations (or score)
+# - years x size
+# - years x sentiment
+# - citations x size
+# - citations x sentiment
+# - size x sentiment
+
+# This is an scatterplot and thus is preferred to have the actual names of the clusters if possible
+# When using clusters or topic models we write the topic names at a later stage.
+# We can add the names here, so the reports and charts show those names. 
+
+# There are 3 options:
+# If cluster/topic analysis and we have not named the clusters. Use the cluster number
+# If cluster/topic analysis and we named the clusters directly in `rcs_merged.csv`
+# If facet analysis use the facet names. In this case we expect the `dataset` to have a X_C_name column since the beginning
+
+
+# Load libraries
 library("plotly")
 library("reshape2")
 library("ggplot2")
@@ -8,19 +30,24 @@ if (exists("topic_names")) {
   rm(topic_names)
 }
 
+# Global inputs
 
-#################################################################
-# When using clusters or topic models we write the topic names at a later stage.
-# We can add the names here, so the reports and charts show those names. 
-# Load the topic_names file here
-# 
-# topic_names
+output_folder_level <- output_folder_level
+subfolder <- 'chart_cluster'
+column_labels <- column_labels
+
+load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
+rcs <- read.csv(file.path(output_folder_level, 'rcs_merged.csv'))
+#column_labels <- read.csv(file.path(output_folder_level, 'column_labels.csv'))
+
+# System
+dir.create(file.path(output_folder_level, subfolder))
+
+# Preparation
+# Convert the colimn_labels to a named vector
 
 
-# There are 3 options:
-# If cluster/topic analysis and we have not named the clusters. Use the cluster number
-# If cluster/topic analysis and we named the clusters.Load a file `topic_names.csv` with 2 columns of X_C and X_C_name
-# If facet analysis use the facet names. In this case we expect the `dataset` to have a X_C_name column since the begining
+
 
 if (params$unit_of_analysis %in% c("topic", "topics", "cluster", "clusters") &
     !exists("topic_names")) {
@@ -63,42 +90,10 @@ if (!(params$unit_of_analysis %in% c("topic", "topics", "cluster", "clusters")))
   rcs_tmp <- rcs[rcs$X_C_name %in% facets_tmp,]
 }
 
-#################################################################
-# DYNAMIC PLOT Ave. Year x Size 
-t <- list(
-  #family = "arial",
-  size = 12,
-  color = toRGB("black"))
 
-p <- plot_ly(rcs_tmp, 
-             x = rcs_tmp$cluster_year, 
-             y = rcs_tmp$sum_cites, 
-             mode = "markers", 
-             type = "scatter",
-             
-             #marker = list(color = '#000000'),
-             text = gsub("---|-0", "", rcs_tmp$cluster_code),#~cluster,
-             
-             #symbol =  as.character(plot_dataset$large_cluster),
-             #symbols = c('x-thin-open','triangle-up', 'circle',"circle-open",'square-dot')
-             
-             color = main_cluster,
-             #colors = c('#0000ff', '#e5e500', '#00ff00', '#ff0000', '#e9e9e9' )
-             
-             size = as.numeric(rcs_tmp$cluster_size)
-) %>%
-  add_text(textfont = t, textposition = "top left") %>% 
-  layout(xaxis = list(title = "Average Publication Year"), 
-         yaxis = list(title="Cummulative citations", tickformat = ",d"), # range = c(0,8000),
-         showlegend = FALSE) 
-p
-
-#################################################################
-# STATIC PLOTS
-
-colnames(rcs)
-################################################################# 
-# Ave. Year x Cites STATIC PLOTS
+##################################################################
+# SCATTERPLOT: Ave. Year x Cites
+##################################################################
 p <- ggplot(rcs_tmp, aes(x=cluster_year, y=ave_cites)) + 
   geom_point() + 
   xlab("Average Publication Year") + 
@@ -111,8 +106,9 @@ p
 ggsave(file.path(output_folder_level, "fig_clusters_year_x_cites.jpg"))
 
 
-#################################################################
-# Ave. Year x Size STATIC PLOTS
+##################################################################
+# SCATTERPLOT: Ave. Year x Size
+##################################################################
 p <- ggplot(rcs_tmp, aes(x=cluster_year, y=cluster_size)) + geom_point() + xlab("Average Publication Year") + ylab("Articles")
 #p + geom_text(aes(label=gsub("---|-0", "", cluster_code)))
 p <- p + geom_point(aes(color=main_cluster, size=cluster_size))
@@ -123,46 +119,34 @@ ggsave(file.path(output_folder_level, "fig_clusters_year_x_size.jpg"))
 
 
 ##################################################################
-# Year boxplots Plots:
+# SCATTERPLOT: Ave. Year x Sentiment
 ##################################################################
-# Boxplots sorted from the most recent to oldest
-# Based on medians; ties are broken with the mean
-PY_compound_mean <- tapply(dataset_tmp$PY, dataset_tmp$X_C, mean, na.rm=TRUE)
-PY_compound_median <- tapply(dataset_tmp$PY, dataset_tmp$X_C, median, na.rm = TRUE)
-
-# Plots
-PY_long <- dataset_tmp[,c("X_C", "PY")]
-PY_long$X_C <- as.character(PY_long$X_C)
-PY_long$X_C <-factor(PY_long$X_C, levels = as.character(order(PY_compound_median, PY_compound_mean)))
-
-bp <- ggplot(PY_long, aes(x = X_C, y = PY)) + geom_boxplot(width = 0.7, fill = "deepskyblue3") + xlab("Cluster") + ylab("Ave. Year") 
-#bp + coord_flip()
-K <- length(unique(dataset_tmp$X_C))
-if (K > 20) {
-  bp <- bp + theme(axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust=1))
-}
-bp + theme_bw() 
-ggsave(file.path(output_folder_level, "fig_clusters_PY_boxplot.jpg"))
-
+p <- ggplot(rcs_tmp, aes(x=cluster_year, y=cluster_size)) + geom_point() + xlab("Average Publication Year") + ylab("Articles")
+#p + geom_text(aes(label=gsub("---|-0", "", cluster_code)))
+p <- p + geom_point(aes(color=main_cluster, size=cluster_size))
+p <- p + geom_text_repel(aes(label=gsub("---|-0", "", cluster_code)))
+p <- p + theme_bw() + theme(legend.position="none")
+p
+ggsave(file.path(output_folder_level, "fig_clusters_year_x_size.jpg"))
 
 ##################################################################
-# Z9 boxplots Plots:
+# SCATTERPLOT: Ave. Year x Sentiment !!!
 ##################################################################
-# Boxplots sorted from the most recent to oldest
-# Based on medians; ties are broken with the mean
-Z9_compound_mean <- tapply(dataset_tmp$Z9, dataset_tmp$X_C, mean, na.rm=TRUE)
-Z9_compound_median <- tapply(dataset_tmp$Z9, dataset_tmp$X_C, median, na.rm = TRUE)
+p <- ggplot(rcs_tmp, aes(x=cluster_year, y=cluster_size)) + geom_point() + xlab("Average Publication Year") + ylab("Articles")
+#p + geom_text(aes(label=gsub("---|-0", "", cluster_code)))
+p <- p + geom_point(aes(color=main_cluster, size=cluster_size))
+p <- p + geom_text_repel(aes(label=gsub("---|-0", "", cluster_code)))
+p <- p + theme_bw() + theme(legend.position="none")
+p
+ggsave(file.path(output_folder_level, "fig_clusters_year_x_size.jpg"))
 
-# Plots
-Z9_long <- dataset_tmp[,c("X_C", "Z9")]
-Z9_long$X_C <- as.character(Z9_long$X_C)
-Z9_long$X_C <-factor(Z9_long$X_C, levels = as.character(order(Z9_compound_median, Z9_compound_mean)))
-
-bp <- ggplot(Z9_long, aes(x = X_C, y = Z9)) + geom_boxplot(width = 0.7, fill = "deepskyblue3") + xlab("Cluster") + ylab("Ave. Year") 
-#bp + coord_flip()
-K <- length(unique(dataset_tmp$X_C))
-if (K > 20) {
-  bp <- bp + theme(axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust=1))
-}
-bp + theme_bw() 
-ggsave(file.path(output_folder_level, "fig_clusters_Z9_boxplot.jpg"))
+##################################################################
+# SCATTERPLOT: Ave. Size x Sentiment !!!
+##################################################################
+p <- ggplot(rcs_tmp, aes(x=cluster_year, y=cluster_size)) + geom_point() + xlab("Average Publication Year") + ylab("Articles")
+#p + geom_text(aes(label=gsub("---|-0", "", cluster_code)))
+p <- p + geom_point(aes(color=main_cluster, size=cluster_size))
+p <- p + geom_text_repel(aes(label=gsub("---|-0", "", cluster_code)))
+p <- p + theme_bw() + theme(legend.position="none")
+p
+ggsave(file.path(output_folder_level, "fig_clusters_year_x_size.jpg"))

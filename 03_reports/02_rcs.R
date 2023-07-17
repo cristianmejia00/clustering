@@ -2,14 +2,14 @@
 #####################################################
 print("###################### reports/02_rcs.R")
 
-#Detect number of communities in the network, as outputted by Fukan System
+# Detect number of communities in the network, as outputted by Fukan System
 id_com <- sort(unique(myDataCorrect$"X_C"))
 myDataCorrect$PY <- as.character(myDataCorrect$PY) %>% as.integer()
 network_year <- round(mean(myDataCorrect$PY, na.rm = TRUE), digits=1)
 
 
-#Create a summary with information of each cluster
-#per each cluster a list of data frames is created (one data frame per core patent)
+# Create a summary with information of each cluster
+# per each cluster a list of data frames is created (one data frame per core patent)
 values = lapply(id_com, function(g) {
   cluster      <- g
   cluster_data <- subset(myDataCorrect, myDataCorrect$"X_C" == g)
@@ -36,7 +36,7 @@ values = lapply(id_com, function(g) {
                                           dmax, sum_cites, ave_cites, cluster_size)
                         return(row)})
   
-  valid_fields <- c("AU", "Countries", "DE", "WC", "SO", "Institutions")
+  valid_fields <- rp$categorical_long_reports
   valid_fields <- valid_fields[valid_fields %in% colnames(cluster_data)]
   
   tt <- c()
@@ -48,11 +48,11 @@ values = lapply(id_com, function(g) {
   
   return(cbind(rows, tops))})
 
-#convert lists of data frames into single data frame
+# convert lists of data frames into single data frame
 rcs <- rbindlist(values) %>% as.data.frame()
 
-#Calculate participation
-#Participation is the proportion of papers within the cluster connected to the hub
+# Calculate participation
+# Participation is the proportion of papers within the cluster connected to the hub
 rcs$participation <- round(rcs$dmax/rcs$cluster_size, 3)
 
 if(params$type_of_dataset != "news") {
@@ -62,7 +62,7 @@ if(params$type_of_dataset != "news") {
   rcs$X[is.na(rcs$X)] <- 0
   rcs$Y[is.na(rcs$Y)] <- 0
   
-  #Add labels
+  # Add labels
   labels <- sapply (1:nrow(rcs), function(z) {
     x <- rcs$X[z]
     y <- rcs$Y[z]

@@ -12,10 +12,6 @@ getwd()
 # Load libraries
 source("04_utils/02_libraries.R")
 
-##########################################################
-# Input Folder
-input_folder <- "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics"
-
 # Load settings from the project we are interested in
 #source(file.choose())
 source("settings.R")
@@ -23,8 +19,10 @@ source("settings.R")
 
 
 ##########################################################
-# Load data and adjust
-load(file.path(input_folder, analysis_metadata$query_id, "dataset.rdata"))
+# Load data
+load(file.path(analysis_metadata$input_folder, 
+               analysis_metadata$query_id, 
+               "dataset.rdata"))
 
 # Special filtering for palm oil news 
 # dataset$X_C <- dataset$cluster
@@ -58,6 +56,9 @@ if (params$type_of_dataset == "news") {
   output_folder <- output_folder_reports
   source(file.path(getwd(), "02_topic_model", "01_1_execute_and_reports.R"))
 }
+
+# Dataset merged RCS
+source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
 
 # Dataset figures
 source(file.path(getwd(), "zz-dataset_figures.R"))

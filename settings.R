@@ -1,5 +1,6 @@
 ## Metadata
 analysis_metadata <- list(
+  input_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
   project_name = "Q249-future-of-employment",
   query_id = "Q249", #This is the Folder name. Equivalent to Fukan's dataset
   project_id = "001", #Equivalent to Fukan's analysis (i.e. the order inside dataset)
@@ -103,9 +104,23 @@ addons <- list(
 rp <- list(
   top_documents = 0, #0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ##0 means ALL # Select the number of top `documents`field`` to show in the clusters report
-  text_columns =  c("TI", "AB")  # Column(s) with text contents to merge and analyze
+  text_columns =  c("TI", "AB"),  # Column(s) with text contents to merge and analyze
+  categorical_long_reports = c("AU", "WC", "SO", "Countries", "Institutions", "DE", "sentiment_factor"), #Columns in the dataset for long-form summary. These are also used for RCS.
+  categorical_simple_wide_reports = c("PY", "sentiment_factor"), #Columns in the dataset without ';' for matrix type summary
+  categorical_multi_wide_reports = c("WC", "Countries", "Institutions"), #Columns in the dataset with ';' for matrix type summary
+  numerical_reports = c("PY", "Z9", "sentiment", "score"), #Numeric columns in the dataset for summary (min, max, mean, median, sd)
+  column_labels = c('Countries' = 'Countries',
+                    'SO' = 'Journals',
+                    'Institutions' = 'Institutions',
+                    'AU' = 'Authors',
+                    'WC' = 'Categories',
+                    'DE' = 'Author Keywords',
+                    'sentiment_factor' = 'Sentiment',
+                    'PY' = 'Publication Years',
+                    'Z9' = 'Citations',
+                    'score' = 'Score',
+                    'sentiment' = 'Sentiment') #Column labels are used to format RCS columns and charts' labels
 )
-
 
 # Activate stopwords
 article_StopWords <- c("analysis", "paper", "na", "say", "will", "can", "article", "use", "press", "release",

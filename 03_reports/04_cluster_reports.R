@@ -153,7 +153,7 @@ generate_numerical_report <- function(df, a_column, clusters, with_all = TRUE) {
   result_list <- lapply(clusters, function(c) {
     cluster_data <- subset(df, df$"X_C" == c)
     tmp <- summary(cluster_data[,a_column]) %>% as.matrix %>% t %>% data.frame
-    tmp$sd <- sd(cluster_data[,a_column]) %>% round(3)
+    tmp$sd <- sd(cluster_data[,a_column], na.rm = TRUE) %>% round(3)
     tmp$cluster <- c
     return(tmp)
   }) %>% rbind.fill()
@@ -173,11 +173,11 @@ generate_numerical_report <- function(df, a_column, clusters, with_all = TRUE) {
 }
 
 ##################################################################
-## 
-categorical_long_reports <- c("AU", "WC", "SO", "Countries", "Institutions") %>% .[. %in% available_columns]
-categorical_simple_wide_reports <- c("PY") %>% .[. %in% available_columns]
-categorical_multi_wide_reports <- c("WC", "Countries", "Institutions") %>% .[. %in% available_columns]
-numerical_reports <- c("PY", "Z9", "sentiment_analysis") %>% .[. %in% available_columns]
+## Check the columns that are actually available
+categorical_long_reports <- rp$categorical_long_reports %>% .[. %in% available_columns]
+categorical_simple_wide_reports <- rp$categorical_simple_wide_reports %>% .[. %in% available_columns]
+categorical_multi_wide_reports <- rp$categorical_multi_wide_reports %>% .[. %in% available_columns]
+numerical_reports <- rp$numerical_reports %>% .[. %in% available_columns]
 
 
 ## Write reports
