@@ -9,9 +9,9 @@ analysis_metadata <- list(
   project_description = "Citation network of future scenario research",
   created_by = "cristianmejia00@gmail.com",
   notes = "NA",
-  fukan_url = "NA",
-  query = "",
-  downloaded_documents = ""
+  fukan_url = "https://academic-landscape.com/dataset/47862",
+  query = '"future*" AND "scenario*"',
+  downloaded_documents = "75265"
 )
 
 ## General Parameters

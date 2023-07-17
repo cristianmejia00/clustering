@@ -1,5 +1,5 @@
 ---
-title: "Citation_network of Future of Employment Papers"
+title: "Citation_network of Future Scenario Papers"
 author: Cristian Mejia
 date: 2023-07-17
 format: 
@@ -9,8 +9,9 @@ format:
     toc-depth: 2
 editor: visual
 ---
-```{r}
+```{r, message=FALSE}
 #| echo: false
+
 library(dplyr)
 library(data.table)
 library(DT)
@@ -31,12 +32,12 @@ rcs_merged <- read.csv(file.path(main_path, "rcs_merged.csv"))
 ## Data and Methods
 
 ### Data
-| Query           |          |
+| Query           | "future*" AND "scenario*"         |
 |-----------------|-----------------------------------|
 | Database        | WOS  |
-| Documents       | |
+| Documents       | 75265|
 | Date retrieved  | 2023-07-13          |
-| Fukan Analysis  |                        |
+| Fukan Analysis  | [Link](https://academic-landscape.com/dataset/47862)                       |
 | ID              | Q249-future-scenario  |
 : Metadata
 
@@ -48,7 +49,8 @@ rcs_merged <- read.csv(file.path(main_path, "rcs_merged.csv"))
 
 
 
-### Clustering
+### Clusters
+![](C:\Users\crist\OneDrive\Documentos\03-bibliometrics/Q249/001/level0/network.png)
 Figure 1: Citation network of Future Scenarios, illustrating clusters of related research.
 
 In this network, clusters are visually differentiated by color, with labels indicating their size based on the number of documents. Proximity between clusters reflects topical relatedness, with closer clusters indicating greater thematic similarity, while distant clusters suggest topical divergence.
@@ -69,6 +71,7 @@ tmp$Z9_Mean <- round(tmp$Z9_Mean, 1)
 setnames(tmp, 
          c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label"),
          c("Cluster", "Documents", "Documents %", "Year Median", "Year Mean", "Cites Median", "Cites Mean", "Label"))
+tmp$Cluster <- NULL
 datatable(tmp)
 ```
 

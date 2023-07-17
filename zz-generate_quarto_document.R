@@ -5,6 +5,8 @@
 # Libraries
 library(glue)
 library(quarto)
+# require(devtools)
+# install_version("knitr", version = "1.42", repos = "http://cran.us.r-project.org")
 
 # Inputs
 analysis_metadata <- analysis_metadata
@@ -17,12 +19,12 @@ level_folder <- 'level0'
 
 
 
-# Initialization
-main_path <- file.path(bibliometrics_folder,
-                       dataset_folder,
-                       analysis_folder,
-                       level_folder)
-main_path
+# # Initialization
+ main_path <- file.path(bibliometrics_folder,
+                        dataset_folder,
+                        analysis_folder,
+                        level_folder)
+#main_path
 # Utils
 glue_code <- function(text) {
   glue(text, .open = '<<', .close = '>>', .literal = FALSE, .comment = '##')
@@ -55,8 +57,9 @@ editor: visual
 # Article initialization
 ###################################
 qt$load_data <- glue_code('
-```{r}
+```{r, message=FALSE}
 #| echo: false
+
 library(dplyr)
 library(data.table)
 library(DT)
@@ -103,9 +106,6 @@ qt$data <- glue('
 ###################################
 
 
-
-
-
 ###################################
 ###################################
 # Results
@@ -138,6 +138,7 @@ tmp$Z9_Mean <- round(tmp$Z9_Mean, 1)
 setnames(tmp, 
          c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label"),
          c("Cluster", "Documents", "Documents %", "Year Median", "Year Mean", "Cites Median", "Cites Mean", "Label"))
+tmp$Cluster <- NULL
 datatable(tmp)
 ```
 '
@@ -163,12 +164,12 @@ quarto_document <- glue('
 
 
 
-### Clustering
+### Clusters
+![]({file.path(main_path, "network.png")})
 {figure_caption$choices[[1]]$message$content}
 {qt$results_table}
 
 ')
-
 # Write the file
 fileConn<-file("output.qmd")
 writeLines(quarto_document, fileConn)
