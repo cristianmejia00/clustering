@@ -34,6 +34,13 @@ openai$api_key <- readr::read_file('05_assets/credentials/openai.key')
 
 
 # utils
+#' @description
+#' Get answers from OpenAI's GPT. Here used for summarization.
+#' @param prompt LIST. A prompt in the format of OpenAI. See the code `zz-prompts.R` for details.
+#' @param temperature NUMBER. Between 0 and 2. 0 means less randomness and 2 more creative.
+#' @param max_tokens INTEGER. The approx MAX size possible for the reply from ChatGPT.
+#' @param n INTEGER. Number of reply variations to get.
+#' @returns The JSON reply from OpenAI in R's LIST form. The actual reply text is located at `x$choices[[1]]$message$content` 
 ask_gpt <- function(prompt, temperature = 0.1, max_tokens = 500, n = 1) {
   response <- openai$ChatCompletion$create(
     model = 'gpt-3.5-turbo-0613', #'gpt-4-0613'
@@ -44,11 +51,12 @@ ask_gpt <- function(prompt, temperature = 0.1, max_tokens = 500, n = 1) {
   )
 }
 
+#' @description
 #' Function to get a subset of the cluster containing the combination of
 #' top 5 most linked (X_E), most cited (Z9), and Most linked of the most recent
-#' param dataset: the dataset
-#' param cluster: the cluster number to subset. Compatible with X_C, meaning sypport for cluster 99.
-#' return a data frame. The largest possible is of size 15 when all 3 conditions are different
+#' @param dataset DATAFRAME. the dataset
+#' @param cluster INTEGER. the cluster number to subset. Compatible with X_C, meaning sypport for cluster 99.
+#' @returns DATAFRAME. The largest possible is of `top * 3` when all 3 conditions are different
 get_cluster_data <- function(dataset, cluster, top = 5) {
   cluster_data <- subset(dataset, X_C == cluster, select = c('X_C','TI','AB','AU','PY','UT','Z9','X_E'))
   if (nrow(cluster_data) > top) {
@@ -67,10 +75,10 @@ get_cluster_data <- function(dataset, cluster, top = 5) {
   return(cluster_data)
 }
 
-
+#' @description
 #' AskGPT to summarize each article in the given dataset. Each summary is appended to column `summary`
-#' param dataset: the dataset
-#' returns the same dataset with column summary appended.
+#' @param dataset DATAFRAME. the dataset
+#' @returns DATAFRAME. the same dataset with the column summary appended.
 get_papers_summary <- function(cl_dataset) {
   cl_dataset$summary <- ''
   starting <- 1
@@ -80,8 +88,9 @@ get_papers_summary <- function(cl_dataset) {
       print(paste(cl_dataset$X_C[idx], as.character(idx), cl_dataset$TI[idx], sep = "; "))
       article_summary <- tryCatch({
         article_summary <- ask_gpt(prompt_summarize_a_paper(topic = MAIN_TOPIC,
-                                         topic_description = MAIN_TOPIC_DESCRIPTION,
-                                         article_text = cl_dataset$text[idx]))
+                                                             topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                             article_text = cl_dataset$text[idx]),
+                                   temperature = 0.7)
         cl_dataset$summary[idx] <- article_summary$choices[[1]]$message$content
         article_summary
       },
@@ -99,8 +108,7 @@ get_papers_summary <- function(cl_dataset) {
   return(cl_dataset)
 }
 
-# ttt <- get_cluster_data(dataset, 20)
-# ttt <- get_papers_summary(ttt)
+
 ###################################
 ###################################
 # Article summary
@@ -125,9 +133,9 @@ get_papers_summary <- function(cl_dataset) {
 #list_of_clusters <- dataset$X_C %>% unique() %>% sort()
 
 # Start where the loop was interrupted
-list_of_clusters <- list_of_clusters[c(6:length(list_of_clusters))]
-
-
+list_of_clusters <- dataset$X_C %>% unique() %>% sort()
+# list_of_clusters <- list_of_clusters[c(13:length(list_of_clusters))]
+# list_of_clusters <- list(5)
 
 for (cluster in list_of_clusters) {
   # Get this cluster tops
@@ -148,6 +156,7 @@ for (cluster in list_of_clusters) {
   }
   print(length(my_texts))
   my_texts <- paste(my_texts, collapse = ' ')
+  my_texts <- substr(my_texts, 1, (3500 * 4))
   
   # Get the topic of the cluster
   print('Get cluster topic')
@@ -156,7 +165,8 @@ for (cluster in list_of_clusters) {
     tmp <- tryCatch({
       cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
                                                                 topic_description = MAIN_TOPIC_DESCRIPTION,
-                                                                cluster_text = my_texts))
+                                                                cluster_text = my_texts),
+                                     temperature = 0.7)
       cluster_description <- cluster_description$choices[[1]]$message$content
       cluster_completed <- TRUE
       cluster_description
@@ -166,7 +176,7 @@ for (cluster in list_of_clusters) {
       message(err)
     })
   }
-  rcs_merged$description[which(rcs_merged$cluster == cluster)] <- cluster_description
+  rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
 
   # Get the name of the cluster
   print('Get cluster name')
@@ -176,7 +186,8 @@ for (cluster in list_of_clusters) {
       cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
                                                   topic_description = MAIN_TOPIC_DESCRIPTION,
                                                   cluster_description = cluster_description), 
-                              max_tokens = 50)
+                              max_tokens = 50,
+                              temperature = 0.4)
       cluster_name <- cluster_name$choices[[1]]$message$content
       cluster_completed <- TRUE
       cluster_name
@@ -186,8 +197,65 @@ for (cluster in list_of_clusters) {
       message(err)
     })
   }
-  rcs_merged$name[which(rcs_merged$cluster == cluster)] <- cluster_name
+  rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
 }
+
+###################################
+# Cluster description and name when the process was interrupted above. 
+###################################
+# Generate the bulk text
+cluster
+cluster_data$X_C[1]
+print('get bulk text')
+print(nrow(cluster_data))
+my_texts <- list()
+for (i in c(1:min(10,nrow(cluster_data)))) {
+  my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
+}
+print(length(my_texts))
+my_texts <- paste(my_texts, collapse = ' ')
+my_texts <- substr(my_texts, 1, (3500 * 4))
+
+# Get the topic of the cluster
+print('Get cluster topic')
+cluster_completed <- FALSE
+while(!cluster_completed) {
+  tmp <- tryCatch({
+    cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
+                                                              topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                              cluster_text = my_texts),
+                                   temperature = 0.7)
+    cluster_description <- cluster_description$choices[[1]]$message$content
+    cluster_completed <- TRUE
+    cluster_description
+  }, 
+  error = function(err){
+    message(glue('Error getting topic description of cluster {i}. Trying again'))
+    message(err)
+  })
+}
+rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
+
+# Get the name of the cluster
+print('Get cluster name')
+cluster_completed <- FALSE
+while(!cluster_completed) {
+  tmp <- tryCatch({
+    cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
+                                                topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                cluster_description = cluster_description), 
+                            max_tokens = 50,
+                            temperature = 0.4)
+    cluster_name <- cluster_name$choices[[1]]$message$content
+    cluster_completed <- TRUE
+    cluster_name
+  }, 
+  error = function(err){
+    message(glue('Error getting topic description of cluster {i}. Trying again'))
+    message(err)
+  })
+}
+rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
 
 
 ###################################

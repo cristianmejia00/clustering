@@ -18,7 +18,7 @@ prompt_summarize_a_paper <- function(topic, topic_description, article_text){
     ),
     list(
       'role' = 'user',
-      'content' = glue('Summarize in one sentence of less than 50 words, and focussing on "{topic}" the following text: {article_text}')
+      'content' = glue('Be sure that your summary is shorter than the text provided. Summarize in one sentence of less than 50 words, and focussing on "{topic}" the following text: {article_text}')
     )
   )
 }
@@ -38,7 +38,7 @@ prompt_cluster_description <- function(topic, topic_description, cluster_text) {
   
       Step 1: You understand the main topic of each text
       Step 2: You find common keywords across the texts relevant to <<{topic}>>
-      Step 3: You summarize all the text in a single paragraph
+      Step 3: You summarize all the text in a single paragraph taking into consideration the common keywords and themes.
       Step 4: You conclude by giving a name for the common topic shared by the articles. 
       
       Your answers are concise.' 
@@ -63,7 +63,7 @@ prompt_cluster_name <- function(topic, topic_description, cluster_description) {
       'content' = 'You are a policy consultant with expertise on <<{topic}>>, meaning that you know about {topic_description}
       You will be given the decription of a cluster of documents. 
       Either extract the cluster name given in the description, or give a short name based on what you read. 
-      Your answers are concise.' 
+      Your answers are concise and include only the name of the cluster without any further explanation or introduction.' 
     ),
     list(
       'role' = 'user',
