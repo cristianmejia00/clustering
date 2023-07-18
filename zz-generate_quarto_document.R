@@ -44,6 +44,7 @@ qt$yml <- glue('---
 title: "{document_title}"
 author: Cristian Mejia
 date: {Sys.Date()}
+bibliography: bibliography.bib
 format: 
   html:
     toc: true
@@ -142,6 +143,25 @@ tmp$Cluster <- NULL
 datatable(tmp)
 ```
 '
+# Write cluster descriptions and paper summaries
+list_of_clusters <- dataset$X_C %>% unique() %>% sort()
+qt$clusters <- ''
+for (cluster in list_of_clusters) {
+  cluster_main_description <- glue('
+  #### Cluster {cluster}: {rcs_merged$cluster_name[rcs_merged$cluster_code == cluster]}
+  {rcs_merged$description[rcs_merged$cluster_code == cluster]}  
+  ')
+  cluster_data <- subset(dataset_bibliography, X_C == cluster)
+  cluster_papers_description <- list()
+  for (i in c(1:2)) {
+    print(cluster_data$X_E[i])
+    cluster_papers_description[[i]] <- glue('{cluster_data$summary[i]} [@{cluster_data$citation_key[i]}]  `degree: {cluster_data$X_E[i]}``citations: {cluster_data$Z9[i]}`', .literal = TRUE)
+  }
+  cluster_papers_description <- paste(cluster_papers_description, collapse = '\n')
+  qt$clusters <- glue('{qt$clusters} 
+                      {cluster_main_description} 
+                      {cluster_papers_description}')
+}
 
 ###################################
 ###################################
@@ -168,6 +188,9 @@ quarto_document <- glue('
 ![]({file.path(main_path, "network.png")})
 {figure_caption$choices[[1]]$message$content}
 {qt$results_table}
+---
+
+{qt$clusters}
 
 ')
 

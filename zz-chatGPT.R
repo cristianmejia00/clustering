@@ -213,6 +213,10 @@ for (cluster in list_of_clusters) {
   rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
 }
 
+# We do this to keep copy of the edits in case we mess it.
+rcs_merged$name2 <- gsub('^.*?"','',rcs_merged$name) %>% gsub('".$','', .) %>% gsub('"','', .)
+rcs_merged$cluster_name <- rcs_merged$name2
+rcs_merged$cluster_name[rcs_merged$cluster_code == 99] <- 'Others'
 ###################################
 # Cluster description and name when the process was interrupted above. 
 ###################################
