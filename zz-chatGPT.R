@@ -113,14 +113,27 @@ get_papers_summary <- function(cl_dataset) {
 ###################################
 # Article summary
 ###################################
+# The oldest article(s) in the dataset.
+# When there are many "old papers" we analyze only the two most cited.
+oldest_year <- min(dataset$PY, na.rm = TRUE)
+oldest_data <- subset(dataset, PY == oldest_year)
+if (nrow(oldest_data) > 2) {
+  oldest_data <- oldest_data[order(oldest_data$Z9, decreasing = FALSE)[c(1:2)],]
+}
+oldest_data$summary <- ''
+for (i in nrow(oldest_data)) {
+  old_UT <- oldest_data$UT[i]
+  old_summary <- ask_gpt(prompt_summarize_a_paper(topic = MAIN_TOPIC,
+                                                      topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                      article_text = paste(oldest_data$TI[i], oldest_data$AB[i], sep = ' ')))
+  oldest_data$summary[i] <- old_summary$choices[[1]]$message$content
+  dataset$summary[which(dataset$UT == old_UT)] <- old_summary$choices[[1]]$message$content
+}
+
+# The following are needed but they are covered in the next block. 
 # The most cited article in the dataset
-
-# The oldest article in the dataset
-
 # The top 3 most connected per cluster 
-
 # The top 3 most cited per cluster
-
 
 ###################################
 ###################################
