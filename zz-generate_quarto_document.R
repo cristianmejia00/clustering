@@ -49,7 +49,7 @@ format:
   html:
     toc: true
     toc-title: Contents
-    toc-depth: 2
+    toc-depth: 4
 editor: visual
 ---')
 
@@ -153,16 +153,38 @@ for (cluster in list_of_clusters) {
   ')
   cluster_data <- subset(dataset_bibliography, X_C == cluster)
   cluster_papers_description <- list()
-  for (i in c(1:2)) {
+  for (i in c(1:nrow(cluster_data))) {
     print(cluster_data$X_E[i])
-    cluster_papers_description[[i]] <- glue('{cluster_data$summary[i]} [@{cluster_data$citation_key[i]}]  `degree: {cluster_data$X_E[i]}``citations: {cluster_data$Z9[i]}`', .literal = TRUE)
+    cluster_papers_description[[i]] <- glue('{cluster_data$summary[i]} [@{cluster_data$citation_key[i]}]  `degree: {cluster_data$X_E[i]}` `citations: {cluster_data$Z9[i]}`  ', .literal = TRUE)
   }
   cluster_papers_description <- paste(cluster_papers_description, collapse = '\n')
   qt$clusters <- glue('{qt$clusters} 
-                      {cluster_main_description} 
-                      {cluster_papers_description}')
+                      {cluster_main_description}  
+                      **Articles:**  
+                      {cluster_papers_description}
+                      ---  
+                      
+                      ')
 }
+qt$clusters
 
+
+qt$figures <- glue_code('::: {#fig-elephants layout-ncol=2}
+
+![Surus](index_files/images/fig_clusters_year_x_cites.jpg){#fig-surus}
+
+![Hanno](index_files/images/fig_clusters_year_x_size.jpg){#fig-hanno}
+
+![Surus](index_files/images/fig_clusters_PY_boxplot.jpg){#fig-surus}
+
+![Hanno](index_files/images/fig_clusters_Z9_boxplot.jpg){#fig-hanno}
+
+Famous Elephants
+
+:::
+
+')
+qt$figures
 ###################################
 ###################################
 # DOCUMENT
@@ -180,15 +202,13 @@ quarto_document <- glue('
 
 ## Results
 ### Overview
-
-
+{qt$figures}
 
 
 ### Clusters
-![]({file.path(main_path, "network.png")})
+![](index_files/images/network.png)
 {figure_caption$choices[[1]]$message$content}
 {qt$results_table}
----
 
 {qt$clusters}
 
@@ -196,12 +216,12 @@ quarto_document <- glue('
 
 
 # Write the file
-fileConn<-file("output.qmd")
+fileConn<-file("index.qmd")
 writeLines(quarto_document, fileConn)
 close(fileConn)
 
 # Render the file to HTML
-quarto_render("output.qmd")
+quarto_render("index.qmd")
 
 
 # Render the file as PDF
