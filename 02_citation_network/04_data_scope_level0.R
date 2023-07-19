@@ -1,9 +1,9 @@
 ###################################################################
-# Data Scope 
+# Data Scope
 myDataCorrect <- dataset
-#if (scope == "all") {myDataCorrect <- dataset}
-#if (scope == "cl99") {myDataCorrect <- subset(dataset, dataset$cl99 == FALSE)}
-#if (scope == "cl_99") {myDataCorrect <- subset(dataset, dataset$cl_99 == FALSE)}
+# if (scope == "all") {myDataCorrect <- dataset}
+# if (scope == "cl99") {myDataCorrect <- subset(dataset, dataset$cl99 == FALSE)}
+# if (scope == "cl_99") {myDataCorrect <- subset(dataset, dataset$cl_99 == FALSE)}
 
 # Remove small clusters
 if (!("level0" %in% colnames(myDataCorrect))) {
@@ -11,8 +11,8 @@ if (!("level0" %in% colnames(myDataCorrect))) {
 }
 
 min_selector <- table(myDataCorrect$level0)
-min_selector <- names(min_selector)[min_selector >= cno$size_lower_limit]
-#myDataCorrect <- myDataCorrect[myDataCorrect$level0 %in% min_selector]
+min_selector <- names(min_selector)[min_selector >= settings$cno$size_lower_limit]
+# myDataCorrect <- myDataCorrect[myDataCorrect$level0 %in% min_selector]
 
 
 # Add simple ID

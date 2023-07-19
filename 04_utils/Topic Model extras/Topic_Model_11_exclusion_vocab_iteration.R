@@ -29,18 +29,18 @@
 #########################################
 # Functions
 # Text cleaner 2 To remove just stopwords, numbers and puntuation
-tidytext2 <- function(myData, columns, useStemming, myStopWords) {
+tidytext2 <- function(myData, columns, useStemming, settings$stopwords$myStopWords) {
   documents <- apply(myData[columns], 1, paste, collapse = ". ")
   text <- Corpus(VectorSource(documents))
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, removeWords, stopwords("english"))
-  #text <- tm_map(text, removeWords, myStopWords)
+  #text <- tm_map(text, removeWords, settings$stopwords$myStopWords)
   text <- tm_map(text, removePunctuation)
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
-  #text <- tm_map(text, removeWords, myStopWords) #We do it twice to remove stemed versions
+  #text <- tm_map(text, removeWords, settings$stopwords$myStopWords) #We do it twice to remove stemed versions
   text <- tm_map(text, stripWhitespace)
   #if (remove_stems) {text <- tm_map(text, removeWords, ERP_vocab)} 
   #text <- tm_map(text, stripWhitespace)
@@ -52,7 +52,7 @@ myText[[100]] == myText2[[100]]
 #########################################
 # Execute
 # Get the clean text to feed the topic model
-myText2 <- tidytext2(myDataCorrect, columns, useStemming, myStopWords)
+myText2 <- tidytext2(myDataCorrect, columns, useStemming, settings$stopwords$myStopWords)
 
 # Obtain the documents that are not blank
 blankLines <- unname(sapply(myText2, nchar))
@@ -97,13 +97,13 @@ re_exclusion <- setdiff(ERP_vocab, re_inclusion)
 ERP_vocab <- re_exclusion
 
 write.csv(re_exclusion, file = "excluded_vocabulary_from_ERP.csv", row.names = FALSE)
-write.csv(myStopWords, file = "excluded_vocabulary_highly_freq.csv", row.names = FALSE)
+write.csv(settings$stopwords$myStopWords, file = "excluded_vocabulary_highly_freq.csv", row.names = FALSE)
 
 "rfid" %in% re_exclusion
 
 # Words to neglect from analysis. In natural language.
 # Re_including: "system"
-myStopWords <- c("patent", "claim", "device", "data", "module", "network", "control" , 
+settings$stopwords$myStopWords <- c("patent", "claim", "device", "data", "module", "network", "control" , 
                  "base","method", "methods","terminal", "information", 
                  "connect", "connects", "connection", "communication", "internet", "things", "thing")
 

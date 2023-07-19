@@ -14,8 +14,8 @@ print("###################### reports/06_citation_to_topic_model_converter.R")
 # Get the clean text to feed the topic model
 # Notes:
 # - useStemming must be FALSE because "papersText" is the zqzq special vector with keywords already stemmed and pasted with "zqzq"
-# - myStopWords is passed as legacy parameter, here we do not need them and not removal is done.
-# myText <- papersText %>% tidyText(., useStemming = FALSE, myStopWords = myStopWords)
+# - settings$stopwords$myStopWords is passed as legacy parameter, here we do not need them and not removal is done.
+# myText <- papersText %>% tidyText(., useStemming = FALSE, settings$stopwords$myStopWords = settings$stopwords$myStopWords)
 
 # For this to work it only makes sense to use the Term Frequencies, hence this to be forced to be FALSE.
 # I tried experimentally and the results of using tfidf are not interpretable
@@ -49,9 +49,9 @@ if (use_tfidf) {
       temp$wildcard <- 1
     }
     return(temp)
- }) %>%
-   data.table::rbindlist(., fill = TRUE) %>%
-   as.data.frame()
+  }) %>%
+    data.table::rbindlist(., fill = TRUE) %>%
+    as.data.frame()
 }
 
 
@@ -63,7 +63,7 @@ temp_dict <- colnames(PHI)
 my_vocab <- from_stem_to_raw[temp_dict] %>% unname()
 
 # Remove my Stopwords
-PHI <- PHI[, !(my_vocab %in% myStopWords)]
+PHI <- PHI[, !(my_vocab %in% settings$stopwords$myStopWords)]
 temp_dict <- colnames(PHI)
 
 

@@ -11,38 +11,38 @@ dataset <- as.data.frame(dataset)
 
 # Remove citation network setting for news, in case we accidentally left it here.
 # If we do not remove it it will cause problem creating the heatmap keywords
-if (params$type_of_dataset == "news" & exists("cno")) {
+if (settings$params$type_of_dataset == "news" & exists("cno")) {
   rm(cno)
 }
 
 
 # Faceted news datasets are a special case where documents do not have any sorting metric
 # And thus we add 1 to X_E
-if (params$type_of_dataset == "news") {
+if (settings$params$type_of_dataset == "news") {
   if (!exists("myDataCorrect")) {
     myDataCorrect <- dataset
   }
-  if (!params$unit_of_analysis %in% c("topics", "topic", "clusters", "cluster")) {
+  if (!settings$params$unit_of_analysis %in% c("topics", "topic", "clusters", "cluster")) {
     myDataCorrect$cluster_code <- myDataCorrect$X_C
-    myDataCorrect$X_E <- 1 
+    myDataCorrect$X_E <- 1
     myDataCorrect$related_topics <- "" # This can be added with the neighbors of the network
   }
 }
 
 # Preparation for news
-if (params$type_of_dataset == "news") {
+if (settings$params$type_of_dataset == "news") {
   if (all(dataset$UT == myDataCorrect$UT)) {
     print("append cols to dataset")
-    if (all((!c("X_C", "cluster_code", "X_E", "related_topics") %in% colnames(dataset))) & 
-      all(c("X_C", "cluster_code", "X_E", "related_topics") %in% colnames(myDataCorrect))){
-      dataset <- cbind(dataset, myDataCorrect[,c("X_C", "cluster_code", "X_E", "related_topics")])
+    if (all((!c("X_C", "cluster_code", "X_E", "related_topics") %in% colnames(dataset))) &
+      all(c("X_C", "cluster_code", "X_E", "related_topics") %in% colnames(myDataCorrect))) {
+      dataset <- cbind(dataset, myDataCorrect[, c("X_C", "cluster_code", "X_E", "related_topics")])
       dataset$level0 <- dataset$X_C
     } else {
-      print ("colnames of dataset seems to be OK.")
+      print("colnames of dataset seems to be OK.")
       dataset$level0 <- dataset$X_C
     }
   } else {
-    print ("column mismatch between dataset and myDataCorrect")
+    print("column mismatch between dataset and myDataCorrect")
   }
 }
 # colnames(dataset)
@@ -51,7 +51,7 @@ if (params$type_of_dataset == "news") {
 # dataset$level0 <- dataset$X_C
 ################################################################################
 # Change column names
-setnames(dataset, c("_N", "_E"), c("X_N", "X_E"), skip_absent=TRUE)
+setnames(dataset, c("_N", "_E"), c("X_N", "X_E"), skip_absent = TRUE)
 
 # Available columns at this point
 available_columns <- colnames(dataset)
@@ -59,30 +59,62 @@ available_columns <- colnames(dataset)
 #################################################################################
 # Append necessary columns when missing
 # Critical
-if (!("TI" %in% available_columns))  {print("ERROR: NO TITLE")}
-if (!("AB" %in% available_columns))  {print("ERROR: NO ABSTRACT")}
-if (!("X_C" %in% available_columns)) {print("ERROR: NO CLUSTER")}
+if (!("TI" %in% available_columns)) {
+  print("ERROR: NO TITLE")
+}
+if (!("AB" %in% available_columns)) {
+  print("ERROR: NO ABSTRACT")
+}
+if (!("X_C" %in% available_columns)) {
+  print("ERROR: NO CLUSTER")
+}
 
 #################################################################################
 # Solvable
-if (!("X_E" %in% available_columns))  {
-  if ("Z9" %in% available_columns) {dataset$X_E  <- dataset$Z9}
+if (!("X_E" %in% available_columns)) {
+  if ("Z9" %in% available_columns) {
+    dataset$X_E <- dataset$Z9
+  }
 }
-if (!("PY" %in% available_columns))  {dataset$PY  <- 2000}
-if (!("DT" %in% available_columns))  {dataset$DT  <- "Article"}
-if (!("Z9" %in% available_columns))  {dataset$Z9  <- 1}
-if (!("X_N" %in% available_columns)) {dataset$X_N <- c(1:nrow(dataset))}
-if (!("UT" %in% available_columns))  {dataset$UT  <- dataset$X_N}
-if (!("DE" %in% available_columns))  {dataset$DE  <- dataset$TI}
-if (!("ID" %in% available_columns))  {dataset$ID  <- dataset$TI}
+if (!("PY" %in% available_columns)) {
+  dataset$PY <- 2000
+}
+if (!("DT" %in% available_columns)) {
+  dataset$DT <- "Article"
+}
+if (!("Z9" %in% available_columns)) {
+  dataset$Z9 <- 1
+}
+if (!("X_N" %in% available_columns)) {
+  dataset$X_N <- c(1:nrow(dataset))
+}
+if (!("UT" %in% available_columns)) {
+  dataset$UT <- dataset$X_N
+}
+if (!("DE" %in% available_columns)) {
+  dataset$DE <- dataset$TI
+}
+if (!("ID" %in% available_columns)) {
+  dataset$ID <- dataset$TI
+}
 
 #################################################################################
 # Optional
-if (!("WC" %in% available_columns)) {print("warning: no WC")}
-if (!("AU" %in% available_columns)) {print("warning: no AU")}
-if (!("DI" %in% available_columns)) {print("warning: no DI")}
-if (!("SO" %in% available_columns)) {print("warning: no SO")}
-if (!("C1" %in% available_columns)) {print("warning: no C1")}
+if (!("WC" %in% available_columns)) {
+  print("warning: no WC")
+}
+if (!("AU" %in% available_columns)) {
+  print("warning: no AU")
+}
+if (!("DI" %in% available_columns)) {
+  print("warning: no DI")
+}
+if (!("SO" %in% available_columns)) {
+  print("warning: no SO")
+}
+if (!("C1" %in% available_columns)) {
+  print("warning: no C1")
+}
 
 
 ##########################################################################
@@ -92,11 +124,11 @@ if (!("C1" %in% available_columns)) {print("warning: no C1")}
 source("04_utils/zz_auxiliary_functions.R")
 
 # Get countries column for news (In Factiva this is the RE regions column)
-if (params$type_of_dataset == "news") {
+if (settings$params$type_of_dataset == "news") {
   if ("C1" %in% available_columns) {
-  dataset$Countries <- dataset$C1
+    dataset$Countries <- dataset$C1
   }
-} 
+}
 
 # # Add Country column (Not needed) for papers and patents
 # if (!("Country" %in% available_columns)) {
@@ -111,24 +143,26 @@ if (params$type_of_dataset == "news") {
 # Add Countries column
 if (!("Countries") %in% available_columns) {
   if ("C1" %in% available_columns) {
-      dataset$Countries <- getCountries(dataset$C1)
-      dataset$IsoCountries <- as.character(getIsoCountries(dataset$Countries))
-      dataset$IsoCountries <- gsub("NA; |; NA$", "", dataset$IsoCountries)
-      dataset$IsoCountries <- gsub("; NA", "", dataset$IsoCountries)
-      print("Countries column has been added")
-    }
+    dataset$Countries <- getCountries(dataset$C1)
+    dataset$IsoCountries <- as.character(getIsoCountries(dataset$Countries))
+    dataset$IsoCountries <- gsub("NA; |; NA$", "", dataset$IsoCountries)
+    dataset$IsoCountries <- gsub("; NA", "", dataset$IsoCountries)
+    print("Countries column has been added")
+  }
 }
 
 # Add institutions column
 if (!("Institutions") %in% available_columns) {
-  if (params$type_of_dataset == "news") {
+  if (settings$params$type_of_dataset == "news") {
     if ("ID" %in% available_columns) {
       dataset$Institutions <- as.character(getInstitutions(dataset$ID))
       dataset$Institutions <- gsub("NA", "", dataset$Institutions)
-      }
+    }
   }
-  if (params$type_of_dataset == "papers") {
-    if ("C1" %in% available_columns) {dataset$Institutions <- as.character(getInstitutions(dataset$C1))}
+  if (settings$params$type_of_dataset == "papers") {
+    if ("C1" %in% available_columns) {
+      dataset$Institutions <- as.character(getInstitutions(dataset$C1))
+    }
   }
 }
 
@@ -137,10 +171,10 @@ if (!("Institutions") %in% available_columns) {
 dataset$X_N <- as.numeric(dataset$X_N)
 dataset$X_C <- as.numeric(dataset$X_C)
 dataset$X_E <- as.numeric(dataset$X_E)
-dataset$Z9  <- as.numeric(dataset$Z9)
-dataset$PY  <- as.numeric(dataset$PY)
+dataset$Z9 <- as.numeric(dataset$Z9)
+dataset$PY <- as.numeric(dataset$PY)
 
-dataset <- dataset[,!duplicated(colnames(dataset))]
-if (params$type_of_dataset == "news") {
-    myDataCorrect <- dataset
+dataset <- dataset[, !duplicated(colnames(dataset))]
+if (settings$params$type_of_dataset == "news") {
+  myDataCorrect <- dataset
 }

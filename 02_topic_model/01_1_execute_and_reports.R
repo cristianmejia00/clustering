@@ -45,7 +45,7 @@ source("03_reports/08_all_keywords_report.R")
 source("03_reports/10_rcs_keywords.R")
 
 # Overlays (Only for WOS data)
-if (params$dataset_source == "wos") {
+if (settings$params$dataset_source == "wos") {
   source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
 }
 

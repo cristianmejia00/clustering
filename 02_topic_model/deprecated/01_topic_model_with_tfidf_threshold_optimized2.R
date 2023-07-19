@@ -22,7 +22,9 @@ tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
-  if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
+  if (useStemming) {
+    text <- tm_map(text, stemDocument, language = "english")
+  }
   text <- tm_map(text, removeWords, myStopWords)
   return(text)
 }
@@ -32,8 +34,10 @@ tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
 # a_corpus = a tm corpus (e.g. created with function tidyText)
 # Output:
 # A character vector with the text re-assembled
-corpusToText <- function(a_corpus){
-  text <- unlist(sapply(1:length(a_corpus), function(x){return(a_corpus[[x]]$content)}))
+corpusToText <- function(a_corpus) {
+  text <- unlist(sapply(1:length(a_corpus), function(x) {
+    return(a_corpus[[x]]$content)
+  }))
   return(text)
 }
 
@@ -49,13 +53,19 @@ get_tidy_text <- function(a_char_vector, rm_punct = TRUE, useStemming = TRUE, my
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, removeWords, stopwords("english"))
   text <- tm_map(text, removeWords, myStopWords)
-  if (rm_punct) {text <- tm_map(text, removePunctuation)}
+  if (rm_punct) {
+    text <- tm_map(text, removePunctuation)
+  }
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
-  if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
+  if (useStemming) {
+    text <- tm_map(text, stemDocument, language = "english")
+  }
   text <- tm_map(text, removeWords, myStopWords)
-  text <- unlist(sapply(1:length(text), function(x){return(text[[x]]$content)}))
+  text <- unlist(sapply(1:length(text), function(x) {
+    return(text[[x]]$content)
+  }))
   return(text)
 }
 
@@ -92,21 +102,21 @@ get_keywords_by_stopword_method <- function(content_vector, useStemming = TRUE, 
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_pattern)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_specials)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_stops_colon)
-  
+
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_stops_space)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "", x)), my_stops_starts)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "", x)), my_stops_ends)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_pattern)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_specials)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_stops_colon)
-  
+
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_stops_space)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "", x)), my_stops_starts)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "", x)), my_stops_ends)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_pattern)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_specials)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_stops_colon)
-  
+
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "; ", x)), my_stops_space)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "", x)), my_stops_starts)
   text <- tm_map(text, content_transformer(function(x, a_pattern) gsub(a_pattern, "", x)), my_stops_ends)
@@ -118,7 +128,9 @@ get_keywords_by_stopword_method <- function(content_vector, useStemming = TRUE, 
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
-  if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
+  if (useStemming) {
+    text <- tm_map(text, stemDocument, language = "english")
+  }
   text <- tm_map(text, removeWords, myStopWords)
   return(text)
 }
@@ -133,8 +145,8 @@ get_keywords_by_stopword_method <- function(content_vector, useStemming = TRUE, 
 # In the case of using abstracs, is advised to remove copyright statements
 
 # text preparation of each column
-title_text <- tolower(iconv(myDataCorrect$TI, "UTF-8", "UTF-8", sub=''))
-ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect$AB, "UTF-8", "UTF-8",sub='')))
+title_text <- tolower(iconv(myDataCorrect$TI, "UTF-8", "UTF-8", sub = ""))
+ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect$AB, "UTF-8", "UTF-8", sub = "")))
 de_keywords <- myDataCorrect$DE %>% tolower()
 
 # Concatenate the strings
@@ -145,15 +157,25 @@ tiab_keywords <- gsub("(; )+", "; ", tiab_keywords)
 all_keywords <- paste(tiab_keywords, de_keywords, sep = "; ")
 
 # Get the unique raw keywords (raw = as they appear in the text)
-all_unique_raw_keywords <- gsub(";$| ;$|^; |^ |^a | s | d |\\\\\\b", "", all_keywords) %>% strsplit(split = ";") %>% unlist %>% trimws %>% trimws %>% table
-all_unique_raw_keywords <- all_unique_raw_keywords[!names(all_unique_raw_keywords) %in% c("","NA","a","b","c","d","e", "f","g","h","i","j","k","l","m","n","o","p", "q","r","s","t","u","v","w","x","y","z")]
-all_unique_raw_keywords <- data.frame(keywords = names(all_unique_raw_keywords), 
-                                      counts = as.numeric(all_unique_raw_keywords),
-                                      stringsAsFactors = FALSE)
+all_unique_raw_keywords <- gsub(";$| ;$|^; |^ |^a | s | d |\\\\\\b", "", all_keywords) %>%
+  strsplit(split = ";") %>%
+  unlist() %>%
+  trimws() %>%
+  trimws() %>%
+  table()
+all_unique_raw_keywords <- all_unique_raw_keywords[!names(all_unique_raw_keywords) %in% c("", "NA", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")]
+all_unique_raw_keywords <- data.frame(
+  keywords = names(all_unique_raw_keywords),
+  counts = as.numeric(all_unique_raw_keywords),
+  stringsAsFactors = FALSE
+)
 
 # Get stems
 from_raw_to_stem <- sapply(all_unique_raw_keywords$keyword, function(x) {
-  tmp <- strsplit(x, split = " ") %>% unlist %>% trimws %>% SnowballC::wordStem()
+  tmp <- strsplit(x, split = " ") %>%
+    unlist() %>%
+    trimws() %>%
+    SnowballC::wordStem()
   return(paste(tmp, collapse = " "))
 })
 names(from_raw_to_stem) <- all_unique_raw_keywords$keyword
@@ -169,10 +191,10 @@ names(from_stem_to_raw) <- from_raw_to_stem[from_stem_to_raw]
 clean_keywords <- strsplit(all_keywords, "; ")
 clean_keywords <- lapply(clean_keywords, function(x) {
   temp <- trimws(x)
-  #temp <- unique(temp) #This line no needed for topic model. We need repeated values in each document. We need this line in cluster aggregation only, when each keyword should only appear once per document because they will be aggregated. 
+  # temp <- unique(temp) #This line no needed for topic model. We need repeated values in each document. We need this line in cluster aggregation only, when each keyword should only appear once per document because they will be aggregated.
   temp <- from_raw_to_stem[temp]
   # Custom correction can also be done here
-  #temp <- mesh_conversion_table$mesh_root_stem[match(temp, mesh_conversion_table$mesh_syn_stem)]
+  # temp <- mesh_conversion_table$mesh_root_stem[match(temp, mesh_conversion_table$mesh_syn_stem)]
   temp <- temp[!is.na(temp)]
   temp <- paste(temp, collapse = "; ")
   return(temp)
@@ -194,15 +216,16 @@ papersText <- gsub("NA ", "", papersText)
 #########################################
 # Get the clean text to feed the topic model
 myCorpusText <- tidyText(papersText,
-                         useStemming = FALSE,
-                         myStopWords = myStopWords)
+  useStemming = FALSE,
+  myStopWords = myStopWords
+)
 myText <- corpusToText(myCorpusText)
 
 
 # Obtain the documents that are not blank
 blankLines <- unname(sapply(myText, nchar))
-myDataCorrect <- dataset[blankLines>2,]
-myText <- myText[blankLines>2]
+myDataCorrect <- dataset[blankLines > 2, ]
+myText <- myText[blankLines > 2]
 
 ###################################################
 # Preparation
@@ -210,16 +233,16 @@ myText <- myText[blankLines>2]
 
 # tokenize on space and output as a list:
 doc.list <- strsplit(myText, "[[:space:]]+")
-doc.list <- lapply(doc.list, function(x) x[which(nchar(x)>1)]) #Ensure we remove white spaces
+doc.list <- lapply(doc.list, function(x) x[which(nchar(x) > 1)]) # Ensure we remove white spaces
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Remove words that appear less or equal to:
 infrequent_terms_threshold <- 5
 
 # Compute tfidf
 tf.idf <- get_TDIDF(myCorpusText, infrequent_terms_threshold)
 
-# a threshold to remove corpus specific stopwords based on tfidf score. 
+# a threshold to remove corpus specific stopwords based on tfidf score.
 # valid range: from 0.001 to 1, or "average" or "firstq"
 tfidf_thresold <- "average"
 
@@ -244,8 +267,8 @@ documents <- lapply(doc.list, get_terms)
 # model fitting
 
 # Compute some statistics related to the data set:
-D <- length(documents)  # number of documents
-W <- length(vocab)  # number of terms in the vocab
-doc.length <- sapply(documents, function(x) sum(x[2, ]))  # number of tokens per document
-N <- sum(doc.length)  # total number of tokens in the data
-term.frequency <- as.integer(term.table)  # frequencies of terms in the corpus
+D <- length(documents) # number of documents
+W <- length(vocab) # number of terms in the vocab
+doc.length <- sapply(documents, function(x) sum(x[2, ])) # number of tokens per document
+N <- sum(doc.length) # total number of tokens in the data
+term.frequency <- as.integer(term.table) # frequencies of terms in the corpus

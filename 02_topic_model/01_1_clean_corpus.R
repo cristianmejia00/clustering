@@ -1,4 +1,3 @@
-
 # In this file I ...
 # Compute `Corpus` and `myText`
 # Copute the `doc.list` and `term.table`
@@ -24,8 +23,10 @@ tidyCorpus <- function(myData, columns, useStemming, myStopWords) {
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
-  if (tmo$useStemming) {text <- tm_map(text, stemDocument, language = "english")}
-  text <- tm_map(text, removeWords, myStopWords) #We do it twice to remove stemed versions
+  if (tmo$useStemming) {
+    text <- tm_map(text, stemDocument, language = "english")
+  }
+  text <- tm_map(text, removeWords, myStopWords) # We do it twice to remove stemed versions
   text <- tm_map(text, stripWhitespace)
   return(text)
 }
@@ -34,7 +35,9 @@ tidyCorpus <- function(myData, columns, useStemming, myStopWords) {
 # Inputs: The result from tidyCorpus()
 # Output: A vector of characters. The text to be used in the topic model
 corpusToText <- function(a_tidyCorpus) {
-  text <- unlist(sapply(1:length(a_tidyCorpus), function(x){return(a_tidyCorpus[[x]]$content)}))
+  text <- unlist(sapply(1:length(a_tidyCorpus), function(x) {
+    return(a_tidyCorpus[[x]]$content)
+  }))
   return(text)
 }
 
@@ -57,7 +60,7 @@ remove_copyright_statements <- function(a_text) {
 # EXECUTE
 #########################################
 # Remove the copyright statement in academic papers from WOS.
-if (params$type_of_dataset == "papers") {
+if (settings$params$type_of_dataset == "papers") {
   dataset$AB <- remove_copyright_statements(dataset$AB)
 }
 
@@ -67,8 +70,8 @@ myText <- corpusToText(myCorpusText)
 
 # Obtain the documents that are not blank
 blankLines <- unname(sapply(myText, nchar))
-myDataCorrect <- dataset[blankLines>2,]
-myText <- myText[blankLines>2]
+myDataCorrect <- dataset[blankLines > 2, ]
+myText <- myText[blankLines > 2]
 
 #########################################
 # Preparation
@@ -76,7 +79,7 @@ myText <- myText[blankLines>2]
 
 # tokenize on space and output as a list:
 doc.list <- strsplit(myText, "[[:space:]]+")
-doc.list <- lapply(doc.list, function(x) x[which(nchar(x)>1)]) #Ensure we remove white spaces.
+doc.list <- lapply(doc.list, function(x) x[which(nchar(x) > 1)]) # Ensure we remove white spaces.
 
 # compute the table of terms:
 term.table <- table(unlist(doc.list))

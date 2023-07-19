@@ -15,4 +15,4 @@
 del <- names(term.table) %in% myStopWords | term.table < 5
 term.table <- term.table[!del]
 vocab <- names(term.table)
-vocab[1:100] #top 100 terms
+vocab[1:100] # top 100 terms

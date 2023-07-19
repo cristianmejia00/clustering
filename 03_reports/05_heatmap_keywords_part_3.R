@@ -61,7 +61,7 @@ clustersText <- myDataCorrect_SAMPLE2$papersText %>%
 
 cluster_contents_corpus <- tidyText(clustersText,
   useStemming = FALSE,
-  myStopWords = myStopWords
+  myStopWords = settings$stopwords$myStopWords
 )
 
 # Cluster Keywords

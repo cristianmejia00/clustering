@@ -19,9 +19,9 @@ library(DT)
 
 source("settings.R")
 
-bibliometrics_folder <- analysis_metadata$input_folder
-dataset_folder <- analysis_metadata$query_id
-analysis_folder <- analysis_metadata$project_id
+bibliometrics_folder <- settings$analysis_metadata$input_folder
+dataset_folder <- settings$analysis_metadata$query_id
+analysis_folder <- settings$analysis_metadata$project_id
 
 main_path <- file.path(bibliometrics_folder,
                        dataset_folder,

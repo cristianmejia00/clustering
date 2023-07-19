@@ -11,14 +11,22 @@ print("-- SAMPLING")
 
 # The main (first) sampling must be based on the finest granularity clustering we selected
 # This is to avoid sampling articles which vocabulary is not reflected in the top articles of the parent cluster
-if (params$type_of_analysis == "citation_network") {
-  if (cno$recursive_level == 0) {myDataCorrect$sampling_column <- myDataCorrect$"level0"}
-  if (cno$recursive_level == 1) {myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label1"}
-  if (cno$recursive_level == 2) {myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label2"}
-  if (cno$recursive_level == 3) {myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label3"}
+if (settings$params$type_of_analysis == "citation_network") {
+  if (settings$cno$recursive_level == 0) {
+    myDataCorrect$sampling_column <- myDataCorrect$"level0"
+  }
+  if (settings$cno$recursive_level == 1) {
+    myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label1"
+  }
+  if (settings$cno$recursive_level == 2) {
+    myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label2"
+  }
+  if (settings$cno$recursive_level == 3) {
+    myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label3"
+  }
 }
 
-if (params$type_of_analysis == "topic_model") {
+if (settings$params$type_of_analysis == "topic_model") {
   myDataCorrect$sampling_column <- myDataCorrect$"level0"
 }
 
@@ -27,8 +35,11 @@ if (params$type_of_analysis == "topic_model") {
 
 # Get the dataset sorted from X_E
 if (nrow(myDataCorrect) > 10000) {
-  myDataCorrect_xe <- myDataCorrect[order(myDataCorrect$X_E, decreasing = TRUE),]
-  myDataCorrect_SAMPLE <- myDataCorrect %>% group_by(sampling_column)  %>% top_n(10, X_E) %>% ungroup # optionally we can use a % %>% top_frac_ceiling(0.1, X_E)
+  myDataCorrect_xe <- myDataCorrect[order(myDataCorrect$X_E, decreasing = TRUE), ]
+  myDataCorrect_SAMPLE <- myDataCorrect %>%
+    group_by(sampling_column) %>%
+    top_n(10, X_E) %>%
+    ungroup() # optionally we can use a % %>% top_frac_ceiling(0.1, X_E)
 } else {
   myDataCorrect_SAMPLE <- myDataCorrect
 }
@@ -50,7 +61,7 @@ print("-- Merge keywords and get conversion vectors")
 # In the case of using abstracs, is advised to remove copyright statements
 
 # text preparation of each column
-title_text <- tolower(iconv(myDataCorrect_SAMPLE$TI, "UTF-8", "UTF-8", sub=''))
+title_text <- tolower(iconv(myDataCorrect_SAMPLE$TI, "UTF-8", "UTF-8", sub = ""))
 de_keywords <- myDataCorrect_SAMPLE$DE %>% tolower()
 id_keywords <- myDataCorrect_SAMPLE$ID %>% tolower()
 
@@ -58,11 +69,13 @@ id_keywords <- myDataCorrect_SAMPLE$ID %>% tolower()
 if (nrow(myDataCorrect_SAMPLE) > 100000) {
   tiab_keywords_raw <- title_text
 } else {
-  ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect_SAMPLE$AB, "UTF-8", "UTF-8",sub='')))
+  ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect_SAMPLE$AB, "UTF-8", "UTF-8", sub = "")))
   tiab_keywords_raw <- paste(title_text, ab_text, sep = ". ") %>% tolower()
 }
 
-tiab_keywords <- get_keywords_by_stopword_method(tiab_keywords_raw, myStopWords = myStopWords, useStemming = FALSE) %>% corpusToText()
+tiab_keywords <- get_keywords_by_stopword_method(tiab_keywords_raw, 
+                                                 myStopWords = settings$stopwords$myStopWords, 
+                                                 useStemming = FALSE) %>% corpusToText()
 tiab_keywords <- gsub("-", " ", tiab_keywords)
 tiab_keywords <- gsub("(; )+", "; ", tiab_keywords)
 all_keywords <- paste(tiab_keywords, de_keywords, id_keywords, sep = "; ")
@@ -80,14 +93,23 @@ all_keywords <- gsub("; lca;", "; life cycle assessment;", all_keywords)
 all_keywords <- gsub("; life cycle assessment lca;", "; life cycle assessment;", all_keywords)
 
 # Get the unique raw keywords (raw = as they appear in the text)
-all_unique_raw_keywords <- gsub(";$| ;$|^; |^ |^a | s | d |\\\\\\b", "", all_keywords) %>% strsplit(split = ";") %>% unlist %>% trimws %>% trimws %>% table
-all_unique_raw_keywords <- all_unique_raw_keywords[!names(all_unique_raw_keywords) %in% c("","NA","a","b","c","d","e", "f","g","h","i","j","k","l","m","n","o","p", "q","r","s","t","u","v","w","x","y","z")]
-all_unique_raw_keywords <- data.frame(keywords = names(all_unique_raw_keywords), 
-                                      counts = as.numeric(all_unique_raw_keywords),
-                                      stringsAsFactors = FALSE)
+all_unique_raw_keywords <- gsub(";$| ;$|^; |^ |^a | s | d |\\\\\\b", "", all_keywords) %>%
+  strsplit(split = ";") %>%
+  unlist() %>%
+  trimws() %>%
+  trimws() %>%
+  table()
+all_unique_raw_keywords <- all_unique_raw_keywords[!names(all_unique_raw_keywords) %in% c("", "NA", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")]
+all_unique_raw_keywords <- data.frame(
+  keywords = names(all_unique_raw_keywords),
+  counts = as.numeric(all_unique_raw_keywords),
+  stringsAsFactors = FALSE
+)
 
 # Get stems
-from_raw_to_stem <- tidyText(all_unique_raw_keywords$keyword, useStemming = TRUE, myStopWords = myStopWords) %>% corpusToText()
+from_raw_to_stem <- tidyText(all_unique_raw_keywords$keyword, 
+                             useStemming = TRUE, 
+                             myStopWords = settings$stopwords$myStopWords) %>% corpusToText()
 names(from_raw_to_stem) <- all_unique_raw_keywords$keyword
 
 # Conversion vector
@@ -106,10 +128,10 @@ print("-- Create clean and zqzq vectors")
 clean_keywords <- strsplit(all_keywords, "; ")
 clean_keywords <- lapply(clean_keywords, function(x) {
   temp <- c(x)
-  #temp <- unique(temp)
+  # temp <- unique(temp)
   temp <- from_raw_to_stem[temp]
   # Custom correction can also be done here
-  #temp <- mesh_conversion_table$mesh_root_stem[match(temp, mesh_conversion_table$mesh_syn_stem)]
+  # temp <- mesh_conversion_table$mesh_root_stem[match(temp, mesh_conversion_table$mesh_syn_stem)]
   temp <- temp[!is.na(temp)]
   temp <- paste(temp, collapse = "; ")
   return(temp)
@@ -133,4 +155,3 @@ papersText <- gsub("NA ", "", papersText)
 
 # Attach to sample
 myDataCorrect_SAMPLE$papersText <- papersText
-
