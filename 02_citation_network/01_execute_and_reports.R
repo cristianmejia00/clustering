@@ -19,7 +19,7 @@
 st <- Sys.time()
 
 # Data preparation
-for (i in c(0:cno$recursive_level)) {
+for (i in c(0:settings$cno$recursive_level)) {
   level_report <<- i
   print(paste("...Starting reports for level", as.character(level_report), sep = " "))
 
@@ -98,7 +98,7 @@ for (i in c(0:cno$recursive_level)) {
   }
 
   # Overlays (Only for WOS data)
-  if (params$dataset_source == "wos") {
+  if (settings$params$dataset_source == "wos") {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
   }
 

@@ -19,7 +19,9 @@ tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
-  if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
+  if (useStemming) {
+    text <- tm_map(text, stemDocument, language = "english")
+  }
   text <- tm_map(text, removeWords, myStopWords)
   return(text)
 }
@@ -29,8 +31,10 @@ tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
 # a_corpus = a tm corpus (e.g. created with function tidyText)
 # Output:
 # A character vector with the text re-assembled
-corpusToText <- function(a_corpus){
-  text <- unlist(sapply(1:length(a_corpus), function(x){return(a_corpus[[x]]$content)}))
+corpusToText <- function(a_corpus) {
+  text <- unlist(sapply(1:length(a_corpus), function(x) {
+    return(a_corpus[[x]]$content)
+  }))
   return(text)
 }
 
@@ -46,13 +50,19 @@ get_tidy_text <- function(a_char_vector, rm_punct = TRUE, useStemming = TRUE, my
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, removeWords, stopwords("english"))
   text <- tm_map(text, removeWords, myStopWords)
-  if (rm_punct) {text <- tm_map(text, removePunctuation)}
+  if (rm_punct) {
+    text <- tm_map(text, removePunctuation)
+  }
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
-  if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
+  if (useStemming) {
+    text <- tm_map(text, stemDocument, language = "english")
+  }
   text <- tm_map(text, removeWords, myStopWords)
-  text <- unlist(sapply(1:length(text), function(x){return(text[[x]]$content)}))
+  text <- unlist(sapply(1:length(text), function(x) {
+    return(text[[x]]$content)
+  }))
   return(text)
 }
 
@@ -73,7 +83,7 @@ remove_copyright_statements <- function(a_text) {
 # Input: A character vector
 # Output: A character vector with the keywords parsed (They will be in lowercase)
 # Dependencies: Library(tm)
-get_keywords_by_stopword_method <- function(a_text){
+get_keywords_by_stopword_method <- function(a_text) {
   temp <- strsplit(tolower(a_text), " ")[[1]]
   sw_idx <- temp %in% stopwords("english")
   temp[sw_idx] <- "---"
@@ -92,7 +102,7 @@ get_keywords_by_stopword_method <- function(a_text){
 #########################################
 # Get the TFIDF for all keywords based on the compete dataset
 # Inputs: The result from tidyCorpus(), and the minimum count of document per term (default to 5)
-# Outputs: A character vector. Is the sorted list of keywords with their normalized (0.01 to 1) score. 
+# Outputs: A character vector. Is the sorted list of keywords with their normalized (0.01 to 1) score.
 #          First keywords on the list are the most generic
 get_TDIDF <- function(a_tidyCorpus, frequency_thr = 5) {
   # Document term frequency
@@ -105,7 +115,10 @@ get_TDIDF <- function(a_tidyCorpus, frequency_thr = 5) {
   term.freq <- col_sums(dtm) - term.doc_frec + 1
   term.idf <- log10(nrow(dtm) / term.doc_frec)
   tfidf <- term.freq * term.idf
-  tfidf <- tfidf %>% log %>% linMap(., 0.001, 1) %>% sort
+  tfidf <- tfidf %>%
+    log() %>%
+    linMap(., 0.001, 1) %>%
+    sort()
   plot(tfidf, xlab = "number of keywords", ylab = "threshold")
   print(tfidf[1:30])
   return(tfidf)
@@ -118,19 +131,27 @@ get_TDIDF <- function(a_tidyCorpus, frequency_thr = 5) {
 #         "average" : The default option. Removes terms below tfidf average
 #         "firstq": Removes values below the 1st quartile (Removes less than the other option)
 #          0.001 to 1 : any number in that range. Keywords with a tfidf below that number are removed
-# OUTPUT: A list with 2 lists: 
+# OUTPUT: A list with 2 lists:
 #           The vocabulary to use in the topic model
 #           The tfidf stopwords
-get_vocabulary <-  function(a_tfidf, a_tfidf_thr = "average") {
+get_vocabulary <- function(a_tfidf, a_tfidf_thr = "average") {
   print("Distribution of TFIDF values")
   boxplot(a_tfidf)
-  if (a_tfidf_thr == "average") {thr <- mean(a_tfidf)}
-  if (a_tfidf_thr == "firstq") {thr <- summary(a_tfidf)[[2]]}
-  if (is.numeric(a_tfidf_thr)) {thr <- a_tfidf_thr}
-  
-  vocab <- a_tfidf[a_tfidf >= thr] %>% sort(., decreasing = TRUE) %>% names
-  stopwords <- a_tfidf[a_tfidf < thr] %>% names
-  
+  if (a_tfidf_thr == "average") {
+    thr <- mean(a_tfidf)
+  }
+  if (a_tfidf_thr == "firstq") {
+    thr <- summary(a_tfidf)[[2]]
+  }
+  if (is.numeric(a_tfidf_thr)) {
+    thr <- a_tfidf_thr
+  }
+
+  vocab <- a_tfidf[a_tfidf >= thr] %>%
+    sort(., decreasing = TRUE) %>%
+    names()
+  stopwords <- a_tfidf[a_tfidf < thr] %>% names()
+
   return(list("vocabulary" = vocab, "tfidf_stopwords" = stopwords))
 }
 
@@ -141,7 +162,7 @@ get_terms <- function(x) {
   rbind(as.integer(index - 1), as.integer(rep(1, length(index))))
 }
 
-# Mapping function. 
+# Mapping function.
 linMap <- function(x, from, to) {
   # Shifting the vector so that min(x) == 0
   x <- x - min(x)
@@ -163,8 +184,8 @@ linMap <- function(x, from, to) {
 # In the case of using abstracs, is advised to remove copyright statements
 
 # Append Title and Abstract keywords
-title_text <- tolower(iconv(myDataCorrect$TI, "UTF-8", "UTF-8", sub=''))
-ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect$AB, "UTF-8", "UTF-8",sub='')))
+title_text <- tolower(iconv(myDataCorrect$TI, "UTF-8", "UTF-8", sub = ""))
+ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect$AB, "UTF-8", "UTF-8", sub = "")))
 
 title_keywords <- paste(title_text, ab_text, sep = ". ") %>% tolower()
 title_keywords <- lapply(title_keywords, get_keywords_by_stopword_method)
@@ -191,7 +212,9 @@ all_keywords <- gsub("; life cycle assessment lca;", "; life cycle assessment;",
 ##############################################################################################
 # Correspondence vectors
 # Create the stem-to-normal conversion vector
-all_unique_raw_keywords <- strsplit(all_keywords, "; ") %>% unlist %>% table
+all_unique_raw_keywords <- strsplit(all_keywords, "; ") %>%
+  unlist() %>%
+  table()
 all_unique_raw_keywords <- data.frame(all_unique_raw_keywords, stringsAsFactors = FALSE)
 colnames(all_unique_raw_keywords) <- c("keyword", "counts")
 
@@ -209,10 +232,10 @@ names(from_stem_to_raw) <- from_raw_to_stem[from_stem_to_raw]
 clean_keywords <- strsplit(all_keywords, "; ")
 clean_keywords <- lapply(clean_keywords, function(x) {
   temp <- c(x)
-  #temp <- unique(temp) #This line no needed for topic model. We need repeated values in each document. We need this line in cluster aggregation only, when each keyword should only appear once per document because they will be aggregated. 
+  # temp <- unique(temp) #This line no needed for topic model. We need repeated values in each document. We need this line in cluster aggregation only, when each keyword should only appear once per document because they will be aggregated.
   temp <- from_raw_to_stem[temp]
   # Custom correction can also be done here
-  #temp <- mesh_conversion_table$mesh_root_stem[match(temp, mesh_conversion_table$mesh_syn_stem)]
+  # temp <- mesh_conversion_table$mesh_root_stem[match(temp, mesh_conversion_table$mesh_syn_stem)]
   temp <- temp[!is.na(temp)]
   temp <- paste(temp, collapse = "; ")
   return(temp)
@@ -241,15 +264,16 @@ papersText <- gsub("NA ", "", papersText)
 #########################################
 # Get the clean text to feed the topic model
 myCorpusText <- tidyText(papersText,
-                         useStemming = FALSE,
-                         myStopWords = myStopWords)
+  useStemming = FALSE,
+  myStopWords = myStopWords
+)
 myText <- corpusToText(myCorpusText)
 
 
 # Obtain the documents that are not blank
 blankLines <- unname(sapply(myText, nchar))
-myDataCorrect <- dataset[blankLines>2,]
-myText <- myText[blankLines>2]
+myDataCorrect <- dataset[blankLines > 2, ]
+myText <- myText[blankLines > 2]
 
 ###################################################
 # Preparation
@@ -257,16 +281,16 @@ myText <- myText[blankLines>2]
 
 # tokenize on space and output as a list:
 doc.list <- strsplit(myText, "[[:space:]]+")
-doc.list <- lapply(doc.list, function(x) x[which(nchar(x)>1)]) #Ensure we remove white spaces
+doc.list <- lapply(doc.list, function(x) x[which(nchar(x) > 1)]) # Ensure we remove white spaces
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Remove words that appear less or equal to:
 infrequent_terms_threshold <- 5
 
 # Compute tfidf
 tf.idf <- get_TDIDF(myCorpusText, infrequent_terms_threshold)
 
-# a threshold to remove corpus specific stopwords based on tfidf score. 
+# a threshold to remove corpus specific stopwords based on tfidf score.
 # valid range: from 0.001 to 1, or "average" or "firstq"
 tfidf_thresold <- "firstq"
 
@@ -291,8 +315,8 @@ documents <- lapply(doc.list, get_terms)
 # model fitting
 
 # Compute some statistics related to the data set:
-D <- length(documents)  # number of documents
-W <- length(vocab)  # number of terms in the vocab
-doc.length <- sapply(documents, function(x) sum(x[2, ]))  # number of tokens per document
-N <- sum(doc.length)  # total number of tokens in the data
-term.frequency <- as.integer(term.table)  # frequencies of terms in the corpus
+D <- length(documents) # number of documents
+W <- length(vocab) # number of terms in the vocab
+doc.length <- sapply(documents, function(x) sum(x[2, ])) # number of tokens per document
+N <- sum(doc.length) # total number of tokens in the data
+term.frequency <- as.integer(term.table) # frequencies of terms in the corpus

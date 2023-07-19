@@ -11,18 +11,26 @@ general_summary <- c(
   "total_articles" = nrow(orphans) + nrow(dataset),
   "nodes" = nrow(dataset),
   "orphans" = nrow(orphans),
-  "orphans_percent" = round( nrow(orphans) / (nrow(orphans) + nrow(dataset)) , 2)
-  )
+  "orphans_percent" = round(nrow(orphans) / (nrow(orphans) + nrow(dataset)), 2)
+)
 
 ## Add values depending the type of analysis
-if (params$type_of_analysis == "citation_network") {
-  if (cno$recursive_level > 0) {
+if (settings$params$type_of_analysis == "citation_network") {
+  if (settings$cno$recursive_level > 0) {
     general_summary <- c(
       general_summary,
       "edges" = ecount(g1),
       "clusters_level0" = nrow(edges_level1),
-      "clusters_level1" = if (cno$recursive_level >= 1) {nrow(edges_level2)} else {0},
-      "clusters_level2" = if (cno$recursive_level >= 2) {nrow(edges_level3)} else {0}
+      "clusters_level1" = if (settings$cno$recursive_level >= 1) {
+        nrow(edges_level2)
+      } else {
+        0
+      },
+      "clusters_level2" = if (settings$cno$recursive_level >= 2) {
+        nrow(edges_level3)
+      } else {
+        0
+      }
     )
   }
 } else {
@@ -33,8 +41,11 @@ if (params$type_of_analysis == "citation_network") {
 }
 
 ## Save the report
-write.csv(as.data.frame.list(general_summary) %>% t(), 
-          file=file.path(input_folder, 
-                         analysis_metadata$query_id, 
-                         analysis_metadata$project_id, 
-                         "general_summary.csv"))
+write.csv(as.data.frame.list(general_summary) %>% t(),
+  file = file.path(
+    settings$analysis_metadata$bibliometrics_folder,
+    settings$analysis_metadata$project_folder,
+    settings$analysis_metadata$analysis_folder,
+    "general_summary.csv"
+  )
+)

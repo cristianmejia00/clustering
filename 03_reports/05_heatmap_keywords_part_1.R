@@ -40,7 +40,7 @@ tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
   return(text)
 }
 
-# Transfor back a tm corpus to normal text. Ideal to use after cleaning.
+# Transform back a tm corpus to normal text. Ideal to use after cleaning.
 # Inputs:
 # a_corpus = a tm corpus (e.g. created with function tidyText)
 # Output:

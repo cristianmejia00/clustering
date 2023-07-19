@@ -30,18 +30,18 @@ dataset <- as.data.frame(dataset)
 
 # Functions
 # Text cleaner
-tidytext <- function(myData, columns, useStemming, myStopWords) {
+tidytext <- function(myData, columns, useStemming, settings$stopwords$myStopWords) {
   documents <- apply(myData[columns], 1, paste, collapse = ". ")
   text <- Corpus(VectorSource(documents))
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, removeWords, stopwords("english"))
-  text <- tm_map(text, removeWords, myStopWords)
+  text <- tm_map(text, removeWords, settings$stopwords$myStopWords)
   text <- tm_map(text, removePunctuation)
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
-  text <- tm_map(text, removeWords, myStopWords) #We do it twice to remove stemed versions
+  text <- tm_map(text, removeWords, settings$stopwords$myStopWords) #We do it twice to remove stemed versions
   text <- tm_map(text, stripWhitespace)
   if (remove_stems) {text <- tm_map(text, removeWords, ERP_vocab)} 
   text <- tm_map(text, stripWhitespace)
@@ -49,7 +49,7 @@ tidytext <- function(myData, columns, useStemming, myStopWords) {
   return(text)
 }
 
-data_TIAB <- tidytext(as.data.frame(dataset), c("TIAB"), useStemming = TRUE, myStopWords = c('article'))
+data_TIAB <- tidytext(as.data.frame(dataset), c("TIAB"), useStemming = TRUE, settings$stopwords$myStopWords = c('article'))
 data_TIAB <- tolower(dataset$TIAB)
 #data_TIAB <- dataset$"full_text"
 # data_TIAB <- dataset$TIAB

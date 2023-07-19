@@ -27,18 +27,18 @@ clusterBulkText <- function(documents_vector, cluster_assignation_vector, list_o
 # my_stopwords = A list of stopwords of my choice. like in c("this", "that")
 # Outputs:
 # A tm corpus object.
-tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
+tidyText <- function(content_vector, useStemming = TRUE, settings$stopwords$myStopWords) {
   text <- Corpus(VectorSource(content_vector))
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, removeWords, stopwords("english"))
-  text <- tm_map(text, removeWords, myStopWords)
+  text <- tm_map(text, removeWords, settings$stopwords$myStopWords)
   text <- tm_map(text, removePunctuation)
   text <- tm_map(text, removeNumbers)
   text <- tm_map(text, stripWhitespace)
   if (useStemming) {
     text <- tm_map(text, stemDocument, language = "english")
   }
-  text <- tm_map(text, removeWords, myStopWords)
+  text <- tm_map(text, removeWords, settings$stopwords$myStopWords)
   return(text)
 }
 
@@ -115,7 +115,7 @@ cluster_contents <- papersText %>%
   ) %>%
   tidyText(
     useStemming = useStemming,
-    myStopWords = myStopWords
+    settings$stopwords$myStopWords = settings$stopwords$myStopWords
   )
 
 
