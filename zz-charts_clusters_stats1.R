@@ -38,12 +38,12 @@ ggplot(stats_size, aes(x = Cluster, y = Documents)) +
   theme_bw() +
   coord_flip() +
   scale_x_discrete(limits = rev)
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_h.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_h.png"))
 
 ggplot(stats_size, aes(x = Cluster, y = Documents)) +
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_v.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_v.png"))
 
 
 ##################################################################
@@ -97,5 +97,5 @@ for (i in numerical_reports) {
                 category_column = "X_C", 
                 value_label = column_labels[i], 
                 category_label = "Clusters")
-  ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.jpg")))
+  ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.png")))
 }

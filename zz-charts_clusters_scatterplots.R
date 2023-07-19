@@ -127,13 +127,13 @@ plot_scatter <- function(rcs_data,
 # - size x citations
 
 plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "Z9_Mean", "main_cluster", "documents", "Ave. Publication Year", "Ave. Citations")
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_PY_x_Z9.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_PY_x_Z9.png"))
 
 plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "documents", "main_cluster", "Z9_Mean", "Ave. Publication Year", "Documents")
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_PY_x_size.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_PY_x_size.png"))
 
 plot_scatter(rcs_tmp, "X_C_name", "documents", "Z9_Mean", "main_cluster", "PY_Mean", "Documents", "Ave. Citations")
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_size_x_Z9.jpg"))
+ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_size_x_Z9.png"))
 
 
 # Only for datasets with sentiment:
@@ -143,11 +143,11 @@ ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_
 
 if ("sentiment_Mean" %in% colnames(rcs_merged)) {
   plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "sentiment_Mean", "main_cluster", "documents", settings$rp$column_labels["PY"], settings$rp$column_labels["sentiment"])
-  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_year_x_sentiment.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_year_x_sentiment.png"))
 
   plot_scatter(rcs_tmp, "X_C_name", "Z9_Mean", "sentiment_Mean", "main_cluster", "documents", settings$rp$column_labels["Z9"], settings$rp$column_labels["sentiment"])
-  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_Z9_x_sentiment.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_Z9_x_sentiment.png"))
 
   plot_scatter(rcs_tmp, "X_C_name", "documents", "sentiment_Mean", "main_cluster", "documents", "Documents", settings$rp$column_labels["sentiment"])
-  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_size_x_sentiment.jpg"))
+  ggsave(file.path(output_folder_level, subfolder_clusters, "fig_scatter_clusters_size_x_sentiment.png"))
 }

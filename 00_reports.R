@@ -65,14 +65,12 @@ if (settings$params$type_of_dataset == "news") {
 # Dataset merged RCS
 source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
 
-# Dataset figures
+# figures
 source(file.path(getwd(), "zz-charts_dataset.R"))
-
-# RCS figures
-source(file.path(getwd(), "zz-rcs_scatterplot.R"))
-
-# Sentiment Analysis
-source(file.path(getwd(), "zz-sentiment_analysis.R"))
+source(file.path(getwd(), "zz-charts_cluster_stats1.R"))
+source(file.path(getwd(), "zz-charts_cluster_stats2.R"))
+source(file.path(getwd(), "zz-charts_cluster_scatterplots.R"))
+source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
 # Save environ
 save.image(file.path(input_folder, settings$analysis_metadata$query_id, "reports_environ.rdata"))
