@@ -11,7 +11,7 @@ library(stringr)
 # Inputs
 #dataset <- dataset[!duplicated(dataset$UT),]
 dataset <- dataset
-file_name <- file.path(main_path, 'bibliography.bib')
+file_name <- file.path(output_folder_level, 'index_files', 'bibliography.bib')
 
 # Check columns
 if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset_bibliography))) {
