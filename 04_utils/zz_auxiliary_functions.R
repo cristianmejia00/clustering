@@ -98,95 +98,101 @@ getInstitutions <- function(a_c1_column) {
 }
 
 
-########################################################
-########################################################
-# Widgets
-
-# Get Top Authors
-TopAuthors <- function(d, top = 5){
-  authors <- 
-    tolower(d$AU) %>%
-    strsplit(split ="; ") %>% 
-    unlist %>% 
-    table %>% 
-    sort(decreasing = TRUE) %>% 
-    .[1:top]
-  return(authors)
-}
-
-# Top WOS categories (Assigned to journal)
-TopCategories <- function(d, top = 5){
-  categories <- 
-    strsplit(d$WC, split ="; ") %>% 
-    unlist %>% 
-    table %>% 
-    sort(decreasing = TRUE) %>% 
-    .[1:top]
-  return(categories)
-}
-
-
-
-# Top Keywords by frequency (Author Keywords + Smart keywords)
-TopKeywords <- function(d, top = 10){
-  keys <- 
-    paste(d$DE, d$ID, sep = "; ") %>%
-    tolower %>%
-    strsplit(split ="; ") %>% 
-    lapply(function(x) x[x!=""]) %>%
-    unlist %>% 
-    table %>% 
-    sort(decreasing = TRUE) %>% 
-    .[1:top]
-  return(keys)
-}
-
-
-# Get top countries
-TopCountries <-  function(d, top = 5){
-  Countries <- 
-    tolower(d$Country) %>%
-    table %>% 
-    sort(decreasing = TRUE) %>%
-    .[1:top]
-  return(Countries)
-}
-
-#Top Journal/Conference (Assigned to paper)
-TopJournals <- function(d, top = 5){
-  Journals <- 
-    strsplit(d$J9, split ="; ") %>% 
-    unlist %>% 
-    table %>% 
-    sort(decreasing = TRUE) %>% 
-    .[1:top]
-  return(Journals)
-}
-
-
-
-#Top Institutions (Based on all co-authors)
-TopInstitutions <- function(d, top = 10){
-  Insts <- 
-    strsplit(d$institutions, split ="; ") %>% 
-    unlist %>% 
-    table %>% 
-    sort(decreasing = TRUE) %>% 
-    .[1:top]
-  return(Insts)
-}
+# ########################################################
+# ########################################################
+# # Widgets
+# 
+# # Get Top Authors
+# TopAuthors <- function(d, top = 5){
+#   authors <- 
+#     tolower(d$AU) %>%
+#     strsplit(split ="; ") %>% 
+#     unlist %>% 
+#     table %>% 
+#     sort(decreasing = TRUE) %>% 
+#     .[1:top]
+#   return(authors)
+# }
+# 
+# # Top WOS categories (Assigned to journal)
+# TopCategories <- function(d, top = 5){
+#   categories <- 
+#     strsplit(d$WC, split ="; ") %>% 
+#     unlist %>% 
+#     table %>% 
+#     sort(decreasing = TRUE) %>% 
+#     .[1:top]
+#   return(categories)
+# }
+# 
+# 
+# 
+# # Top Keywords by frequency (Author Keywords + Smart keywords)
+# TopKeywords <- function(d, top = 10){
+#   keys <- 
+#     paste(d$DE, d$ID, sep = "; ") %>%
+#     tolower %>%
+#     strsplit(split ="; ") %>% 
+#     lapply(function(x) x[x!=""]) %>%
+#     unlist %>% 
+#     table %>% 
+#     sort(decreasing = TRUE) %>% 
+#     .[1:top]
+#   return(keys)
+# }
+# 
+# 
+# # Get top countries
+# TopCountries <-  function(d, top = 5){
+#   Countries <- 
+#     tolower(d$Country) %>%
+#     table %>% 
+#     sort(decreasing = TRUE) %>%
+#     .[1:top]
+#   return(Countries)
+# }
+# 
+# #Top Journal/Conference (Assigned to paper)
+# TopJournals <- function(d, top = 5){
+#   Journals <- 
+#     strsplit(d$J9, split ="; ") %>% 
+#     unlist %>% 
+#     table %>% 
+#     sort(decreasing = TRUE) %>% 
+#     .[1:top]
+#   return(Journals)
+# }
+# 
+# 
+# 
+# #Top Institutions (Based on all co-authors)
+# TopInstitutions <- function(d, top = 10){
+#   Insts <- 
+#     strsplit(d$institutions, split ="; ") %>% 
+#     unlist %>% 
+#     table %>% 
+#     sort(decreasing = TRUE) %>% 
+#     .[1:top]
+#   return(Insts)
+# }
 
 
 ## Generic
 # Auxiliar function to get the top values from a Factiva 
 # Works for "NS"("AU") categories "CO"("ID") companies "IN"("DE") industries "RE"("C1") regions. Factiva("WOS")
 TopSomething <- function(d, coll = "ID" , top = 5){
-  categories <- 
-    strsplit(d[[coll]], split ="; ") %>% 
+  categories <- tolower(d[[coll]]) 
+  if (coll %in% c('Countries', 'Institutions', 'AU', 'SO')) {
+    library(stringr)
+    categories <- str_to_title(categories)
+  }
+  categories <- categories %>% 
+    strsplit(split ="; ") %>% 
     unlist %>% 
     table %>% 
     sort(decreasing = TRUE) %>% 
     .[1:top]
+  names(categories)[tolower(names(categories)) %in% c('usa')] <- 'USA'
   return(categories)
 }
 

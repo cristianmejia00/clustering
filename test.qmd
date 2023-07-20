@@ -1,0 +1,73 @@
+---
+title: "tests"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+::: panel-tabset
+## First tab
+
+![](test_files/network.png)
+
+## Second tab
+
+![](test_files/fig_yearly_trends_Countries.jpg)
+
+## Third tab
+
+![test](test_files/fig_yearly_trends_clusters.svg)
+:::
+
+::: column-screen
+::: {#fig-elephants layout-ncol="6"}
+![Surus](test_files/fig_01_AU.png){#fig-surus}
+
+![Hanno](test_files/fig_01_Countries.png){#fig-hanno}
+
+![](test_files/fig_01_Institutions.png)
+
+![](test_files/fig_01_Keywords.png)
+
+![](test_files/fig_01_SO.png)
+
+![](test_files/fig_01_WC.png)
+
+Famous Elephants
+:::
+:::
+
+```{mermaid}
+flowchart LR
+  A[Hard edge] --> B(Round edge)
+  B --> C{Decision}
+  C --> D[Result one]
+  C --> E[Result two]
+```
+
+```{mermaid}
+flowchart LR
+  1(Data collection from WOS) --> 2(Created citation network) --> 3(Extracted Maximum Component) --> 4(Clustering using the Louvain method) --> 5(Cluster description)
+```
+
+ --> 4("Clustering using the Louvain method) --> 5("Cluster description")

@@ -12,13 +12,14 @@ library(glue)
 dataset <- dataset
 document_label <- toTitleCase(settings$params$type_of_dataset)
 output_folder_level <- output_folder_level
-subfolder_dataset <- "charts_dataset"
+subfolder_dataset <- subfolder_dataset #"charts_dataset"
+extension <- extension
 available_columns <- available_columns
 column_labels <- settings$rp$column_labels
 categorical_long_reports <- settings$rp$categorical_long_reports
 
 # Create directory to store charts
-dir.create(file.path(output_folder_level, subfolder_dataset))
+dir.create(file.path(output_folder_level, subfolder_dataset), recursive = TRUE)
 
 ##################################################################
 ##################################################################
@@ -46,16 +47,18 @@ create_report_and_barchart <- function(column_data,
     strsplit("; ") %>%
     unlist() %>%
     tolower() %>%
-    toTitleCase() %>%
+    str_to_title() %>%
     table() %>%
     sort(decreasing = TRUE) %>%
     data.frame() %>%
     setNames(c("Item", "Documents"))
-  write.csv(stats_column,
-    file = file.path(output_folder_level, subfolder_dataset, glue("dataset_{tolower(item_label)}.csv")),
-    row.names = FALSE
-  )
-
+  if (extension != 'svg') {
+    write.csv(stats_column,
+              file = file.path(output_folder_level, 
+                               subfolder_dataset, 
+                               glue("dataset_{tolower(item_label)}.csv")),
+              row.names = FALSE)
+  }
 
   ggplot(stats_column[c(1:top_items), ], aes(x = Item, y = Documents)) +
     geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
@@ -64,7 +67,12 @@ create_report_and_barchart <- function(column_data,
     scale_x_discrete(name = item_label, limits = rev) +
     scale_y_continuous(name = document_label) +
     theme_bw()
-  ggsave(file.path(output_folder_level, subfolder_dataset, glue("fig_{tolower(item_label)}.jpg")))
+  ggsave(file.path(output_folder_level, 
+                   subfolder_dataset, 
+                   glue("fig_{gsub(' ', '_', tolower(item_label))}.{extension}")), 
+         width = 1000, 
+         height = 1000, 
+         units = 'px')
 }
 
 ################################################################################
@@ -72,9 +80,9 @@ create_report_and_barchart <- function(column_data,
 ################################################################################
 for (i in categorical_long_reports) {
   if (i %in% available_columns) {
+    print(i)
     create_report_and_barchart(dataset[[i]], 
-                               item_label = column_labels[i], 
-                               document_label = document_label)
+                               item_label = column_labels[i])
   }
 }
 
@@ -88,9 +96,11 @@ yearly_trends <- dataset$PY %>%
   setNames(c("Year", "Articles"))
 yearly_trends
 yearly_trends <- yearly_trends[order(yearly_trends$Year, decreasing = TRUE), ]
-write.csv(yearly_trends, file = file.path(output_folder_level, subfolder_dataset, "data_yearly_trends.csv"), row.names = FALSE)
+if (extension != 'svg') {
+  write.csv(yearly_trends, file = file.path(output_folder_level, subfolder_dataset, "data_yearly_trends.csv"), row.names = FALSE)
+}
 
-ggplot(yearly_trends[1:15, ], aes(x = Year, y = Articles)) +
+ggplot(yearly_trends[1:10, ], aes(x = Year, y = Articles)) +
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_level, subfolder_dataset, "fig_yearly_trends.jpg"))
+ggsave(file.path(output_folder_level, subfolder_dataset, glue("fig_yearly_trends.{extension}")))

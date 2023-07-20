@@ -44,13 +44,14 @@ format_long_table <- function(a_table, a_cluster_id, top) {
   }
 }
 
+#' @description
+#' Creates a long report based on selected column.
+#' @param df DATAFRAME. Usually `myDataCorrect`.
+#' @param a_column STRING. the name of the column to summarize
+#' @param clusters LIST[INTEGERS]. a list of clusters to include in the summary
+#' @param top INTEGER. the number of results to include in the report
+#' @param with_all BOOL. if the summary including all data should be include as `Cluster 0`
 generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
-  # Creates a long report based on selected column.
-  # df = a data frame. Usually `myDataCorrect`
-  # a_column = the column to summarize
-  # clusters = a list of clusters to include in the summary
-  # top = the number of results to include in the report
-  # with_all = if the summary including all data should be include as `Cluster 0`
 
   ## Get clusters' results
   result_list <- lapply(clusters, function(c) {

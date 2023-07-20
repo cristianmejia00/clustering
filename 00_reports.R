@@ -66,11 +66,26 @@ if (settings$params$type_of_dataset == "news") {
 source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
 
 # figures
+# Save PNG figures. Normal raster figures for easy navigation in PC.
+extension <- 'png'
+subfolder_dataset <- "charts_dataset"
+subfolder_clusters <- "charts_clusters"
 source(file.path(getwd(), "zz-charts_dataset.R"))
 source(file.path(getwd(), "zz-charts_cluster_stats1.R"))
 source(file.path(getwd(), "zz-charts_cluster_stats2.R"))
 source(file.path(getwd(), "zz-charts_cluster_scatterplots.R"))
 source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
+
+# Save PNG figures. Needed for notebook.
+extension <- 'svg'
+subfolder_dataset <- "index_files/charts"
+subfolder_clusters <- "index_files/charts"
+source(file.path(getwd(), "zz-charts_dataset.R"))
+source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
+source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
+source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
+source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
+
 # Save environ
-save.image(file.path(input_folder, settings$analysis_metadata$query_id, "reports_environ.rdata"))
+save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))

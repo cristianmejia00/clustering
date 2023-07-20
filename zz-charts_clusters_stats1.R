@@ -8,9 +8,10 @@ library(ggplot2)
 library(glue)
 
 # INPUT
-output_folder_level <- output_folder_level
-subfolder_clusters <- "charts_clusters"
 dataset <- dataset
+output_folder_level <- output_folder_level
+subfolder_clusters <- subfolder_clusters
+extension <- extension
 
 ## From settings
 document_label <- toTitleCase(settings$params$type_of_dataset)
@@ -20,7 +21,7 @@ numerical_reports <- intersect(settings$rp$numerical_reports, colnames(dataset))
 
 ################################################################################
 # SYSTEM
-dir.create(file.path(output_folder_level, subfolder_clusters))
+dir.create(file.path(output_folder_level, subfolder_clusters), recursive = TRUE)
 
 
 ################################################################################
@@ -31,19 +32,26 @@ stats_size <- dataset$X_C %>%
   table() %>%
   data.frame() %>%
   setNames(c("Cluster", "Documents"))
-write.csv(stats_size, file = file.path(output_folder_level, subfolder_clusters, "data_cluster_size.csv"), row.names = FALSE)
+if (extension != 'svg') {
+  write.csv(stats_size, 
+            row.names = FALSE, 
+            file = file.path(output_folder_level, 
+                                         subfolder_clusters, 
+                                         "data_cluster_size.csv"))
+}
+
 
 ggplot(stats_size, aes(x = Cluster, y = Documents)) +
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw() +
   coord_flip() +
   scale_x_discrete(limits = rev)
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_h.png"))
+ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_cluster_size_h.{extension}")))
 
 ggplot(stats_size, aes(x = Cluster, y = Documents)) +
   geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
   theme_bw()
-ggsave(file.path(output_folder_level, subfolder_clusters, "fig_cluster_size_v.png"))
+ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_cluster_size_v.{extension}")))
 
 
 ##################################################################
@@ -97,5 +105,5 @@ for (i in numerical_reports) {
                 category_column = "X_C", 
                 value_label = column_labels[i], 
                 category_label = "Clusters")
-  ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.png")))
+  ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.{extension}")))
 }

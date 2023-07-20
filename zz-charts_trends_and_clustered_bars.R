@@ -1,14 +1,16 @@
 # 2023-07-06 Exploratory Data analysis of a dataset
 
 # We expect a dataset with WOS format:
-# i.e. multi factor columns like WC are separated by semicolon.
+# i.e. multi-factor columns like WC are separated by semicolon.
 
 #INPUTS
 dataset <- dataset
-settings <- settings
+categorical_long_reports <- settings$rp$categorical_long_reports
+column_labels <- settings$rp$column_labels
 output_folder_level <- output_folder_level
-subfolder_dataset <- 'charts_dataset'
-subfolder_clusters <- 'charts_clusters'
+subfolder_dataset <- subfolder_dataset
+subfolder_clusters <- subfolder_clusters
+extension <- extension
 
 ###############################################################################
 library(glue)
@@ -287,8 +289,8 @@ plot_percent_line(cluster_year,
                   legend_palette = color_blind_Palette)
 
 ggsave(file.path(output_folder_level, 
-                 subfolder_clusters, 
-                 glue("fig_yearly_trends_clusters2.png")),
+                 subfolder_dataset, 
+                 glue("fig_yearly_trends_clusters.{extension}")),
        dpi = 300)
 
 # Compute yearly trends at the dataset level for different columns
@@ -296,11 +298,11 @@ trend_reports <- list()
 available_charts <- intersect(settings$rp$categorical_long_reports, colnames(dataset))
 for (i in available_charts) {
   tmp <- summarize_two_columns(df = dataset, 
-                                              a_column = i,
-                                              b_column = 'PY',
-                                              b_include = c(PY_min:PY_max),
-                                              b_decreasing = FALSE,
-                                              b_top = 0)
+                                a_column = i,
+                                b_column = 'PY',
+                                b_include = c(PY_min:PY_max),
+                                b_decreasing = FALSE,
+                                b_top = 0)
   plot_percent_line(tmp, 
                     a_column_label = settings$rp$column_labels[i], 
                     b_column_label = 'Year',
@@ -310,7 +312,7 @@ for (i in available_charts) {
   
   ggsave(file.path(output_folder_level, 
                    subfolder_dataset, 
-                   glue("fig_yearly_trends_{i}.png")))
+                   glue("fig_yearly_trends_{i}.{extension}")))
 }
 
 ##############################################################################
