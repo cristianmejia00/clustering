@@ -14,7 +14,7 @@ dataset <- dataset
 file_name <- file.path(output_folder_level, 'index_files', 'bibliography.bib')
 
 # Check columns
-if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset_bibliography))) {
+if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset))) {
   stop('Necessary column for .bib is missing.')
 }
 

@@ -80,6 +80,9 @@ main_path <- file.path(bibliometrics_folder,
                        "<<level_folder>>")
 
 rcs_merged <- read.csv(file.path(main_path, "rcs_merged.csv"))
+# if(nrow(rcs_merged) > 0) {
+#   stop(is.na(rcs_merged$cluster_name))
+# }
 ```
 ')
 qt$load_data
@@ -124,7 +127,6 @@ qt$methods <- methods
 # INTRO
 
 ## Overview
-
 qt$dataset_overview <- glue_code('  
 
 ::::: panel-tabset
@@ -255,20 +257,21 @@ qt$clusters_figures <- glue_code('
 qt$results_table <- '
 ```{r}
 #| echo: false
-tmp <- rcs_merged[c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label")]
-if (all(TRUE)) {
+tmp <- rcs_merged[,c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label")]
+if(all(is.na(rcs_merged$cluster_name))|all(rcs_merged$cluster_name == "")) {
   tmp$cluster_name <- sapply(rcs_merged$frequent_keywords, function(x) {
     k <- strsplit(x, "; ") %>% unlist()
     k <- k[c(1:min(5, length(k)))]
     k <- paste(k, collapse = "; ")
   })
-  tmp$cluster_name[nrow(tmp)] <- "Others"
+  tmp$cluster_name[tmp$cluster_code %in% c(99,999)] <- "Others"
 }
 tmp$PY_Mean <- round(tmp$PY_Mean, 1)
 tmp$Z9_Mean <- round(tmp$Z9_Mean, 1)
 setnames(tmp,
          c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label"),
          c("Cluster", "Documents", "Documents %", "Year Median", "Year Mean", "Cites Median", "Cites Mean", "Label"))
+# Not to display the Cluster name in the table because space.
 tmp$Cluster <- NULL
 datatable(tmp)
 ```
@@ -278,7 +281,7 @@ list_of_clusters <- dataset$X_C %>%
   unique() %>%
   sort()
 
-char_size <- nchar(as.character(max(list_of_clusters)))
+char_size <- nchar(as.character(length(list_of_clusters)))
 
 # Charts of cluster 99 are saved as x, where x is the main_clusters + 1
 # If there are 27 clusters + 99, then 99 is the cluster 28.

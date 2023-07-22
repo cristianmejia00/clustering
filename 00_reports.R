@@ -71,9 +71,9 @@ extension <- 'png'
 subfolder_dataset <- "charts_dataset"
 subfolder_clusters <- "charts_clusters"
 source(file.path(getwd(), "zz-charts_dataset.R"))
-source(file.path(getwd(), "zz-charts_cluster_stats1.R"))
-source(file.path(getwd(), "zz-charts_cluster_stats2.R"))
-source(file.path(getwd(), "zz-charts_cluster_scatterplots.R"))
+source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
+source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
+source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
 source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
 
