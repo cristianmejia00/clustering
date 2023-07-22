@@ -77,5 +77,15 @@ source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
 source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
 source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
-# Save environ
+# Save code snapshot
+files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
+# Not to zip Rdata environments as they are heavy and saved separately
+files_to_save <- files_to_save[!grepl('rdata$', tolower(files_to_save))]
+# Zip them. This needs Rtools to work
+zip(zipfile = file.path(output_folder_level, 'source_code'),
+    files = files_to_save)
+
+# Save package list
+
+# Save Global environment
 save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))
