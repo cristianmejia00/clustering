@@ -1,13 +1,18 @@
 # 20181206 Cluster summaries
 print("###################### reports/04_cluster_reports.R")
 
-# So we need it.
+# INPUT
 list_of_clusters <- myDataCorrect$X_C %>%
-  unique() %>%
-  sort()
-
-# Get the available columns
+                    unique() %>%
+                    sort()
 available_columns <- colnames(myDataCorrect)
+
+## Check the columns that are actually available
+categorical_long_reports <- settings$rp$categorical_long_reports %>% .[. %in% available_columns]
+categorical_simple_wide_reports <- settings$rp$categorical_simple_wide_reports %>% .[. %in% available_columns]
+categorical_multi_wide_reports <- settings$rp$categorical_multi_wide_reports %>% .[. %in% available_columns]
+numerical_reports <- settings$rp$numerical_reports %>% .[. %in% available_columns]
+
 
 ## DEFINITIONS
 
@@ -27,20 +32,21 @@ available_columns <- colnames(myDataCorrect)
 ## min, 1q, mean, media, 3q, max, NAs
 
 ##################################################################
-## Auxiliary functions:
-
-format_long_table <- function(a_table, a_cluster_id, top) {
-  # Creates summary tables properly formatted
-  # By removing NAs and adjusting for the items found
-
-
+## Utils:
+#' @description
+#' Creates summary df properly formatted by removing NAs and adjusting for the items found
+#' @param a_table TABLE. Usually the output of `TopSomething()`
+#' @param a_cluster INTEGER. The cluster being formatted.
+#' @param top INTEGER. the number of results to include in the report
+#' @returns DATAFRAME. A long shaped data frame
+format_long_table <- function(a_table, a_cluster, top) {
 
   ## Update the table to remove possible NAs
   a_table <- a_table[!is.na(a_table)]
   if (length(a_table) >= 1) {
     ## Update "top" in case the table contains fewer values.
     top1 <- min(top, length(a_table))
-    data.frame(toupper(names(a_table)), unname(a_table), rep(a_cluster_id, top1))
+    data.frame(toupper(names(a_table)), unname(a_table), rep(a_cluster, top1))
   }
 }
 
@@ -51,13 +57,14 @@ format_long_table <- function(a_table, a_cluster_id, top) {
 #' @param clusters LIST[INTEGERS]. a list of clusters to include in the summary
 #' @param top INTEGER. the number of results to include in the report
 #' @param with_all BOOL. if the summary including all data should be include as `Cluster 0`
+#' @returns Nothing. --> It writes a .csv with the report.
 generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
 
   ## Get clusters' results
   result_list <- lapply(clusters, function(c) {
     cluster_data <- subset(df, df$"X_C" == c)
     cluster_tops <- TopSomething(cluster_data, coll = a_column, top = top)
-    return(format_long_table(cluster_tops, a_cluster_id = c, top = top))
+    return(format_long_table(cluster_tops, a_cluster = c, top = top))
   }) %>% rbind.fill()
   if (ncol(result_list) > 4) {
     result_list <- result_list[, c(1:4)]
@@ -65,8 +72,8 @@ generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
 
   ## Insert `cluster 0` summary
   if (with_all) {
-    cluster_zero <- TopSomething(df, coll = a_column, top = top)
-    cluster_zero <- format_long_table(cluster_zero, a_cluster_id = 0, top = top)
+    cluster_zero <- TopSomething(df, coll = a_column, top = top) %>%
+                    format_long_table(a_cluster = 0, top = top)
     result_list <- rbind(cluster_zero, result_list)
   }
 
@@ -194,12 +201,6 @@ generate_numerical_report <- function(df, a_column, clusters, with_all = TRUE) {
 }
 
 ##################################################################
-## Check the columns that are actually available
-categorical_long_reports <- settings$rp$categorical_long_reports %>% .[. %in% available_columns]
-categorical_simple_wide_reports <- settings$rp$categorical_simple_wide_reports %>% .[. %in% available_columns]
-categorical_multi_wide_reports <- settings$rp$categorical_multi_wide_reports %>% .[. %in% available_columns]
-numerical_reports <- settings$rp$numerical_reports %>% .[. %in% available_columns]
-
 
 ## Write reports
 for (cc in categorical_long_reports) {
@@ -217,3 +218,8 @@ for (cc in categorical_multi_wide_reports) {
 for (cc in numerical_reports) {
   generate_numerical_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters)
 }
+
+# Cleaning up
+rm('cc','list_of_clusters', 'available_columns', 
+   'categorical_long_reports', 'categorical_simple_wide_reports',
+   'categorical_multi_wide_reports', 'numerical_reports')

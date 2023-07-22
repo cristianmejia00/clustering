@@ -27,19 +27,7 @@ load(file.path(
   "dataset_clustering.rdata"
 ))
 
-# Special filtering for palm oil news
-# dataset$X_C <- dataset$cluster
-# dataset$cluster_code <- dataset$cluster
-# dataset$X_C_name <- as.character(dataset$X_C)
-# dataset$related_topics <- dataset$X_C_name
-# dataset <- dataset[dataset$X_C > 0,]
-# dataset$X_E <- dataset$score
-# myDataCorrect <- dataset
 
-# facet_dataset <- dataset
-#
-# myDataCorrect_backup <- myDataCorrect
-# dataset_backup <- dataset
 ##########################################################
 # Output Folder
 output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_folder, 
@@ -47,9 +35,11 @@ output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_fold
                                    settings$analysis_metadata$analysis_folder)
 dir.create(output_folder_reports)
 
+
 ##########################################################
 # Verify the data is correctly formatted for reports
-source(file.path(getwd(), "03_reports", "00_verify_data.R"))
+source(file.path(getwd(), "04_utils", "00_verify_data.R"))
+zz_env <- list('x01' = ls())
 
 # Reporting clusters PAPERS
 if (settings$params$type_of_dataset == "papers") {

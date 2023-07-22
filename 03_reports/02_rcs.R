@@ -2,9 +2,12 @@
 #####################################################
 print("###################### reports/02_rcs.R")
 
-# Detect number of communities in the network, as outputted by Fukan System
-id_com <- sort(unique(myDataCorrect$"X_C"))
+# INPUTS
+myDataCorrect
+
+# Computed
 myDataCorrect$PY <- as.character(myDataCorrect$PY) %>% as.integer()
+id_com <- sort(unique(myDataCorrect$"X_C"))
 network_year <- round(mean(myDataCorrect$PY, na.rm = TRUE), digits = 1)
 
 
@@ -70,43 +73,42 @@ rcs <- rbindlist(values) %>% as.data.frame()
 # Participation is the proportion of papers within the cluster connected to the hub
 rcs$participation <- round(rcs$dmax / rcs$cluster_size, 3)
 
-if (settings$params$type_of_dataset != "news") {
-  # Calculate X, Y
-  rcs$X <- rcs$cluster_year - rcs$network_year
-  rcs$Y <- rcs$hub_year - rcs$cluster_year
-  rcs$X[is.na(rcs$X)] <- 0
-  rcs$Y[is.na(rcs$Y)] <- 0
 
-  # Add labels
-  labels <- sapply(1:nrow(rcs), function(z) {
-    x <- rcs$X[z]
-    y <- rcs$Y[z]
-    name <- if (x > 0 & y > 0) {
-      "Change Maker"
-    } else if (x > 0 & y < 0) {
-      "Incremental"
-    } else if (x < 0 & y > 0) {
-      "Breaktrough"
-    } else if (x < 0 & y < 0) {
-      "Matured"
-    }
-    # else {"OTHER"}})
-    # The appearance of the following may imply error in calculations
-    else if (x == 0 & y > 0) {
-      "B & CM"
-    } else if (x == 0 & y < 0) {
-      "M & I"
-    } else if (x > 0 & y == 0) {
-      "CM & I"
-    } else if (x < 0 & y == 0) {
-      "B & M"
-    } else {
-      "CENTERED"
-    }
-  })
+# Calculate RCS Labels
+rcs$X <- rcs$cluster_year - rcs$network_year
+rcs$Y <- rcs$hub_year - rcs$cluster_year
+rcs$X[is.na(rcs$X)] <- 0
+rcs$Y[is.na(rcs$Y)] <- 0
 
-  rcs$label <- labels
-}
+# Add labels
+labels <- sapply(1:nrow(rcs), function(z) {
+  x <- rcs$X[z]
+  y <- rcs$Y[z]
+  name <- if (x > 0 & y > 0) {
+    "Change Maker"
+  } else if (x > 0 & y < 0) {
+    "Incremental"
+  } else if (x < 0 & y > 0) {
+    "Breaktrough"
+  } else if (x < 0 & y < 0) {
+    "Matured"
+  }
+  # else {"OTHER"}})
+  # The appearance of the following may imply error in calculations
+  else if (x == 0 & y > 0) {
+    "B & CM"
+  } else if (x == 0 & y < 0) {
+    "M & I"
+  } else if (x > 0 & y == 0) {
+    "CM & I"
+  } else if (x < 0 & y == 0) {
+    "B & M"
+  } else {
+    "CENTERED"
+  }
+})
+rcs$label <- labels
+
 
 ## Needs the PY prop table computed in cluster reports
 # Find growing clusters
@@ -123,6 +125,8 @@ growth_finder <- function(a_prop_matrix, a_range) {
 cluster_year_proportions <- read.csv(file.path(output_folder_level, "report_PY_proportions.csv"))
 rcs$growth_rate <- growth_finder(cluster_year_proportions, 4)
 
-#############################################
+# Write RCS
 write.csv(rcs, file = rn$PROJECTrcs, row.names = FALSE)
 
+# cleaning up
+rm('id_com', 'network_year', 'values', 'labels', 'cluster_year_proportions')

@@ -6,6 +6,13 @@
 
 print("###################### reports/07_prob_exclu_keywords.R")
 
+# INPUTS
+K <- K
+term.frequency <- term.frequency
+phi <- phi
+my_vocab <- my_vocab
+term.frequency
+
 #########################################
 #########################################
 print("-- Parameters to compute Relevance")
@@ -38,15 +45,15 @@ find_relevance <- function(i) {
 #########################################
 print("-- Compute relevance: most probable")
 #########################################
-relevance0.6 <- find_relevance(1)
+relevance_vector <- find_relevance(1)
 
-topic_names <- unique(relevance0.6$Category)
+topic_names <- unique(relevance_vector$Category)
 
 #Vector of terms in topics
 ALL_Topics <- lapply(topic_names, function(x) {
-  topic_index <- which(relevance0.6$Category == x)
-  term <- unlist(relevance0.6$Term[topic_index])
-  relevance <- unlist(relevance0.6$relev[topic_index])
+  topic_index <- which(relevance_vector$Category == x)
+  term <- unlist(relevance_vector$Term[topic_index])
+  relevance <- unlist(relevance_vector$relev[topic_index])
   relevance <- relevance + abs(min(relevance)) + 0.01 #Linear scaling, to have positive weigths always
   return (x = data.frame(term, relevance))})
 
@@ -60,15 +67,15 @@ names(ALL_Topics) <- sapply(1:length(ALL_Topics), function(x) paste("T", as.char
 #########################################
 print("-- Compute relevance: most exclusive")
 #########################################
-relevance0.6 <- find_relevance(0.03)
+relevance_vector <- find_relevance(0.03)
 
-topic_names_exclu <- unique(relevance0.6$Category)
+topic_names_exclu <- unique(relevance_vector$Category)
 
 #Vector of terms in topics
 ALL_Topics_exclu <- lapply(topic_names_exclu, function(x) {
-  topic_index <- which(relevance0.6$Category == x)
-  term <- unlist(relevance0.6$Term[topic_index])
-  relevance <- unlist(relevance0.6$relev[topic_index])
+  topic_index <- which(relevance_vector$Category == x)
+  term <- unlist(relevance_vector$Term[topic_index])
+  relevance <- unlist(relevance_vector$relev[topic_index])
   relevance <- relevance + abs(min(relevance)) + 0.01 #Linear scaling, to have positive weigths always
   return (x = data.frame(term, relevance))})
 

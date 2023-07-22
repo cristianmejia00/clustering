@@ -16,11 +16,11 @@
 # Reports
 ####################################################
 # Keep track of time
-st <- Sys.time()
+started_time <- Sys.time()
 
 # Data preparation
-for (i in c(0:settings$cno$recursive_level)) {
-  level_report <<- i
+for (level_report_iteration in c(0:settings$cno$recursive_level)) {
+  level_report <<- level_report_iteration
   print(paste("...Starting reports for level", as.character(level_report), sep = " "))
 
   # Get the level path and create the directory
@@ -28,32 +28,33 @@ for (i in c(0:settings$cno$recursive_level)) {
   dir.create(output_folder_level)
 
   # Get the right dataset for the corresponding level
-  if (i == 0) {
+  if (level_report_iteration == 0) {
     source("02_citation_network/04_data_scope_level0.R")
   }
-  if (i == 1) {
+  if (level_report_iteration == 1) {
     source("02_citation_network/04_data_scope_level1.R")
   }
-  if (i == 2) {
+  if (level_report_iteration == 2) {
     source("02_citation_network/04_data_scope_level2.R")
   }
-  if (i == 3) {
+  if (level_report_iteration == 3) {
     source("02_citation_network/04_data_scope_level3.R")
   }
-
 
   # update report names
   # PROJECT <- paste(PROJECTNAME, "_", as.character(i), sep = "")
   # Docker container Ubuntu (Comment it out in Windows):
   # PROJECT <- paste("/var/container/", PROJECT, sep = "")
-  rn <- list()
-  rn$PROJECTarticlereport <- file.path(output_folder_level, "article_report.csv")
-  rn$PROJECTrcs <- file.path(output_folder_level, "rcs.csv")
-  rn$PROJECTrcs2 <- file.path(output_folder_level, "rcs2.csv")
-  rn$PROJECTrcsviz <- file.path(output_folder_level, "rcs_viz.html")
-  rn$PROJECTKeywords <- file.path(output_folder_level, "ALL_Cluster_keywords.rdata")
-  rn$PROJECTKeywords_report <- file.path(output_folder_level, "report_keyword.csv")
-  rn$PROJECTenviron <- file.path(output_folder_level, "environ.rdata")
+  rn <- list(
+    PROJECTarticlereport = file.path(output_folder_level, "article_report.csv"),
+    PROJECTrcs = file.path(output_folder_level, "rcs.csv"),
+    PROJECTrcs2 = file.path(output_folder_level, "rcs2.csv"),
+    PROJECTrcsviz = file.path(output_folder_level, "rcs_viz.html"),
+    PROJECTKeywords = file.path(output_folder_level, "ALL_Cluster_keywords.rdata"),
+    PROJECTKeywords_report = file.path(output_folder_level, "report_keyword.csv"),
+    PROJECTenviron = file.path(output_folder_level, "environ.rdata")
+  )
+
 
   # Number of clusters
   K <- length(unique(myDataCorrect$X_C))
@@ -61,15 +62,19 @@ for (i in c(0:settings$cno$recursive_level)) {
   # Document report
   print("Making article summary")
   source("03_reports/01_document_report_with_abstract.R")
-
+  zz_env$x02 <- ls()
+  
   # Get detail reports reports by feature by cluster
   print("Clusters reports")
   source("03_reports/04_cluster_reports.R")
+  zz_env$x03 <- ls()
 
   # RCS
   print("Computing RCS")
   source("03_reports/02_rcs.R")
-
+  zz_env$x04 <- ls()
+  stop('Cristian stop')
+  
   # Keywords for heatmap # Now, do it for all.
   print("Heatmap keywords")
   source("03_reports/05_heatmap_keywords_part_1.R")
@@ -105,7 +110,9 @@ for (i in c(0:settings$cno$recursive_level)) {
   # Save complete environment by level
   print("Saving image")
   save.image(rn$PROJECTenviron)
+  
   # Time per level
-  time_taken <- Sys.time() - st
-  print(time_taken)
+  time_02_finished <- Sys.time()
+  time_03_taken <- time_02_finished - time_01_started
+  print(time_03_taken)
 }
