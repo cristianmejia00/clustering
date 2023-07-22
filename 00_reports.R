@@ -85,7 +85,14 @@ files_to_save <- files_to_save[!grepl('rdata$', tolower(files_to_save))]
 zip(zipfile = file.path(output_folder_level, 'source_code'),
     files = files_to_save)
 
+# Save readable settings
+writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
+           file.path(output_folder_level, "settings.json"))
+
 # Save package list
+session_info <- sessionInfo()
+save(session_info, file = file.path(output_folder_level, "sessionInfo.rdata")) 
+writeLines(capture.output(sessionInfo()), file.path(output_folder_level, "sessionInfo.txt"))
 
 # Save Global environment
 save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))
