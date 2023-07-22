@@ -35,7 +35,7 @@ if (nrow(myDataCorrect) > 10000) {
   myDataCorrect_SAMPLE2 <- myDataCorrect_SAMPLE %>%
     group_by(X_C) %>%
     top_n(my_thres[level_report + 1], X_E) %>%
-    ungroup() # optianally use fractions %>% top_frac_ceiling(0.05, X_E)
+    ungroup() # optionally use fractions %>% top_frac_ceiling(0.05, X_E)
 } else {
   myDataCorrect_SAMPLE2 <- myDataCorrect_SAMPLE
 }

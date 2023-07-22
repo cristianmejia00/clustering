@@ -135,7 +135,12 @@ settings$rp <- list(
   categorical_simple_wide_reports = c("PY", "sentiment_factor"), # Columns in the dataset without ';' for matrix type summary
   categorical_multi_wide_reports = c("WC", "Countries", "Institutions"), # Columns in the dataset with ';' for matrix type summary
   numerical_reports = c("PY", "Z9", "sentiment", "score"), # Numeric columns in the dataset for summary (min, max, mean, median, sd)
-  column_labels = c(
+  methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
+)
+
+# Column labels are used to format RCS columns and charts' labels
+if (settings$params$dataset_source == 'wos') {
+  settings$rp$column_labels <- c(
     "X_C" = "Cluster",
     "TI" = "Title",
     "AB" = "Abstract",
@@ -153,9 +158,51 @@ settings$rp <- list(
     "sentiment" = "Sentiment score",
     "sentiment_factor" = "Sentiment",
     "UT" = "ID"
-  ), # Column labels are used to format RCS columns and charts' labels
-  methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
-)
+  )
+}
+
+if (settings$params$dataset_source == 'derwent') {
+  settings$rp$column_labels <- c(
+    "X_C" = "Cluster",
+    "TI" = "Title",
+    "AB" = "Abstract",
+    "AU" = "Inventors",
+    "PY" = "Publication Years",
+    "X_E" = "Degree", 
+    #"SO" = "Journals",
+    "Countries" = "Countries",
+    "Institutions" = "Asignees",
+    "DI" = "DOI",
+    "WC" = "IPC",
+    "DE" = "Author Keywords",
+    "Z9" = "Citations",
+    "score" = "Score",
+    #"sentiment" = "Sentiment score",
+    #"sentiment_factor" = "Sentiment",
+    "UT" = "Patent Number"
+  )
+}
+
+if (settings$params$dataset_source == 'factiva') {
+  settings$rp$column_labels <- c(
+    "X_C" = "Cluster",
+    "TI" = "Headline",
+    "AB" = "Main paragraph",
+    "AU" = "Authors",
+    "PY" = "Publication Years",
+    "X_E" = "Score", 
+    "SO" = "Newspapers",
+    "Countries" = "Regions",
+    "Institutions" = "Organizations",
+    "WC" = "Categories",
+    "DE" = "Types",
+    "ID" = "Entities",
+    "score" = "Score",
+    "sentiment" = "Sentiment score",
+    "sentiment_factor" = "Sentiment",
+    "UT" = "ID"
+  )
+}
 
 # Activate stopwords
 settings$stopwords <- list()

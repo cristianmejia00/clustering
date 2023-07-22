@@ -2,10 +2,9 @@
 
 # 20181203
 # Plot the keywords of the clusters like in the topic model visualizer
-
 print("###################### reports/06_citation_to_topic_model_converter.R")
 
-# From the secuence of codes, we need:
+# From the codes, we need:
 # papersText OR myDataCorrect (to paste TI and AB)
 # cluster_keywords_tf OR cluster_keywords_tfidf (Depending of the one decided)
 # cluster_ID_label1_backup (When doing retrospective)
@@ -49,11 +48,10 @@ if (use_tfidf) {
       temp$wildcard <- 1
     }
     return(temp)
-  }) %>%
+  })  %>%
     data.table::rbindlist(., fill = TRUE) %>%
     as.data.frame()
 }
-
 
 PHI[is.na(PHI)] <- 0
 

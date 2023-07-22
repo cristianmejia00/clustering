@@ -3,11 +3,11 @@
 
 # Any file, passing through this code will have the following columns in the following format
 
-# INPUTS
-myDataCorrect
-settings$rp$top_documents
-settings$rp$column_labels
-rn$PROJECTarticlereport
+# # INPUTS
+# myDataCorrect
+# settings$rp$top_documents
+# settings$rp$column_labels
+# rn$PROJECTarticlereport
 
 
 print("###################### reports/01_document_report_with_abstract.R")

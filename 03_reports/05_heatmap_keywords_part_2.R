@@ -1,6 +1,6 @@
 # 20210812 Last updated
 print("###################### reports/05_heatmap_keywords_part_2.R")
-
+zz_env$x02 <- ls()
 #########################################
 #########################################
 print("-- SAMPLING")
@@ -30,19 +30,23 @@ if (settings$params$type_of_analysis == "topic_model") {
   myDataCorrect$sampling_column <- myDataCorrect$"level0"
 }
 
+sample_columns <- intersect(c('TI', 'AB', 'DE', 'ID','X_E','X_C','sampling_column',
+                              'subcluster_label1','subcluster_label2','subcluster_label3'),
+                            colnames(myDataCorrect))
 
 
+# Sampling sizes vary depending on level
+my_thres <- c(100, 50, 10, 10)
 
-# Get the dataset sorted from X_E
 if (nrow(myDataCorrect) > 10000) {
-  myDataCorrect_xe <- myDataCorrect[order(myDataCorrect$X_E, decreasing = TRUE), ]
-  myDataCorrect_SAMPLE <- myDataCorrect %>%
+  myDataCorrect_SAMPLE <- myDataCorrect[,sample_columns] %>%
     group_by(sampling_column) %>%
-    top_n(10, X_E) %>%
-    ungroup() # optionally we can use a % %>% top_frac_ceiling(0.1, X_E)
+    top_n(my_thres[level_report + 1], X_E) %>%
+    ungroup() # optionally use fractions %>% top_frac_ceiling(0.05, X_E)
 } else {
-  myDataCorrect_SAMPLE <- myDataCorrect
+  myDataCorrect_SAMPLE <- myDataCorrect[,sample_columns]
 }
+
 
 myDataCorrect$sampling_column <- NULL
 
@@ -67,9 +71,11 @@ id_keywords <- myDataCorrect_SAMPLE$ID %>% tolower()
 
 # Concatenate the strings
 if (nrow(myDataCorrect_SAMPLE) > 100000) {
+  # Use only the title for large datasets
   tiab_keywords_raw <- title_text
 } else {
-  ab_text <- remove_copyright_statements(tolower(iconv(myDataCorrect_SAMPLE$AB, "UTF-8", "UTF-8", sub = "")))
+  # Otherwise use the title and abstract
+  ab_text <- tolower(iconv(myDataCorrect_SAMPLE$AB, "UTF-8", "UTF-8", sub = ""))
   tiab_keywords_raw <- paste(title_text, ab_text, sep = ". ") %>% tolower()
 }
 
@@ -155,3 +161,4 @@ papersText <- gsub("NA ", "", papersText)
 
 # Attach to sample
 myDataCorrect_SAMPLE$papersText <- papersText
+

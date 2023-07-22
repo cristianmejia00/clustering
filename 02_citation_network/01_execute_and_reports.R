@@ -24,7 +24,8 @@ for (level_report_iteration in c(0:settings$cno$recursive_level)) {
   print(paste("...Starting reports for level", as.character(level_report), sep = " "))
 
   # Get the level path and create the directory
-  output_folder_level <- file.path(output_folder_reports, paste("level", as.character(level_report), sep = ""))
+  output_folder_level <- file.path(output_folder_reports, 
+                                   paste("level", as.character(level_report), sep = ""))
   dir.create(output_folder_level)
 
   # Get the right dataset for the corresponding level
@@ -73,7 +74,6 @@ for (level_report_iteration in c(0:settings$cno$recursive_level)) {
   print("Computing RCS")
   source("03_reports/02_rcs.R")
   zz_env$x04 <- ls()
-  stop('Cristian stop')
   
   # Keywords for heatmap # Now, do it for all.
   print("Heatmap keywords")
@@ -101,14 +101,16 @@ for (level_report_iteration in c(0:settings$cno$recursive_level)) {
     # source("03_reports/09_keywords_per_clusters.R")
     source("03_reports/10_rcs_keywords.R")
   }
-
+  zz_env$x05 <- c(zz_env$x04, 'papersText', 'myDataCorrect_SAMPLE', 'unified_keywords')
+  
   # Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos") {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
   }
 
-  # Save complete environment by level
+  # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
+  rm(setdiff(ls(),zz_env$x05))
   save.image(rn$PROJECTenviron)
   
   # Time per level
@@ -116,3 +118,4 @@ for (level_report_iteration in c(0:settings$cno$recursive_level)) {
   time_03_taken <- time_02_finished - time_01_started
   print(time_03_taken)
 }
+

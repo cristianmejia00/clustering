@@ -7,7 +7,7 @@
 print("###################### reports/07_prob_exclu_keywords.R")
 
 # INPUTS
-K <- K
+K <- length(unique(myDataCorrect$X_C)) #K
 term.frequency <- term.frequency
 phi <- phi
 my_vocab <- my_vocab
