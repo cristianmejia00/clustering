@@ -27,19 +27,7 @@ load(file.path(
   "dataset_clustering.rdata"
 ))
 
-# Special filtering for palm oil news
-# dataset$X_C <- dataset$cluster
-# dataset$cluster_code <- dataset$cluster
-# dataset$X_C_name <- as.character(dataset$X_C)
-# dataset$related_topics <- dataset$X_C_name
-# dataset <- dataset[dataset$X_C > 0,]
-# dataset$X_E <- dataset$score
-# myDataCorrect <- dataset
 
-# facet_dataset <- dataset
-#
-# myDataCorrect_backup <- myDataCorrect
-# dataset_backup <- dataset
 ##########################################################
 # Output Folder
 output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_folder, 
@@ -47,9 +35,11 @@ output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_fold
                                    settings$analysis_metadata$analysis_folder)
 dir.create(output_folder_reports)
 
+
 ##########################################################
 # Verify the data is correctly formatted for reports
-source(file.path(getwd(), "03_reports", "00_verify_data.R"))
+source(file.path(getwd(), "04_utils", "00_verify_data.R"))
+zz_env <- list('x01' = ls())
 
 # Reporting clusters PAPERS
 if (settings$params$type_of_dataset == "papers") {
@@ -71,9 +61,9 @@ extension <- 'png'
 subfolder_dataset <- "charts_dataset"
 subfolder_clusters <- "charts_clusters"
 source(file.path(getwd(), "zz-charts_dataset.R"))
-source(file.path(getwd(), "zz-charts_cluster_stats1.R"))
-source(file.path(getwd(), "zz-charts_cluster_stats2.R"))
-source(file.path(getwd(), "zz-charts_cluster_scatterplots.R"))
+source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
+source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
+source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
 source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
 
@@ -87,5 +77,22 @@ source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
 source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
 source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
-# Save environ
+# Save code snapshot
+files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
+# Not to zip Rdata environments as they are heavy and saved separately
+files_to_save <- files_to_save[!grepl('rdata$', tolower(files_to_save))]
+# Zip them. This needs Rtools to work
+zip(zipfile = file.path(output_folder_level, 'source_code'),
+    files = files_to_save)
+
+# Save readable settings
+writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
+           file.path(output_folder_level, "settings.json"))
+
+# Save package list
+session_info <- sessionInfo()
+save(session_info, file = file.path(output_folder_level, "sessionInfo.rdata")) 
+writeLines(capture.output(sessionInfo()), file.path(output_folder_level, "sessionInfo.txt"))
+
+# Save Global environment
 save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))

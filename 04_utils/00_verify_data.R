@@ -45,10 +45,7 @@ if (settings$params$type_of_dataset == "news") {
     print("column mismatch between dataset and myDataCorrect")
   }
 }
-# colnames(dataset)
-# dataset$X_E <- NULL
-# dataset <- cbind(dataset, myDataCorrect[,c("X_C", "cluster_code", "X_E", "related_topics")])
-# dataset$level0 <- dataset$X_C
+
 ################################################################################
 # Change column names
 setnames(dataset, c("_N", "_E"), c("X_N", "X_E"), skip_absent = TRUE)
@@ -173,6 +170,12 @@ dataset$X_C <- as.numeric(dataset$X_C)
 dataset$X_E <- as.numeric(dataset$X_E)
 dataset$Z9 <- as.numeric(dataset$Z9)
 dataset$PY <- as.numeric(dataset$PY)
+
+##########################################################################
+# Clean abstract
+dataset$AB <- remove_copyright_statements(dataset$AB)
+dataset$AB <- remove_word_counts_line(dataset$AB)
+
 
 dataset <- dataset[, !duplicated(colnames(dataset))]
 if (settings$params$type_of_dataset == "news") {

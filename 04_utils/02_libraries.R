@@ -25,7 +25,7 @@ if (!("Opener5"     %in% rownames(installed.packages()))) {
   install_github("cristianmejia00/Opener5")
 }
 if (!("DT"          %in% rownames(installed.packages()))) {install.packages("DT")}
-
+if (!("glue"        %in% rownames(installed.packages()))) {install.packages("glue")}
 ####################################################
 # Load libraries
 
@@ -57,3 +57,4 @@ library(slam)
 library(Rtsne)
 library(tools)
 library(DT)
+library(glue)

@@ -14,7 +14,7 @@ dataset <- dataset
 file_name <- file.path(output_folder_level, 'index_files', 'bibliography.bib')
 
 # Check columns
-if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset_bibliography))) {
+if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset))) {
   stop('Necessary column for .bib is missing.')
 }
 
@@ -23,7 +23,7 @@ if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset
 #' Save all the articles in a dataset as a reference file `.bib`.
 #' .bib files can be used in any reference manager like Zotero, and are needed for Latex and Markdown articles.
 #' @param a_data_frame DATAFRAME. The dataset. (needed columns: TI, AU, PY, SO, VL, IS, BP, EP, DI, citation_key)
-#' @param file_name STRING. The name of the file.
+#' @param file_name STRING. The name of the output file including the extension `.bib`
 write_refs_from_df <- function (a_data_frame, file_name = "references.bib") {
   bib_docs <- lapply(c(1:nrow(a_data_frame)), function(x) {
     roww <- a_data_frame[x,]
@@ -48,7 +48,7 @@ write_refs_from_df <- function (a_data_frame, file_name = "references.bib") {
 ###################################
 
 # Create the keys for citation analysis
-citation_keys <- sapply(c(1:nrow(dataset)), function(x) {
+citation_keys <- sapply(1:nrow(dataset), \(x) {
   if (dataset$AU[x] != '') {
     first_au <- gsub(',|;', '', dataset$AU[x]) %>% strsplit(' ') %>% unlist() %>% tolower() %>% .[[1]] 
   } else {
@@ -57,11 +57,15 @@ citation_keys <- sapply(c(1:nrow(dataset)), function(x) {
   first_kwd <- tolower(dataset$TI[x]) %>% gsub('^the |^a |^an ', '', .) %>% gsub(' of | the | a | an | from | to | in | on ', ' ', .) %>% strsplit(' ') %>% unlist() %>% .[c(1:2)] %>% gsub('[[:punct:]]','',.) %>% paste(collapse = '-')
   tmp <- paste(first_au, as.character(dataset$PY[x]), first_kwd, sep = '-')
   tmp <- gsub('%|:|,|"|;', '', tmp)
+  if (length(tmp) > 1) {
+    print(x)
+  }
   return(tmp)
 })
 
-citation_keys[duplicated(citation_keys)] <- paste(citation_keys[duplicated(citation_keys)], c(1:length(citation_keys[duplicated(citation_keys)])), collapse = '')
+citation_keys[duplicated(citation_keys)] <- paste(citation_keys[duplicated(citation_keys)], c(1:length(citation_keys[duplicated(citation_keys)])), sep = '')
 dataset$citation_key <- citation_keys
+
 
 # We get the files that have a summary. 
 # Because those are the only ones we reference in the generated article

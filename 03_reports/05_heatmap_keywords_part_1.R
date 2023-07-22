@@ -6,13 +6,12 @@ print("###################### reports/05_heatmap_keywords_part_1.R")
 #########################################
 # Functions for preparation and text tokenization
 #########################################
-# Agreggate textual contents by clusters. Ideal to merge the documents by clusters.
-# documents_vector = the column containing the text to use
-# Inputs:
-# cluster_assignation_vector = The column having the cluster ID per document
-# list_of_cluster = The list of clusters to use
-# Outputs:
-# A list of type character of size list_of_clusters.
+#' @description
+#' Agreggate textual contents by clusters. Ideal to merge the documents by clusters.
+#' @param documents_vector LIST[STRINGS] The dataset column with the document text to be aggregated
+#' @param cluster_assignation_vector LIST[INTEGERS] The dataset column with the cluster per document. usually X_C.
+#' @param list_of_clusters LIST[INTEGERS] The list of cluster ids to use
+#' @returns LIST[STRINGS] A list of size `list_of_clusters` with the aggregated text.
 clusterBulkText <- function(documents_vector, cluster_assignation_vector, list_of_clusters) {
   lapply(list_of_clusters, function(i){
     paste(documents_vector[cluster_assignation_vector==i], collapse = " ")
@@ -51,31 +50,23 @@ corpusToText <- function(a_corpus){
 }
 
 
-
 #########################################
 #########################################
 # Functions for improved text mining
 #########################################
-# Function to remove the copyright from abstracts.
-# Input: A char string or vector. Ususally the abstracts from WOS
-# Output: The imput without the copyritgh statements.
-# Dependencies: None.
-remove_copyright_statements <- function(a_text) {
-  return(gsub(" [A-z0-9 ]*?\\(C\\).*$", "", a_text))
-}
-
-# Patterns for the split
-my_pattern <- "--- | --- | ---|- | - | -|\\.|,|;|:|\\(|\\)|!|#|\\$|%|\\&|\\'|\\*|\\+|/|<|=|>|\\?|@|\\[|\\]|\\^|_|`|~|\\{|\\}|\\|"
-my_stops_space <- paste(" ", stopwords("english"), " ", sep = "") %>% paste(collapse = "|")
-my_stops_starts <- paste("^", stopwords("english"), " ", sep = "") %>% paste(collapse = "|")
-my_stops_ends <- paste(" ", stopwords("english"), "$", sep = "") %>% paste(collapse = "|")
-my_stops_colon <- paste(" ", stopwords("english"), ";", sep = "") %>% paste(collapse = "|")
-
-# Patterns to be removed
-my_specials <- "\\\\\\u|\\\\\\;"
-
 # Splitting function
 get_keywords_by_stopword_method <- function(content_vector, useStemming = TRUE, myStopWords) {
+  
+  # Patterns for the split
+  my_pattern <- "--- | --- | ---|- | - | -|\\.|,|;|:|\\(|\\)|!|#|\\$|%|\\&|\\'|\\*|\\+|/|<|=|>|\\?|@|\\[|\\]|\\^|_|`|~|\\{|\\}|\\|"
+  my_stops_space <- paste(" ", stopwords("english"), " ", sep = "") %>% paste(collapse = "|")
+  my_stops_starts <- paste("^", stopwords("english"), " ", sep = "") %>% paste(collapse = "|")
+  my_stops_ends <- paste(" ", stopwords("english"), "$", sep = "") %>% paste(collapse = "|")
+  my_stops_colon <- paste(" ", stopwords("english"), ";", sep = "") %>% paste(collapse = "|")
+  
+  # Patterns to be removed
+  my_specials <- "\\\\\\u|\\\\\\;"
+  
   text <- SimpleCorpus(VectorSource(enc2utf8(content_vector)))
   text <- tm_map(text, content_transformer(tolower))
   

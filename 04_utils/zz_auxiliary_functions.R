@@ -97,94 +97,13 @@ getInstitutions <- function(a_c1_column) {
   return(inst)
 }
 
-
-# ########################################################
-# ########################################################
-# # Widgets
-# 
-# # Get Top Authors
-# TopAuthors <- function(d, top = 5){
-#   authors <- 
-#     tolower(d$AU) %>%
-#     strsplit(split ="; ") %>% 
-#     unlist %>% 
-#     table %>% 
-#     sort(decreasing = TRUE) %>% 
-#     .[1:top]
-#   return(authors)
-# }
-# 
-# # Top WOS categories (Assigned to journal)
-# TopCategories <- function(d, top = 5){
-#   categories <- 
-#     strsplit(d$WC, split ="; ") %>% 
-#     unlist %>% 
-#     table %>% 
-#     sort(decreasing = TRUE) %>% 
-#     .[1:top]
-#   return(categories)
-# }
-# 
-# 
-# 
-# # Top Keywords by frequency (Author Keywords + Smart keywords)
-# TopKeywords <- function(d, top = 10){
-#   keys <- 
-#     paste(d$DE, d$ID, sep = "; ") %>%
-#     tolower %>%
-#     strsplit(split ="; ") %>% 
-#     lapply(function(x) x[x!=""]) %>%
-#     unlist %>% 
-#     table %>% 
-#     sort(decreasing = TRUE) %>% 
-#     .[1:top]
-#   return(keys)
-# }
-# 
-# 
-# # Get top countries
-# TopCountries <-  function(d, top = 5){
-#   Countries <- 
-#     tolower(d$Country) %>%
-#     table %>% 
-#     sort(decreasing = TRUE) %>%
-#     .[1:top]
-#   return(Countries)
-# }
-# 
-# #Top Journal/Conference (Assigned to paper)
-# TopJournals <- function(d, top = 5){
-#   Journals <- 
-#     strsplit(d$J9, split ="; ") %>% 
-#     unlist %>% 
-#     table %>% 
-#     sort(decreasing = TRUE) %>% 
-#     .[1:top]
-#   return(Journals)
-# }
-# 
-# 
-# 
-# #Top Institutions (Based on all co-authors)
-# TopInstitutions <- function(d, top = 10){
-#   Insts <- 
-#     strsplit(d$institutions, split ="; ") %>% 
-#     unlist %>% 
-#     table %>% 
-#     sort(decreasing = TRUE) %>% 
-#     .[1:top]
-#   return(Insts)
-# }
-
-
 ## Generic
 # Auxiliar function to get the top values from a Factiva 
 # Works for "NS"("AU") categories "CO"("ID") companies "IN"("DE") industries "RE"("C1") regions. Factiva("WOS")
 TopSomething <- function(d, coll = "ID" , top = 5){
   categories <- tolower(d[[coll]]) 
   if (coll %in% c('Countries', 'Institutions', 'AU', 'SO')) {
-    library(stringr)
-    categories <- str_to_title(categories)
+    categories <- stringr::str_to_title(categories)
   }
   categories <- categories %>% 
     strsplit(split ="; ") %>% 
@@ -196,3 +115,34 @@ TopSomething <- function(d, coll = "ID" , top = 5){
   return(categories)
 }
 
+
+## Remove word count from abstract
+remove_word_counts_line <- function(a_text) {
+  a_text <- gsub(" [A-z0-9 ]*?\\(Word\\).*$", "", a_text)
+  a_text <- gsub(" [A-z0-9 ]*?\\(word\\).*$", "", a_text)
+  return(a_text)
+}
+
+## Remove copyright statement from abstract
+# Function to remove the copyright from abstracts.
+# Input: A char string or vector. Ususally the abstracts from WOS
+# Output: The imput without the copyritgh statements.
+# Dependencies: None.
+
+# Test for 
+# Elsevier
+# rights reserved
+# Published by
+# creativecommons
+# C0
+remove_copyright_statements <- function(a_text) {
+  a_text <- gsub(" [A-z0-9 ]*?\\(C\\).*$", "", a_text)
+  a_text <- gsub(" [A-z0-9 ]*?\\(c\\).*$", "", a_text)
+  a_text <- gsub(" [A-z0-9 ]*?\\.\\(C\\).*$", "", a_text)
+  a_text <- gsub(" [A-z0-9 ]*?\\.\\(c\\).*$", "", a_text)
+  a_text <- gsub(" CO .*$", "", a_text)
+  a_text <- gsub(" This is an open access article .*$", "", a_text)
+  a_text <- gsub(" Published by .*$", "", a_text)
+  a_text <- gsub("(1|2)\\d{3} E.*$", "", a_text)
+  return(a_text)
+}

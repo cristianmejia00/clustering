@@ -5,10 +5,11 @@
 # Globals
 
 # The topic used to infer the query
-MAIN_TOPIC <- 'Future Scenarios'
+MAIN_TOPIC <- settings$analysis_metadata$project_name
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- 'technological forecasting and social change, foresight, and roadmapping in the context of management and innovation.'
+MAIN_TOPIC_DESCRIPTION <- 'Food waste and food loss. This is food that is not eaten. Food loss and waste occurs at all stages of the food supply chain – production, processing, sales, and consumption.'
+#'technological forecasting and social change, foresight, and roadmapping in the context of management and innovation.'
 
 
 
@@ -108,6 +109,13 @@ get_papers_summary <- function(cl_dataset) {
   return(cl_dataset)
 }
 
+###################################
+###################################
+# Initialize
+###################################
+rcs_merged$description <- ''
+rcs_merged$name <- ''
+dataset$summary <- ''
 
 ###################################
 ###################################
@@ -153,7 +161,7 @@ list_of_clusters <- dataset$X_C %>% unique() %>% sort()
 for (cluster in list_of_clusters) {
   # Get this cluster tops
   print(glue('cluster: {cluster}'))
-  cluster_data <- get_cluster_data(dataset, cluster = cluster, top = 5)
+  cluster_data <- get_cluster_data(dataset, cluster = cluster, top = 3)
   # Summarize each of the selected papers
   cluster_data <- get_papers_summary(cluster_data)
   # Assign the summaries to the main dataset
@@ -217,62 +225,63 @@ for (cluster in list_of_clusters) {
 rcs_merged$name2 <- gsub('^.*?"','',rcs_merged$name) %>% gsub('".$','', .) %>% gsub('"','', .)
 rcs_merged$cluster_name <- rcs_merged$name2
 rcs_merged$cluster_name[rcs_merged$cluster_code == 99] <- 'Others'
+
 ###################################
 # Cluster description and name when the process was interrupted above. 
 ###################################
-# Generate the bulk text
-cluster
-cluster_data$X_C[1]
-print('get bulk text')
-print(nrow(cluster_data))
-my_texts <- list()
-for (i in c(1:min(10,nrow(cluster_data)))) {
-  my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
-}
-print(length(my_texts))
-my_texts <- paste(my_texts, collapse = ' ')
-my_texts <- substr(my_texts, 1, (3500 * 4))
-
-# Get the topic of the cluster
-print('Get cluster topic')
-cluster_completed <- FALSE
-while(!cluster_completed) {
-  tmp <- tryCatch({
-    cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
-                                                              topic_description = MAIN_TOPIC_DESCRIPTION,
-                                                              cluster_text = my_texts),
-                                   temperature = 0.7)
-    cluster_description <- cluster_description$choices[[1]]$message$content
-    cluster_completed <- TRUE
-    cluster_description
-  }, 
-  error = function(err){
-    message(glue('Error getting topic description of cluster {i}. Trying again'))
-    message(err)
-  })
-}
-rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
-
-# Get the name of the cluster
-print('Get cluster name')
-cluster_completed <- FALSE
-while(!cluster_completed) {
-  tmp <- tryCatch({
-    cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
-                                                topic_description = MAIN_TOPIC_DESCRIPTION,
-                                                cluster_description = cluster_description), 
-                            max_tokens = 50,
-                            temperature = 0.4)
-    cluster_name <- cluster_name$choices[[1]]$message$content
-    cluster_completed <- TRUE
-    cluster_name
-  }, 
-  error = function(err){
-    message(glue('Error getting topic description of cluster {i}. Trying again'))
-    message(err)
-  })
-}
-rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
+# # Generate the bulk text
+# cluster
+# cluster_data$X_C[1]
+# print('get bulk text')
+# print(nrow(cluster_data))
+# my_texts <- list()
+# for (i in c(1:min(10,nrow(cluster_data)))) {
+#   my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
+# }
+# print(length(my_texts))
+# my_texts <- paste(my_texts, collapse = ' ')
+# my_texts <- substr(my_texts, 1, (3500 * 4))
+# 
+# # Get the topic of the cluster
+# print('Get cluster topic')
+# cluster_completed <- FALSE
+# while(!cluster_completed) {
+#   tmp <- tryCatch({
+#     cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
+#                                                               topic_description = MAIN_TOPIC_DESCRIPTION,
+#                                                               cluster_text = my_texts),
+#                                    temperature = 0.7)
+#     cluster_description <- cluster_description$choices[[1]]$message$content
+#     cluster_completed <- TRUE
+#     cluster_description
+#   }, 
+#   error = function(err){
+#     message(glue('Error getting topic description of cluster {i}. Trying again'))
+#     message(err)
+#   })
+# }
+# rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
+# 
+# # Get the name of the cluster
+# print('Get cluster name')
+# cluster_completed <- FALSE
+# while(!cluster_completed) {
+#   tmp <- tryCatch({
+#     cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
+#                                                 topic_description = MAIN_TOPIC_DESCRIPTION,
+#                                                 cluster_description = cluster_description), 
+#                             max_tokens = 50,
+#                             temperature = 0.4)
+#     cluster_name <- cluster_name$choices[[1]]$message$content
+#     cluster_completed <- TRUE
+#     cluster_name
+#   }, 
+#   error = function(err){
+#     message(glue('Error getting topic description of cluster {i}. Trying again'))
+#     message(err)
+#   })
+# }
+# rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
 
 
 ###################################
