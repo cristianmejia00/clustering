@@ -16,7 +16,7 @@
 # Reports
 ####################################################
 # Keep track of time
-started_time <- Sys.time()
+time_01_started <- Sys.time()
 
 # Data preparation
 for (level_report_iteration in c(0:settings$cno$recursive_level)) {
@@ -110,7 +110,7 @@ for (level_report_iteration in c(0:settings$cno$recursive_level)) {
 
   # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
-  rm(setdiff(ls(),zz_env$x05))
+  rm(list=setdiff(ls(),zz_env$x05))
   save.image(rn$PROJECTenviron)
   
   # Time per level
@@ -119,3 +119,5 @@ for (level_report_iteration in c(0:settings$cno$recursive_level)) {
   print(time_03_taken)
 }
 
+
+      
