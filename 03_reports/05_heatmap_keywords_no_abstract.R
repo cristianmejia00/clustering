@@ -27,7 +27,7 @@ clusterBulkText <- function(documents_vector, cluster_assignation_vector, list_o
 # my_stopwords = A list of stopwords of my choice. like in c("this", "that")
 # Outputs:
 # A tm corpus object.
-tidyText <- function(content_vector, useStemming = TRUE, settings$stopwords$myStopWords) {
+tidyText <- function(content_vector, useStemming = TRUE, myStopWords) {
   text <- Corpus(VectorSource(content_vector))
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, removeWords, stopwords("english"))
@@ -37,7 +37,7 @@ tidyText <- function(content_vector, useStemming = TRUE, settings$stopwords$mySt
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
   if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
-  text <- tm_map(text, removeWords, settings$stopwords$myStopWords)
+  text <- tm_map(text, removeWords, myStopWords)
   return(text)
 }
 
@@ -110,7 +110,7 @@ library(ngram)
 # Params: rm_punt. Loguc. "Remove punctuation"
 #         useSteaming. Logic.
 #         settings$stopwords$myStopWords. A Character vector with my choosen stopwords
-get_tidy_text <- function(a_char_vector, rm_punct = TRUE, useStemming = TRUE, settings$stopwords$myStopWords = c()) {
+get_tidy_text <- function(a_char_vector, rm_punct = TRUE, useStemming = TRUE, myStopWords = c()) {
   text <- Corpus(VectorSource(a_char_vector))
   text <- tm_map(text, content_transformer(tolower))
   text <- tm_map(text, removeWords, stopwords("english"))
@@ -120,7 +120,7 @@ get_tidy_text <- function(a_char_vector, rm_punct = TRUE, useStemming = TRUE, se
   text <- tm_map(text, stripWhitespace)
   text <- tm_map(text, stripWhitespace)
   if (useStemming) {text <- tm_map(text, stemDocument, language = "english")}
-  text <- tm_map(text, removeWords, settings$stopwords$myStopWords)
+  text <- tm_map(text, removeWords, myStopWords)
   text <- unlist(sapply(1:length(text), function(x){return(text[[x]]$content)}))
   return(text)
 }
@@ -266,7 +266,7 @@ cluster_contents <- papersText %>%
   clusterBulkText(cluster_assignation_vector = cluster_assignation_vector,
                   list_of_clusters = list_of_clusters) %>%
   tidyText(useStemming = FALSE,
-           settings$stopwords$myStopWords = settings$stopwords$myStopWords)
+           myStopWords = settings$stopwords$myStopWords)
 
 
 #Cluster Keywords
