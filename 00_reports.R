@@ -77,8 +77,12 @@ source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
 source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
 source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
+
 # Save code snapshot
 files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
+files_to_omit <- list.files(file.path(getwd(),'renv','library'), full.names = TRUE, recursive = TRUE)
+files_to_save <- setdiff(files_to_save, files_to_omit)
+
 # Not to zip Rdata environments as they are heavy and saved separately
 files_to_save <- files_to_save[!grepl('rdata$', tolower(files_to_save))]
 # Zip them. This needs Rtools to work

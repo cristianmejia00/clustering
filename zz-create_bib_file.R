@@ -71,3 +71,4 @@ dataset$citation_key <- citation_keys
 # Because those are the only ones we reference in the generated article
 dataset_bibliography <- subset(dataset, summary != '')
 write_refs_from_df(dataset_bibliography, file_name = file_name)
+
