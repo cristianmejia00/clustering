@@ -12,16 +12,16 @@ print("-- SAMPLING")
 # The main (first) sampling must be based on the finest granularity clustering we selected
 # This is to avoid sampling articles which vocabulary is not reflected in the top articles of the parent cluster
 if (settings$params$type_of_analysis == "citation_network") {
-  if (settings$cno$recursive_level == 0) {
+  if (settings$params$recursive_level == 0) {
     myDataCorrect$sampling_column <- myDataCorrect$"level0"
   }
-  if (settings$cno$recursive_level == 1) {
+  if (settings$params$recursive_level == 1) {
     myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label1"
   }
-  if (settings$cno$recursive_level == 2) {
+  if (settings$params$recursive_level == 2) {
     myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label2"
   }
-  if (settings$cno$recursive_level == 3) {
+  if (settings$params$recursive_level == 3) {
     myDataCorrect$sampling_column <- myDataCorrect$"subcluster_label3"
   }
 }

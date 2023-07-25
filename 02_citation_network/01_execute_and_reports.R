@@ -19,7 +19,7 @@
 time_01_started <- Sys.time()
 
 # Data preparation
-for (level_report_iteration in c(0:settings$cno$recursive_level)) {
+for (level_report_iteration in c(0:settings$params$recursive_level)) {
   level_report <<- level_report_iteration
   print(paste("...Starting reports for level", as.character(level_report), sep = " "))
 

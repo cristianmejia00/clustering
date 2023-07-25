@@ -3,7 +3,7 @@
 print("###################### reports/02_rcs.R")
 
 # INPUTS
-myDataCorrect
+#myDataCorrect
 
 # Computed
 myDataCorrect$PY <- as.character(myDataCorrect$PY) %>% as.integer()
@@ -14,7 +14,7 @@ network_year <- round(mean(myDataCorrect$PY, na.rm = TRUE), digits = 1)
 # Create a summary with information of each cluster
 # per each cluster a list of data frames is created (one data frame per core patent)
 values <- lapply(id_com, function(cluster) {
-  cluster_data <- subset(myDataCorrect, myDataCorrect$"X_C" == cluster)
+  cluster_data <- myDataCorrect[myDataCorrect$"X_C" == cluster,]
   cluster_size <- length(cluster_data$"X_C")
   cluster_year <- round(mean(cluster_data$PY, na.rm = TRUE), digits = 1)
   cluster_code <- names(table(cluster_data$cluster_code))
