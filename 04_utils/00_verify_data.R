@@ -21,11 +21,23 @@ if (settings$params$type_of_dataset == "news" & exists("cno")) {
 if (settings$params$type_of_dataset == "news") {
   if (!exists("myDataCorrect")) {
     myDataCorrect <- dataset
+    setnames(myDataCorrect, c('SCORE','Score'), c('score','score'), skip_absent = TRUE)
   }
   if (!settings$params$unit_of_analysis %in% c("topics", "topic", "clusters", "cluster")) {
     myDataCorrect$cluster_code <- myDataCorrect$X_C
-    myDataCorrect$X_E <- 1
     myDataCorrect$related_topics <- "" # This can be added with the neighbors of the network
+    if ('score' %in% colnames(myDataCorrect)) {
+      if (!'Z9' %in% colnames(myDataCorrect)) {
+        myDataCorrect$Z9 <- myDataCorrect$score
+      } else {
+        myDataCorrect$Z9 <- 1
+      }
+      if (!'X_E' %in% colnames(myDataCorrect)) {
+        myDataCorrect$X_E <- myDataCorrect$score
+      } else {
+        myDataCorrect$X_E <- 1
+      }
+    } 
   }
 }
 
@@ -165,11 +177,12 @@ if (!("Institutions") %in% available_columns) {
 
 ##########################################################################
 # Format classes
-dataset$X_N <- as.numeric(dataset$X_N)
-dataset$X_C <- as.numeric(dataset$X_C)
+dataset$X_N <- as.numeric(as.character(dataset$X_N))
+dataset$X_C <- as.numeric(as.character(dataset$X_C))
+dataset$PY <- as.numeric(as.character(dataset$PY))
 dataset$X_E <- as.numeric(dataset$X_E)
 dataset$Z9 <- as.numeric(dataset$Z9)
-dataset$PY <- as.numeric(dataset$PY)
+
 
 ##########################################################################
 # Clean abstract

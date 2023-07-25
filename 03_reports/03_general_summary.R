@@ -16,17 +16,17 @@ general_summary <- c(
 
 ## Add values depending the type of analysis
 if (settings$params$type_of_analysis == "citation_network") {
-  if (settings$cno$recursive_level > 0) {
+  if (settings$params$recursive_level > 0) {
     general_summary <- c(
       general_summary,
       "edges" = ecount(g1),
       "clusters_level0" = nrow(edges_level1),
-      "clusters_level1" = if (settings$cno$recursive_level >= 1) {
+      "clusters_level1" = if (settings$params$recursive_level >= 1) {
         nrow(edges_level2)
       } else {
         0
       },
-      "clusters_level2" = if (settings$cno$recursive_level >= 2) {
+      "clusters_level2" = if (settings$params$recursive_level >= 2) {
         nrow(edges_level3)
       } else {
         0

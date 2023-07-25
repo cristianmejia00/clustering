@@ -55,11 +55,18 @@ if (settings$rp$top_documents != 0) {
     top_n(settings$rp$top_documents, X_E)
 }
 
+# Order the report 
+article_report <- article_report[order(article_report$X_C, 
+                                       -article_report$X_E, 
+                                       -article_report$Z9, 
+                                       -article_report$PY),]
+
 # Change colnames to natural names
 setnames(article_report, 
          names(settings$rp$column_labels), 
          unname(settings$rp$column_labels), 
          skip_absent = TRUE)
+
 
 
 # Write the article report

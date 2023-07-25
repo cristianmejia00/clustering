@@ -14,7 +14,7 @@ document_label <- toTitleCase(settings$params$type_of_dataset)
 output_folder_level <- output_folder_level
 subfolder_dataset <- subfolder_dataset #"charts_dataset"
 extension <- extension
-available_columns <- available_columns
+available_columns <- colnames(dataset)
 column_labels <- settings$rp$column_labels
 categorical_long_reports <- settings$rp$categorical_long_reports
 

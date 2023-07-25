@@ -8,29 +8,30 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q275-food-waste",
+  project_folder = "Q259-palm-oil-enhanced2",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'TS=("food waste" OR "food loss")',
-  query_id = "Q275", # This is the Folder name. Equivalent to Fukan's dataset
-  fukan_url = "https://academic-landscape.com/analysis/47765/0#c0",
-  downloaded_documents = "15512",
+  query = '("palm oil" OR "oil palm") and (sustainab* or sdg* or esg or environ* or social or forest* or deforest* or biodiv*) and (agri* or farm* or plant*)',
+  query_id = "Q259", # This is the Folder name. Equivalent to Fukan's dataset
+  fukan_url = "",
+  downloaded_documents = "2411",
 
   # project
-  project_name = "Food Wate and Loss",
-  project_description = "Citation network of food waste and loss",
-  date = "2023-07-21",
+  project_name = "Palm Oil News",
+  project_description = "Topic Model of news about sustainable palm oil",
+  date = "2023-07-25",
   created_by = "cristianmejia00@gmail.com",
   notes = "NA"
 )
 
 ## General Parameters
 settings$params <- list(
-  type_of_dataset = "papers", # "papers", "patents" or "news"
-  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "citation_network", # "topic_model" or "citation_network"
-  dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
+  type_of_dataset = "news", # "papers", "patents" or "news"
+  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "topic_model", # "topic_model" or "citation_network"
+  dataset_source = "factiva", # wos, derwent, factiva (dimensions = wos)
+  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -54,9 +55,6 @@ if (settings$params$type_of_analysis == "citation_network") {
 
     # Cluster scope
     scope = "all", # "all" OR "cl99" OR "cl_99"
-
-    # Report for up to this level
-    recursive_level = 0, # if (vcount(g1) < 30000) {0} else {1} #0,1,2, OR 3
 
     ### Options for clustering or recursive clustering.
     ### The following options are useful for any of these conditions
@@ -86,23 +84,31 @@ if (settings$params$type_of_analysis == "citation_network") {
 ## Topic Model options
 if (settings$params$type_of_analysis == "topic_model") {
   settings$tmo <- list(
-    # Select the number of topics
-    K = 86, # select "0" zero to automatically detect the topics
-
-    # Gibbs sampling parameter
-    G = 500, # iterations
-    alpha = 0.02,
-    eta = 0.02,
-
-    # More options
-    useStemming = TRUE,
-    fullReports = FALSE, # for KXD and WXK
-
-    # Select the level of relevance
-    # 1 = Words ordered based on simple frequency within the topic
-    # 0 = Words ordered based on how unique they are to the topic
-    # 0.6 is recommended
-    relevance_value = 1
+    # Shall we use the initial clustering solution included in the dataset?
+    # If TRUE, we use the column "X_C" in dataset, this column was previously computed 
+    # using a Topic Model algorithm, usually HDBScan or Kmeans from Python, or LDA from my other codes
+    # If FALSE, we compute a new "X_C" column based on the algorithm of choice. Usually LDA.
+    using_initial_column_x_C = TRUE
+    
+    # # The `using_initial_column_x_C = TRUE`, then all the following 
+    # # are NOT necessary, because we do not compute the topic model here.
+    # # Select the number of topics
+    # K = 86, # select "0" zero to automatically detect the topics
+    # 
+    # # Gibbs sampling parameter
+    # G = 500, # iterations
+    # alpha = 0.02,
+    # eta = 0.02,
+    # 
+    # # More options
+    # useStemming = TRUE,
+    # fullReports = FALSE, # for KXD and WXK
+    # 
+    # # Select the level of relevance
+    # # 1 = Words ordered based on simple frequency within the topic
+    # # 0 = Words ordered based on how unique they are to the topic
+    # # 0.6 is recommended
+    # relevance_value = 1
   )
 }
 
@@ -114,7 +120,7 @@ settings$addons <- list(
   # The dataset must contain the columns:
   # - `sentiment` NUMERIC. with a score between -1 and 1
   # - `sentiment_factor` STRING ENUM[positive, neutral, negative] with the sentiment label
-  "sentiment_analysis" = FALSE,
+  "sentiment_analysis" = TRUE,
   # These are possible if we provide a network file. 
   "page_rank" = FALSE,
   "eigen_centrality" = FALSE,
@@ -131,11 +137,16 @@ settings$rp <- list(
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze
   article_report_columns = c('X_C','cluster_code','AU','PY','DI','TI','AB','Z9','X_E','DE','SO','WC','Countries','UT', 'sentiment', 'sentiment_factor'),
-  categorical_long_reports = c("AU", "WC", "SO", "Countries", "Institutions", "DE", "sentiment_factor"), # Columns in the dataset for long-form summary. These are also used for RCS.
+  categorical_long_reports = c("AU", "WC", "SO", "Countries", "Institutions", "DE", "sentiment_factor", "ID", "issues"), # Columns in the dataset for long-form summary. These are also used for RCS.
   categorical_simple_wide_reports = c("PY", "sentiment_factor"), # Columns in the dataset without ';' for matrix type summary
-  categorical_multi_wide_reports = c("WC", "Countries", "Institutions"), # Columns in the dataset with ';' for matrix type summary
+  categorical_multi_wide_reports = c("WC", "Countries", "Institutions", "issues"), # Columns in the dataset with ';' for matrix type summary
   numerical_reports = c("PY", "Z9", "sentiment", "score"), # Numeric columns in the dataset for summary (min, max, mean, median, sd)
-  methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
+  methods = c('Data collection from Factiva',
+              'Embeddings',
+              'UMAP',
+              'HDBScan')
+  # Need to capture the parameters of the topic model
+  #c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
 )
 
 # Column labels are used to format RCS columns and charts' labels
@@ -188,19 +199,21 @@ if (settings$params$dataset_source == 'factiva') {
     "X_C" = "Cluster",
     "TI" = "Headline",
     "AB" = "Main paragraph",
-    "AU" = "Authors",
-    "PY" = "Publication Years",
     "X_E" = "Score", 
+    "PY" = "Publication Years",
     "SO" = "Newspapers",
+    "AU" = "Factiva Types",
     "Countries" = "Regions",
-    "Institutions" = "Organizations",
-    "WC" = "Categories",
-    "DE" = "Types",
+    #"Institutions" = "Organizations",
+    #"WC" = "Categories",
+    "DE" = "Categories",
     "ID" = "Entities",
     "score" = "Score",
     "sentiment" = "Sentiment score",
     "sentiment_factor" = "Sentiment",
-    "UT" = "ID"
+    "UT" = "ID",
+    "issues" = "Issues",
+    "Keywords" = "Keywords"
   )
 }
 

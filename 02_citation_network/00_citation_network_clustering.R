@@ -26,7 +26,7 @@ if (settings$cno$threshold > 1) {
 
 #####################################################
 # If any of these is TRUE, then we need a network object.
-if (!settings$cno$using_initial_column_C_from_fukan | settings$cno$recursive_level > 0) {
+if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_level > 0) {
   print("Clustering will be performed using the provided network")
   #####################################################
   # open network file.

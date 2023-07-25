@@ -63,12 +63,13 @@ get_digits <- function(x){
 #' Generate a ggplot bar plot for cluster's categorical columns
 #' @param plot_data DATAFRAME. a long report for a given column
 #' @param cluster_number INTEGER. the cluster number
-#' @param item_label STRING. the column label
+#' @param column_data_position INTEGER. {2} The position of the column with data values
+#' @param item_label STRING. {"ITEM"} the column label
 #' @param document_label STRING. {"Documents"} what is being counted
 #' @returns a bar plot ggplot
-plot_cluster_data <- function(plot_data, cluster_number, item_label = 'Item', document_label = 'Documents') {
-  plot_data <- subset(plot_data, Cluster != 0)
-  cluster_data <- subset(plot_data, Cluster == cluster_number)
+plot_cluster_data <- function(plot_data, cluster_number, column_data_position = 2, item_label = 'Item', document_label = 'Documents') {
+  plot_data <- plot_data[plot_data$Cluster != 0,]
+  cluster_data <- plot_data[plot_data$Cluster == cluster_number,]
   # Remove potential white spaces
   cluster_data <- cluster_data[cluster_data[[1]] != '',]
   cluster_data <- cluster_data[cluster_data[[1]] != ' ',]
@@ -78,7 +79,8 @@ plot_cluster_data <- function(plot_data, cluster_number, item_label = 'Item', do
   cluster_data[[1]] <- tolower(cluster_data[[1]]) %>% 
                        substr(start = 0, stop = 20)
   cluster_data[[1]][duplicated(cluster_data[[1]])] <- paste(cluster_data[[1]][duplicated(cluster_data[[1]])], ' ', sep = '')
-  cluster_levels <- cluster_data[[1]][order(cluster_data[[2]])]
+  cluster_levels <- cluster_data[[1]][order(cluster_data[[column_data_position]])]
+  cluster_levels <- cluster_levels[!is.na(cluster_levels)]
   cluster_labels <- sapply(cluster_levels, 
                            function(x) {
                              if (nchar(x) >= 20) {
@@ -89,17 +91,18 @@ plot_cluster_data <- function(plot_data, cluster_number, item_label = 'Item', do
   cluster_data[[1]] <- factor(cluster_data[[1]], 
                               levels = cluster_levels,
                               labels = cluster_labels)
-  p <- ggplot(cluster_data[c(1:20),], 
-              aes(x=.data[[names(cluster_data)[1]]], y=Freq)) + 
-              geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") + 
-              scale_y_continuous(name=document_label, limits=c(0, max(plot_data[[2]]))) + 
-              scale_x_discrete(name=item_label) + #,labels = function(x) formatC(x, width = 5)) +
-              coord_flip() +
-              theme_bw()
+  p <- ggplot(cluster_data[c(1:min(20, nrow(cluster_data))),], 
+              aes(x=.data[[names(cluster_data)[1]]], 
+                  y=.data[[names(cluster_data)[column_data_position]]],
+                  na.rm = TRUE)) + 
+        geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") + 
+        scale_y_continuous(name=document_label, limits=c(0, max(plot_data[[column_data_position]]))) + 
+        scale_x_discrete(name=item_label) +
+        coord_flip() +
+        theme_bw()
 
   return(p)
 }
-
 
 # Plot and save
 available_charts <- names(charts_datasets)
@@ -110,7 +113,7 @@ for (i in available_charts) {
   char_size <- get_digits(max(clusters_n))
   for (j in clusters_n) {
     if (tolower(i) %in% c('keyword', 'keywords')) {
-      plot_cluster_data(tmp, j, item_label = column_labels[i], document_label ='TFIDF')
+      plot_cluster_data(tmp, j, column_data_position = 5, item_label = column_labels[i], document_label ='TFIDF')
     } else {
       plot_cluster_data(tmp, j, item_label = column_labels[i])
     }
@@ -137,3 +140,4 @@ for (i in available_charts) {
            units = 'px')
   }
 }
+

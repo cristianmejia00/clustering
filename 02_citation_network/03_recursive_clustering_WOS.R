@@ -101,7 +101,7 @@ dataset_minimal$level0 <- unifyer(dataset_minimal$X_C, cl_threshold)
 plot(sort(table(dataset_minimal$X_C)))
 
 
-if (settings$cno$recursive_level > 0) {
+if (settings$params$recursive_level > 0) {
   # Order dataset_minimal to the order of nodes in the network
   dataset_minimal <- dataset_minimal[match(as.integer(names(V(g1))), dataset_minimal$X_N), ]
 
