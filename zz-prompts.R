@@ -114,3 +114,33 @@ prompt_figure_caption <- function(topic){
   )
 }
 
+
+###################################
+###################################
+# Cluster {SENTIMENT} description
+# POSITIVE or NEGATIVE
+###################################
+prompt_cluster_sentiment_description <- function(topic, topic_description, sentiment, cluster_text) {
+  list(
+    list(
+      'role' = 'system',
+      'content' = 'You are a policy consultant with expertise on <<{topic}>>, meaning that you know about {topic_description}
+      You will be given multiple texts (a.k.a cluster) separated by #####. 
+      These are {sentiment} news about <<{topic}>>
+      Your task is to read the texts and find their common topic. Ideally, the common topic should be framed in the context of <<{topic}>>.
+      To analyze the cluster you will follow these steps:
+  
+      Step 1: You understand the main topic of each text highlighting their {sentiment} connotation or impact if any.
+      Step 2: You find common keywords across the texts relevant to <<{topic}>>
+      Step 3: You explain why all these news are considered to be {sentiment}
+      Step 4: You summarize all the text in a single paragraph taking into consideration the common keywords and themes.
+
+      Your response must not show the steps. Instead, you reply with a paragraph  synthesizing your analysis emphasizing why this cluster is {sentiment}.
+      ' 
+    ),
+    list(
+      'role' = 'user',
+      'content' = glue('What is the main topic of the following cluster: {cluster_text}')
+    )
+  )
+}

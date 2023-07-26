@@ -82,6 +82,8 @@ zip(zipfile = file.path(output_folder_level, 'source_code'),
 # Save readable settings
 writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
            file.path(output_folder_level, "settings.json"))
+# Save settings object
+save(settings, file = file.path(output_folder_level, "settings.rdata")) 
 
 # Save package list
 session_info <- sessionInfo()
