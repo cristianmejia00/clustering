@@ -60,20 +60,20 @@ ask_gpt <- function(prompt, model = 'gpt-3.5-turbo-0613', temperature = 0.1, max
 #' @param cluster INTEGER. the cluster number to subset. Compatible with X_C, meaning sypport for cluster 99.
 #' @returns DATAFRAME. The largest possible is of `top * 3` when all 3 conditions are different
 get_cluster_data <- function(dataset, cluster, top = 5) {
-  cluster_data <- subset(dataset, X_C == cluster, select = c('X_C','TI','AB','AU','PY','UT','Z9','X_E'))
+  cluster_data <- dataset[dataset$X_C == cluster, c('X_C','TI','UT','new_score','LP_clean2','TD','sentiment','sentiment_factor')]
   if (nrow(cluster_data) > top) {
     selected_papers <- c(
-      # Most connected
-      cluster_data$UT[order(cluster_data$X_E, decreasing = TRUE)][1:top],
-      # Most cited
-      cluster_data$UT[order(cluster_data$Z9, decreasing = TRUE)][1:top],
-      # Newest most connected (X_E is preferred over Z9 because most of paper wont have citations)
-      cluster_data$UT[order(cluster_data$PY, cluster_data$X_E, decreasing = TRUE)][1:top]
+      # Highest Score
+      cluster_data$UT[order(cluster_data$new_score, decreasing = TRUE)][1:top],
+      # Most positive
+      cluster_data$UT[order(cluster_data$sentiment, decreasing = TRUE)][1:top],
+      # Most negative
+      cluster_data$UT[order(cluster_data$sentiment, decreasing = FALSE)][1:top]
     ) %>% unique()
     # Only retain selected papers
     cluster_data <- cluster_data[cluster_data$UT %in% selected_papers,]
   }
-  cluster_data$text <- paste(cluster_data$TI, cluster_data$AB, sep = ' ')
+  cluster_data$text <- paste(cluster_data$TI, cluster_data$LP_clean2, cluster_data$TD, sep = ' ')
   return(cluster_data)
 }
 
@@ -90,8 +90,8 @@ get_papers_summary <- function(cl_dataset) {
       print(paste(cl_dataset$X_C[idx], as.character(idx), cl_dataset$TI[idx], sep = "; "))
       article_summary <- tryCatch({
         article_summary <- ask_gpt(prompt_summarize_a_paper(topic = MAIN_TOPIC,
-                                                             topic_description = MAIN_TOPIC_DESCRIPTION,
-                                                             article_text = cl_dataset$text[idx]),
+                                                            topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                            article_text = cl_dataset$text[idx]),
                                    temperature = 0.7)
         cl_dataset$summary[idx] <- article_summary$choices[[1]]$message$content
         article_summary
@@ -116,33 +116,9 @@ get_papers_summary <- function(cl_dataset) {
 ###################################
 rcs_merged$description <- ''
 rcs_merged$name <- ''
+rcs_merged$pos_description <- ''
+rcs_merged$neg_description <- ''
 dataset$summary <- ''
-
-###################################
-###################################
-# Article summary
-###################################
-# The oldest article(s) in the dataset.
-# When there are many "old papers" we analyze only the two most cited.
-oldest_year <- min(dataset$PY, na.rm = TRUE)
-oldest_data <- subset(dataset, PY == oldest_year)
-if (nrow(oldest_data) > 2) {
-  oldest_data <- oldest_data[order(oldest_data$Z9, decreasing = FALSE)[c(1:2)],]
-}
-oldest_data$summary <- ''
-for (i in nrow(oldest_data)) {
-  old_UT <- oldest_data$UT[i]
-  old_summary <- ask_gpt(prompt_summarize_a_paper(topic = MAIN_TOPIC,
-                                                      topic_description = MAIN_TOPIC_DESCRIPTION,
-                                                      article_text = paste(oldest_data$TI[i], oldest_data$AB[i], sep = ' ')))
-  oldest_data$summary[i] <- old_summary$choices[[1]]$message$content
-  dataset$summary[which(dataset$UT == old_UT)] <- old_summary$choices[[1]]$message$content
-}
-
-# The following are needed but they are covered in the next block. 
-# The most cited article in the dataset
-# The top 3 most connected per cluster 
-# The top 3 most cited per cluster
 
 ###################################
 ###################################
@@ -156,30 +132,36 @@ for (i in nrow(oldest_data)) {
 
 # Start where the loop was interrupted
 list_of_clusters <- dataset$X_C %>% unique() %>% sort()
+list_of_clusters <- list_of_clusters[8:15]
 # list_of_clusters <- list_of_clusters[c(13:length(list_of_clusters))]
 # list_of_clusters <- list(5)
 
 for (cluster in list_of_clusters) {
   # Get this cluster tops
   print(glue('cluster: {cluster}'))
-  cluster_data <- get_cluster_data(dataset, cluster = cluster, top = 3)
+  cluster_data <- get_cluster_data(dataset, cluster = cluster, top = 5)
+  # Order from highest score
+  cluster_data <- cluster_data[order(cluster_data$new_score, decreasing = TRUE),]
   # Summarize each of the selected papers
   cluster_data <- get_papers_summary(cluster_data)
   # Assign the summaries to the main dataset
   print('asign summaries to main dataset')
   dataset$summary[match(cluster_data$UT, dataset$UT)] <- cluster_data$summary
   
+  ################################################################### 1: DESCRIPTION
   # Generate the bulk text
   print('get bulk text')
   print(nrow(cluster_data))
+
   my_texts <- list()
-  for (i in c(1:min(10,nrow(cluster_data)))) {
+  for (i in c(1:min(15,nrow(cluster_data)))) {
     my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
   }
   print(length(my_texts))
   my_texts <- paste(my_texts, collapse = ' ')
-  my_texts <- substr(my_texts, 1, (3500 * 4))
+  my_texts <- substr(my_texts, 1, (7000 * 4))
   
+
   # Get the topic of the cluster
   print('Get cluster topic')
   cluster_completed <- FALSE
@@ -188,6 +170,7 @@ for (cluster in list_of_clusters) {
       cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
                                                                 topic_description = MAIN_TOPIC_DESCRIPTION,
                                                                 cluster_text = my_texts),
+                                     model = 'gpt-4',
                                      temperature = 0.7)
       cluster_description <- cluster_description$choices[[1]]$message$content
       cluster_completed <- TRUE
@@ -199,7 +182,9 @@ for (cluster in list_of_clusters) {
     })
   }
   rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
-
+  
+  
+  ################################################################### 2: NAME
   # Get the name of the cluster
   print('Get cluster name')
   cluster_completed <- FALSE
@@ -208,6 +193,7 @@ for (cluster in list_of_clusters) {
       cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
                                                   topic_description = MAIN_TOPIC_DESCRIPTION,
                                                   cluster_description = cluster_description), 
+                              model = 'gpt-4',
                               max_tokens = 50,
                               temperature = 0.4)
       cluster_name <- cluster_name$choices[[1]]$message$content
@@ -220,6 +206,78 @@ for (cluster in list_of_clusters) {
     })
   }
   rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
+  
+  ################################################################### 3: POSITIVE DESCRIPTION
+  # Generate the bulk text
+  print('get bulk text of positive news')
+  cluster_data_backup <- cluster_data
+  cluster_data <- cluster_data_backup[order(cluster_data_backup$sentiment, decreasing = TRUE),][1:5,]
+  my_texts <- list()
+  for (i in c(1:min(5,nrow(cluster_data)))) {
+    my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
+  }
+  print(length(my_texts))
+  my_texts <- paste(my_texts, collapse = ' ')
+  my_texts <- substr(my_texts, 1, (7000 * 4))
+  
+  
+  # Get the topic of the cluster
+  print('Get positive cluster topic')
+  cluster_completed <- FALSE
+  while(!cluster_completed) {
+    tmp <- tryCatch({
+      cluster_description <- ask_gpt(prompt_cluster_sentiment_description(topic = MAIN_TOPIC, 
+                                                                          topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                                          sentiment = 'positive',
+                                                                          cluster_text = my_texts),
+                                     model = 'gpt-4',
+                                     temperature = 0.7)
+      cluster_description <- cluster_description$choices[[1]]$message$content
+      cluster_completed <- TRUE
+      cluster_description
+    }, 
+    error = function(err){
+      message(glue('Error getting topic description of cluster {i}. Trying again'))
+      message(err)
+    })
+  }
+  rcs_merged$pos_description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
+  
+  
+  ################################################################### 4: NEGATIVE DESCRIPTION
+  # Generate the bulk text
+  print('get bulk text of negative news')
+  cluster_data <- cluster_data_backup[order(cluster_data_backup$sentiment, decreasing = FALSE),][1:5,]
+  my_texts <- list()
+  for (i in c(1:min(15,nrow(cluster_data)))) {
+    my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
+  }
+  print(length(my_texts))
+  my_texts <- paste(my_texts, collapse = ' ')
+  my_texts <- substr(my_texts, 1, (7000 * 4))
+  
+  
+  # Get the topic of the cluster
+  print('Get negative cluster topic')
+  cluster_completed <- FALSE
+  while(!cluster_completed) {
+    tmp <- tryCatch({
+      cluster_description <- ask_gpt(prompt_cluster_sentiment_description(topic = MAIN_TOPIC, 
+                                                                          topic_description = MAIN_TOPIC_DESCRIPTION,
+                                                                          sentiment = 'negative',
+                                                                          cluster_text = my_texts),
+                                     model = 'gpt-4',
+                                     temperature = 0.7)
+      cluster_description <- cluster_description$choices[[1]]$message$content
+      cluster_completed <- TRUE
+      cluster_description
+    }, 
+    error = function(err){
+      message(glue('Error getting topic description of cluster {i}. Trying again'))
+      message(err)
+    })
+  }
+  rcs_merged$neg_description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
 }
 
 # We do this to keep copy of the edits in case we mess it.

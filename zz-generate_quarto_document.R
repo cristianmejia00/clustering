@@ -68,7 +68,7 @@ library(dplyr)
 library(data.table)
 library(DT)
 
-source("settings.R")
+load("settings.rdata")
 
 bibliometrics_folder <- settings$analysis_metadata$bibliometrics_folder
 project_folder <- settings$analysis_metadata$project_folder
@@ -190,7 +190,6 @@ Dataset stats.
 
 
 ')
-
 
 
 
