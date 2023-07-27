@@ -204,7 +204,7 @@ if (settings$params$dataset_source == 'factiva') {
     "SO" = "Newspapers",
     "AU" = "Factiva Types",
     "Countries" = "Regions",
-    #"Institutions" = "Organizations",
+    "Institutions" = "Entities",
     #"WC" = "Categories",
     "DE" = "Categories",
     "ID" = "Entities",

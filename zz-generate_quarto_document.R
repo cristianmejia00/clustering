@@ -17,8 +17,12 @@ project_folder <- settings$analysis_metadata$project_folder
 analysis_folder <- settings$analysis_metadata$analysis_folder
 level_folder <- "level0"
 
-
-
+dataset <- dataset
+dataset_bibliography <- dataset_bibliography
+if(settings$params$type_of_analysis == 'topic_model') {
+  dataset_bibliography$X_E <- round(dataset_bibliography$new_score,3)
+}
+  
 # # Initialization
 # main_path
 main_path <- file.path(
@@ -125,6 +129,24 @@ qt$methods <- methods
 ###################################
 
 # INTRO
+displayable_charts <- intersect(settings$rp$categorical_long_reports, colnames(dataset))
+rm(chart)
+dataset_barcharts <- ''
+dataset_trends <- ''
+for (chart in displayable_charts) {
+  dataset_barcharts <- glue_code('<<dataset_barcharts>>
+  
+                                ![](index_files/charts/fig_<<chart>>.svg)
+                                ')
+  this_chart_label <- settings$rp$column_labels[chart]
+  dataset_trends <- glue_code('<<dataset_trends>>
+  
+                              ## <<this_chart_label>>
+
+                              ![](index_files/charts/fig_yearly_trends_<<chart>>.svg)
+                              ')
+}
+
 
 ## Overview
 qt$dataset_overview <- glue_code('  
@@ -141,17 +163,7 @@ qt$dataset_overview <- glue_code('
 
 :::: {#fig-panel-dataset-bars layout-ncol=3}
 
-![](index_files/charts/fig_author_keywords.svg)
-
-![](index_files/charts/fig_categories.svg)
-
-![](index_files/charts/fig_journals.svg)
-
-![](index_files/charts/fig_countries.svg)
-
-![](index_files/charts/fig_institutions.svg)
-
-![](index_files/charts/fig_authors.svg)  
+<<dataset_barcharts>>
 
 Dataset stats.
 ::::  
@@ -160,29 +172,7 @@ Dataset stats.
 
 :::: panel-tabset
 
-## A. Keywords
-
-![](index_files/charts/fig_yearly_trends_DE.svg)
-
-## Categories
-
-![](index_files/charts/fig_yearly_trends_WC.svg)
-
-## Journals
-
-![](index_files/charts/fig_yearly_trends_SO.svg)
-
-## Countries
-
-![](index_files/charts/fig_yearly_trends_Countries.svg)
-
-## Insts.
-
-![](index_files/charts/fig_yearly_trends_Institutions.svg)
-
-## Authors
-
-![](index_files/charts/fig_yearly_trends_AU.svg)  
+<<dataset_trends>>
 
 ::::  
 
@@ -289,22 +279,19 @@ list_of_clusters_edited[length(list_of_clusters_edited)] <- length(list_of_clust
 cluster_chart_panel <- list()
 
 for (cluster in list_of_clusters_edited) {
+  cluster_barcharts <- ''
+  for (chart in displayable_charts) {
+    cluster_barcharts <- glue_code('<<cluster_barcharts>>
+  
+                                    ![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_<<chart>>.svg)
+                                    ')}
+  
   cluster_chart_panel[[cluster]] <- glue_code('
   
 
 ::: {#fig-panel-<<cluster>> layout-ncol=3}
 
-![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_DE.svg)
-
-![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_WC.svg)
-
-![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_SO.svg)
-
-![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_Countries.svg)
-
-![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_Institutions.svg)
-
-![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_AU.svg)  
+<<cluster_barcharts>>
 
 Cluster <<cluster>> stats.
 
@@ -384,7 +371,7 @@ quarto_document <- glue('
 {qt$clusters}
 
 ')
-
+#{qt$clusters_}
 
 if (nchar(quarto_document) == 0) {
   stop('The generated quarto ducument is blank.')
