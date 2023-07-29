@@ -29,14 +29,16 @@ dir.create(file.path(output_folder_level, subfolder_dataset), recursive = TRUE)
 # UTILS
 #' @description
 #' Takes a STRING or FACTOR column and saves the report with all values and a bar chart of top_items.
-#' @param column_data a column in the form of `dataset$something`
-#' @param item_label the label of the category axis
-#' @param document_label 'Document' or 'Paper', 'News, 'Patent', etc.
-#' @param top_items the number of bars to show. The report will contain everything anyways.
-#' @param sorted_bars TRUE, sort from the highest
-#' @param horizontal TRUE, for horizontal bars
+#' @param column_data LIST. a DF column in the form of `dataset$something`
+#' @param column_data STRING. the column header of this column
+#' @param item_label STRING. {'ITEM'} the label of the category axis
+#' @param document_label STRING. {'DOCUMENT'} 'Document' or 'Paper', 'News, 'Patent', etc.
+#' @param top_items INTEGER. {20} the max number of bars to show. The report will contain everything anyways.
+#' @param sorted_bars BOOLEAN. {TRUE}, sort from the highest
+#' @param horizontal BOOLEAN. {TRUE}, for horizontal bars
 #' @returns nothing. But it saves the plot and report
 create_report_and_barchart <- function(column_data,
+                                       column_name,
                                        item_label = "Item",
                                        document_label = "Documents",
                                        top_items = 20,
@@ -56,11 +58,11 @@ create_report_and_barchart <- function(column_data,
     write.csv(stats_column,
               file = file.path(output_folder_level, 
                                subfolder_dataset, 
-                               glue("dataset_{tolower(item_label)}.csv")),
+                               glue("dataset_{column_name}.csv")),
               row.names = FALSE)
   }
 
-  ggplot(stats_column[c(1:top_items), ], aes(x = Item, y = Documents)) +
+  ggplot(stats_column[c(1:min(nrow(stats_column), top_items)), ], aes(x = Item, y = Documents)) +
     geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
     # theme(axis.text=element_text(size=14)) +
     coord_flip() +
@@ -69,7 +71,7 @@ create_report_and_barchart <- function(column_data,
     theme_bw()
   ggsave(file.path(output_folder_level, 
                    subfolder_dataset, 
-                   glue("fig_{gsub(' ', '_', tolower(item_label))}.{extension}")), 
+                   glue("fig_{gsub(' ', '_', column_name)}.{extension}")), 
          width = 1000, 
          height = 1000, 
          units = 'px')
@@ -82,6 +84,7 @@ for (i in categorical_long_reports) {
   if (i %in% available_columns) {
     print(i)
     create_report_and_barchart(dataset[[i]], 
+                               column_name = i,
                                item_label = column_labels[i])
   }
 }

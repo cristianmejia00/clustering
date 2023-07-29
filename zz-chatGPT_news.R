@@ -280,68 +280,23 @@ for (cluster in list_of_clusters) {
   rcs_merged$neg_description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
 }
 
-# We do this to keep copy of the edits in case we mess it.
-rcs_merged$name2 <- gsub('^.*?"','',rcs_merged$name) %>% gsub('".$','', .) %>% gsub('"','', .)
-rcs_merged$cluster_name <- rcs_merged$name2
-rcs_merged$cluster_name[rcs_merged$cluster_code == 99] <- 'Others'
+
 
 ###################################
 # Cluster description and name when the process was interrupted above. 
 ###################################
-# # Generate the bulk text
-# cluster
-# cluster_data$X_C[1]
-# print('get bulk text')
-# print(nrow(cluster_data))
-# my_texts <- list()
-# for (i in c(1:min(10,nrow(cluster_data)))) {
-#   my_texts[i] <- glue('##### {cluster_data$text[[i]]}')
-# }
-# print(length(my_texts))
-# my_texts <- paste(my_texts, collapse = ' ')
-# my_texts <- substr(my_texts, 1, (3500 * 4))
-# 
-# # Get the topic of the cluster
-# print('Get cluster topic')
-# cluster_completed <- FALSE
-# while(!cluster_completed) {
-#   tmp <- tryCatch({
-#     cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
-#                                                               topic_description = MAIN_TOPIC_DESCRIPTION,
-#                                                               cluster_text = my_texts),
-#                                    temperature = 0.7)
-#     cluster_description <- cluster_description$choices[[1]]$message$content
-#     cluster_completed <- TRUE
-#     cluster_description
-#   }, 
-#   error = function(err){
-#     message(glue('Error getting topic description of cluster {i}. Trying again'))
-#     message(err)
-#   })
-# }
-# rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
-# 
-# # Get the name of the cluster
-# print('Get cluster name')
-# cluster_completed <- FALSE
-# while(!cluster_completed) {
-#   tmp <- tryCatch({
-#     cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
-#                                                 topic_description = MAIN_TOPIC_DESCRIPTION,
-#                                                 cluster_description = cluster_description), 
-#                             max_tokens = 50,
-#                             temperature = 0.4)
-#     cluster_name <- cluster_name$choices[[1]]$message$content
-#     cluster_completed <- TRUE
-#     cluster_name
-#   }, 
-#   error = function(err){
-#     message(glue('Error getting topic description of cluster {i}. Trying again'))
-#     message(err)
-#   })
-# }
-# rcs_merged$name[which(rcs_merged$cluster_code == cluster)] <- cluster_name
+# Copy the inners of the for loop above.
 
+#cluster <- 1
+# --- Copy Here ---
+
+###################################
+# Assign cluster names
+###################################
+# We do this to keep copy of the edits in case we mess it.
+rcs_merged$name2 <- gsub('^.*?"','',rcs_merged$name) %>% gsub('".$','', .) %>% gsub('"','', .)
+rcs_merged$cluster_name <- rcs_merged$name2
+rcs_merged$cluster_name[rcs_merged$cluster_code == 99] <- 'Others'
 
 ###################################
 ###################################

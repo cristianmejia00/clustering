@@ -7,7 +7,9 @@
 library(RefManageR)
 library(tools)
 library(stringr)
-colnames(news)
+
+gsub('\\(.*\\)','',news$HD[227]) %>% trimws()
+
 # Inputs
 #dataset <- dataset[!duplicated(dataset$UT),]
 # Add the dates. We need the full date for newspapers
@@ -41,9 +43,10 @@ write_refs_from_df <- function (a_data_frame, file_name = "references.bib") {
     bib <- c(bibtype = "article", 
              key = roww$citation_key,
              author = toTitleCase(roww$BY_full2),
-             title = str_to_sentence(roww$TI) %>% substr(1,120),
+             title = gsub('\\(.*\\)','',roww$TI) %>% trimws(),
              journal = roww$SO %>% tolower() %>% toTitleCase(), 
-             year = if(is.na(roww$date)) {"1800"} else {paste(as.character(roww$PY), roww$month, as.character(roww$day), sep = '-')},
+             year = if(is.na(roww$date)) {"1800"} else {as.character(roww$date)},
+               #{paste(as.character(roww$PY), roww$month, as.character(roww$day), sep = '-')},
              # month = roww$month,
              # day = roww$day,
              type = 'Newspaper Article')
