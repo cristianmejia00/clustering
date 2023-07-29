@@ -1,4 +1,8 @@
-
+# 20230729
+# Save the cluster plot in the style of LDAvis for Topic Models
+# i.e. A Bubble charts of relative positions
+# this assumes that the LDA-vis was created and is saved in the folder "keyword Explorer"
+# The x and y coords are extracted from there.
 
 subfolder_clusters <- subfolder_clusters
 extension <- extension
@@ -66,3 +70,6 @@ if (file.exists(file.path(output_folder_level, 'keyword_explorer', 'lda.json')))
     ggsave(file.path(output_folder_level, subfolder_clusters, glue('clusters_lda_sentiment.{extension}')))
   }
 }
+
+p <- plot_clusters(tmp)
+p

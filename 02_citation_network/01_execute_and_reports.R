@@ -101,7 +101,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
     # source("03_reports/09_keywords_per_clusters.R")
     source("03_reports/10_rcs_keywords.R")
   }
-  zz_env$x05 <- c(zz_env$x04, 'papersText', 'myDataCorrect_SAMPLE', 'unified_keywords')
+  zz_env$x05 <- c(zz_env$x04, 'papersText', 'myDataCorrect_SAMPLE', 'unified_keywords', 'PHI')
   
   # Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos") {

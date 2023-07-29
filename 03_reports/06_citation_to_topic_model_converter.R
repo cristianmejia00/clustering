@@ -171,7 +171,6 @@ if (level_report <= 4) {
   json <- RJSONIO::toJSON(ttt)
 
   # Create the files
-
   serVis(json,
     out.dir = paste(output_folder_level, "\\keyword_explorer", sep = ""),
     open.browser = FALSE
