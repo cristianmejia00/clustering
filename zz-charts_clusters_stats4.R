@@ -9,15 +9,22 @@ PHI <- PHI
 output_folder_level <- output_folder_level
 subfolder_clusters <- subfolder_clusters
 extension <- extension
+rcs_merged <- rcs_merged
 
 # Compute tfidf
 idf <- (PHI > 0) %>% colSums()
 idf <- log((1+nrow(PHI)) / (1 + idf)) + 0.01
-idf <- matrix(rep(idf, 15), nrow = nrow(PHI), ncol=length(idf), byrow = TRUE)
+idf <- matrix(rep(idf, nrow(PHI)), nrow = nrow(PHI), ncol=length(idf), byrow = TRUE)
 tfidf <- PHI * idf
+
+if ((nrow(rcs_merged) <= 99) & (99 %in% rcs_merged$cluster_code)) {
+  print('Remove cluster 99 from heatmap')
+  tfidf <- tfidf[1:(nrow(tfidf) - 1),]
+}
 
 # Cosine similarity
 cos_matrix <- tfidf %>% as.matrix() %>% t() %>% lsa::cosine()
+
 
 # Long form needed by ggplot
 melted <- reshape2::melt(cos_matrix)
@@ -35,11 +42,12 @@ p <- ggplot(melted, aes(x=Var1, y=Var2, fill=value)) +
         theme(panel.background = element_blank(),
               axis.title.x=element_blank(),
               axis.title.y=element_blank())
+
 # Save static
-ggsave(p, file.path(output_folder_level,
+ggsave(p, filename=file.path(output_folder_level,
                     subfolder_clusters,
                     glue('heatmap.{extension}')))
-  
+
 # Save interactive
 fig <- ggplotly(p, tooltip="value")
 htmlwidgets::saveWidget(

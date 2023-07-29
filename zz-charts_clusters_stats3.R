@@ -59,6 +59,9 @@ if (file.exists(file.path(output_folder_level, 'keyword_explorer', 'lda.json')))
                        'x' = coords$mdsDat$x,
                        'y' = coords$mdsDat$y)
   tmp <- merge(rcs_merged, coords, by='cluster')
+  if ((nrow(tmp) <= 99) & (99 %in% tmp$cluster_code)) {
+    tmp <- tmp[tmp$cluster_code != 99,]
+  }
   
   # Plot clusters with color gradient based on years
   plot_clusters(tmp)
@@ -70,6 +73,3 @@ if (file.exists(file.path(output_folder_level, 'keyword_explorer', 'lda.json')))
     ggsave(file.path(output_folder_level, subfolder_clusters, glue('clusters_lda_sentiment.{extension}')))
   }
 }
-
-p <- plot_clusters(tmp)
-p
