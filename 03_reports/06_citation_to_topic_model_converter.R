@@ -177,3 +177,4 @@ if (level_report <= 4) {
     open.browser = FALSE
   ) # TRUE to open in the console
 }
+
