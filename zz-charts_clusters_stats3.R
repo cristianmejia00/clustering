@@ -14,7 +14,6 @@ print("-- Creating Static LDA-like viz")
 library(jsonlite)
 library(ggrepel)
 
-
 #' @description
 #' Plot clusters in the style of the LDA topic models
 #' @param rcs DATAFRAME. the RCS with columns x, y, X_C_name, documents, and the column for controlling colors

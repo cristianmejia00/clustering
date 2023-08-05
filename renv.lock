@@ -1150,6 +1150,16 @@
       ],
       "Hash": "c269b06beb2bbadb0d058c0e6fa4ec3d"
     },
+    "lsa": {
+      "Package": "lsa",
+      "Version": "0.73.3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "SnowballC"
+      ],
+      "Hash": "f228e7dc89060fa4a7f3271ff744c099"
+    },
     "lubridate": {
       "Package": "lubridate",
       "Version": "1.9.2",
