@@ -6,6 +6,7 @@
 
 subfolder_clusters <- subfolder_clusters
 extension <- extension
+rcs_merged <- rcs_merged
 
 #########################################
 #########################################
@@ -16,7 +17,7 @@ library(ggrepel)
 
 #' @description
 #' Plot clusters in the style of the LDA topic models
-#' @param rcs DATAFRAME. the RCS with columns x, y, X_C_name, documents, and the column for controlling colors
+#' @param rcs DATAFRAME. the RCS with columns x, y, cluster_name (X_C_name), documents, and the column for controlling colors
 #' @param color_values STRING. The column name that define the color gradient
 #' @param color_label STRING. The display name of the column defining the color gradient
 #' @param size_label STRING. {'Documents'} The column name defining the size of the cluster
@@ -24,7 +25,7 @@ library(ggrepel)
 #' @param color_gradient LIST[STRING] {c("red", "grey", "green")} A character vector with 3 hex colors or R color names for the min, mid, high colors.
 plot_clusters <- function(rcs, 
                           color_values = 'PY_Mean',
-                          color_label = 'Ave. Year', 
+                          color_label = 'PY_Mean', 
                           size_label = 'Documents', 
                           color_gradient_limits = c(min(rcs$PY_Mean), max(rcs$PY_Mean)), 
                           color_gradient = c("red", "grey", "green")) {
@@ -36,7 +37,7 @@ plot_clusters <- function(rcs,
     scale_color_gradientn(name = color_label,
                           colors = color_gradient,
                           limits = color_gradient_limits) +
-    geom_text_repel(aes(label = gsub("---|-0", "", X_C_name)), 
+    geom_text_repel(aes(label = gsub("---|-0", "", cluster_name)), 
                     size=3, 
                     color='black') + 
     theme(panel.background = element_blank(),

@@ -55,6 +55,13 @@ if (settings$rp$top_documents != 0) {
     top_n(settings$rp$top_documents, X_E)
 }
 
+# Clean the columns
+article_report$Z9 <- as.integer(article_report$Z9)
+article_report$Z9[is.na(article_report$Z9)] <- 0
+
+article_report$PY <- as.integer(article_report$PY)
+article_report$PY[is.na(article_report$PY)] <- median(article_report$PY, na.rm = TRUE)
+
 # Order the report 
 article_report <- article_report[order(article_report$X_C, 
                                        -article_report$X_E, 

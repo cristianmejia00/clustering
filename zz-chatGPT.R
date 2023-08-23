@@ -117,6 +117,7 @@ get_papers_summary <- function(cl_dataset) {
 rcs_merged$description <- ''
 rcs_merged$name <- ''
 dataset$summary <- ''
+source("zz-prompts.R")
 
 ###################################
 ###################################
