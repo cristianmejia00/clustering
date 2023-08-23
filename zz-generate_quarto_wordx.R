@@ -260,13 +260,13 @@ if (nchar(quarto_document) == 0) {
 
 
 # Write the file
-fileConn <- file(file.path(output_folder_level, "dockx.qmd"))
+fileConn <- file(file.path(output_folder_level, "docx.qmd"))
 writeLines(quarto_document, fileConn)
 close(fileConn)
 
 # Render the file to HTML
 # settings.R and bibliography.bib must be on the same directory as index.qmd
-quarto_render(file.path(output_folder_level, "index.qmd"))
+quarto_render(file.path(output_folder_level, "docx.qmd"))
 
 
 # Render the file as PDF
