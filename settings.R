@@ -8,21 +8,21 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q281",
+  project_folder = "Q282",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'See Q281 PIK Postdam Institute for Climate Impact Research',
-  query_id = "Q281", # This is the Folder name. Equivalent to Fukan's dataset
-  fukan_url = "",
-  downloaded_documents = "5421",
+  query = 'See Q282 Riken',
+  query_id = "Q282", # This is the Folder name. Equivalent to Fukan's dataset
+  fukan_url = "https://academic-landscape.com/analysis/48186/1#c0",
+  downloaded_documents = "17018",
 
   # project
-  project_name = "PIK Postdam",
+  project_name = "RIKEN",
   project_description = "Citation Network of PIK",
   date = "2023-09-19",
   created_by = "cristianmejia00@gmail.com",
-  notes = "NA"
+  notes = "Using Fukan subclusters as cluster 0"
 )
 
 ## General Parameters

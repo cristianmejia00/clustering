@@ -19,8 +19,8 @@ dataset_folder <- choose.dir()
 
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q281", 
-                         "fukan_url" = "https://academic-landscape.com/analysis/48185/1#c0")
+dataset_metadata <- list("query_id" = "Q282", 
+                         "fukan_url" = "https://academic-landscape.com/analysis/48186/1#c0")
 
 
 ###########################################################################################
@@ -50,8 +50,8 @@ orphans <- read_from_fukan_2(dataset_folder, what = "orphans")
 library(glue)
 fukan_clusters <- table(dataset$X_C)
 initial_cluster <- 1
-final_cluster <- 12
-total_clusters <- 22
+final_cluster <- 26
+total_clusters <- length(fukan_clusters)
 
 main_cluster <- initial_cluster
 sub_cluster <- 1
