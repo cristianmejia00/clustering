@@ -96,3 +96,13 @@ writeLines(capture.output(sessionInfo()), file.path(output_folder_level, "sessio
 
 # Save Global environment
 save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))
+
+# Save cluster IDS
+if ('fukan_original_cluster_id' %in% colnames(dataset)) {
+  print('Saving cluster id comparison for subclusters')
+  cluster_comparison <- dataset[c('X_C', 'fukan_X_C', 'fukan_original_cluster_id', 'fukan_subcluster_label')]
+  cluster_comparison <- cluster_comparison[!duplicated(cluster_comparison$fukan_subcluster_label),]
+  cluster_comparison <- cluster_comparison[order(cluster_comparison$fukan_X_C),]
+  write.csv(cluster_comparison, file = file.path(output_folder_level, "cluster_id_comparison.csv"), row.names = FALSE)
+}
+
