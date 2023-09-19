@@ -43,10 +43,9 @@ bibliometrics_folder <- "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometric
 dataset <- read_from_fukan_2(dataset_folder)
 orphans <- read_from_fukan_2(dataset_folder, what = "orphans")
 
-## Create directories
-dir.create(file.path(bibliometrics_folder, dataset_metadata$query_id), showWarnings = FALSE)
-save(dataset,orphans,dataset_metadata, 
-     file = file.path(bibliometrics_folder, dataset_metadata$query_id, "dataset.rdata"))
+#################################################
+# Using Fukan Sub Clusters as Cluster 0
+#################################################
 
 library(glue)
 fukan_clusters <- table(dataset$X_C)
@@ -58,26 +57,43 @@ main_cluster <- initial_cluster
 sub_cluster <- 1
 sub_cluster_labels <- c('1-1')
 for (j in c(2: length(fukan_clusters))) {
-    if (fukan_clusters[j] <= fukan_clusters[j-1] & 
-        main_cluster <= final_cluster) {
-      main_cluster <- main_cluster
-      sub_cluster <- sub_cluster + 1
+  if (fukan_clusters[j] <= fukan_clusters[j-1] & 
+      main_cluster <= final_cluster) {
+    main_cluster <- main_cluster
+    sub_cluster <- sub_cluster + 1
+  } else {
+    main_cluster <- main_cluster + 1
+    if (main_cluster <= final_cluster) {
+      sub_cluster <- 1
     } else {
-      main_cluster <- main_cluster + 1
-      if (main_cluster <= final_cluster) {
-        sub_cluster <- 1
-      } else {
-        sub_cluster <- 0
-      }
+      sub_cluster <- 0
     }
+  }
   sub_cluster_labels <- c(sub_cluster_labels, glue("{main_cluster}-{sub_cluster}"))
   print(glue("{main_cluster}-{sub_cluster}"))
 } 
 
 sub_cluster_labels
 
-dataset$subcluster_label <- sub_cluster_labels[dataset$X_C]
-table(dataset$subcluster_label, dataset$X_C)
+dataset$fukan_subcluster_label <- sub_cluster_labels[dataset$X_C]
+table(dataset$fukan_subcluster_label, dataset$X_C)
+
+# reorder clusters from largest like in cluster 0
+tmp <- table(dataset$X_C)
+if (!(sapply(c(2:length(tmp)), function(x) {tmp[x] <= tmp[x-1]}) |> all())) {
+  tmp <- table(dataset$X_C) |> sort(decreasing = TRUE)
+  dataset$fukan_original_cluster_id <- dataset$X_C
+  dataset$X_C <- match(dataset$X_C, names(tmp))
+}
+
+# Verify clusters are ordered from the largest
+table(dataset$X_C)
+
+
+## Create directories
+dir.create(file.path(bibliometrics_folder, dataset_metadata$query_id), showWarnings = FALSE)
+save(dataset,orphans,dataset_metadata, 
+     file = file.path(bibliometrics_folder, dataset_metadata$query_id, "dataset.rdata"))
 
 
 

@@ -8,29 +8,29 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q259-palm-oil-enhanced2",
+  project_folder = "Q281",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = '("palm oil" OR "oil palm") and (sustainab* or sdg* or esg or environ* or social or forest* or deforest* or biodiv*) and (agri* or farm* or plant*)',
-  query_id = "Q259", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'See Q281 PIK Postdam Institute for Climate Impact Research',
+  query_id = "Q281", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "",
-  downloaded_documents = "2411",
+  downloaded_documents = "5421",
 
   # project
-  project_name = "Palm Oil News",
-  project_description = "Topic Model of news about sustainable palm oil",
-  date = "2023-07-25",
+  project_name = "PIK Postdam",
+  project_description = "Citation Network of PIK",
+  date = "2023-09-19",
   created_by = "cristianmejia00@gmail.com",
   notes = "NA"
 )
 
 ## General Parameters
 settings$params <- list(
-  type_of_dataset = "news", # "papers", "patents" or "news"
-  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "topic_model", # "topic_model" or "citation_network"
-  dataset_source = "factiva", # wos, derwent, factiva (dimensions = wos)
+  type_of_dataset = "papers", # "papers", "patents" or "news"
+  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "citation_network", # "topic_model" or "citation_network"
+  dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
@@ -51,7 +51,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 7,
+    threshold = 0.9,
 
     # Cluster scope
     scope = "all", # "all" OR "cl99" OR "cl_99"
@@ -120,7 +120,7 @@ settings$addons <- list(
   # The dataset must contain the columns:
   # - `sentiment` NUMERIC. with a score between -1 and 1
   # - `sentiment_factor` STRING ENUM[positive, neutral, negative] with the sentiment label
-  "sentiment_analysis" = TRUE,
+  "sentiment_analysis" = FALSE,
   # These are possible if we provide a network file. 
   "page_rank" = FALSE,
   "eigen_centrality" = FALSE,
@@ -141,10 +141,11 @@ settings$rp <- list(
   categorical_simple_wide_reports = c("PY", "sentiment_factor"), # Columns in the dataset without ';' for matrix type summary
   categorical_multi_wide_reports = c("WC", "Countries", "Institutions", "issues"), # Columns in the dataset with ';' for matrix type summary
   numerical_reports = c("PY", "Z9", "sentiment", "score"), # Numeric columns in the dataset for summary (min, max, mean, median, sd)
-  methods = c('Data collection from Factiva',
-              'Embeddings',
-              'UMAP',
-              'HDBScan')
+  methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
+#c('Data collection from Factiva',
+              #'Embeddings',
+              #'UMAP',
+              #'HDBScan')
   # Need to capture the parameters of the topic model
   #c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
 )
