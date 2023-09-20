@@ -8,21 +8,21 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q282",
+  project_folder = "Q282tm",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'See Q282 Riken',
+  query = 'See Q282 RIKEN',
   query_id = "Q282", # This is the Folder name. Equivalent to Fukan's dataset
-  fukan_url = "https://academic-landscape.com/analysis/48186/1#c0",
-  downloaded_documents = "17018",
+  fukan_url = "",
+  downloaded_documents = "16943",
 
   # project
   project_name = "RIKEN",
-  project_description = "Citation Network of PIK",
-  date = "2023-09-19",
+  project_description = "Topic Model of RIKEN (2019-2023)",
+  date = "2023-09-20",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Using Fukan subclusters as cluster 0"
+  notes = "tm"
 )
 
 ## General Parameters
@@ -51,7 +51,10 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.9,
+    threshold = 0.99999,
+    
+    # Top max clusters to analyze per iteration
+    max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
 
     # Cluster scope
     scope = "all", # "all" OR "cl99" OR "cl_99"
@@ -62,9 +65,6 @@ if (settings$params$type_of_analysis == "citation_network") {
     ### - we want clustering at level0, either because:
     ###   - we don't want to use Fukan System X_C
     ###   - We have a WOS dataset without X_C
-
-    # Top max clusters to analyze per iteration
-    max_clusters = 100,
 
     # Subcluster only if having this or more
     size_limit = 500,
