@@ -83,3 +83,15 @@ write.csv(article_report,
 
 # Cleaning up
 rm('columns_in_myDataCorrect')
+
+# Filter to the top_documents of each cluster
+if (settings$rp$top_documents == 0) {
+  article_report_20 <- article_report %>%
+    group_by(Cluster) %>%
+    top_n(30, Degree)
+}
+
+# Write the article report
+write.csv(article_report_20,
+          file = gsub('_report', '_report_20', rn$PROJECTarticlereport),
+          row.names = FALSE)
