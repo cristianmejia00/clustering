@@ -88,7 +88,7 @@ rm('columns_in_myDataCorrect')
 if (settings$rp$top_documents == 0) {
   article_report_20 <- article_report %>%
     group_by(Cluster) %>%
-    top_n(30, Degree)
+    top_n(20, Degree)
 }
 
 # Write the article report

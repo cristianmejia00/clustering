@@ -37,6 +37,13 @@ load(file.path(
 # table(dataset$X_C) %>% sort(decreasing = TRUE) %>%  plot()
 # Update the threshold in settings file.
 
+##########################################################
+# Check all documents have a cluster assigned
+if (any(is.na(dataset$X_C))) {
+  print('CRITICAL: At least one document is missing cluster assignation!')
+  print('Those papers are removed')
+  dataset <- dataset[!is.na(dataset$X_C),]
+}
 
 ##########################################################
 # Document classification (Get clusters or Get topics)

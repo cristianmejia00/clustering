@@ -8,19 +8,19 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q282tm",
+  project_folder = "Q282tm_all_years",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'See Q282 RIKEN',
+  query = 'See Q282 RIKEN all years',
   query_id = "Q282", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "",
-  downloaded_documents = "16943",
+  downloaded_documents = "85811",
 
   # project
   project_name = "RIKEN",
   project_description = "Topic Model of RIKEN (2019-2023)",
-  date = "2023-09-20",
+  date = "2023-09-21",
   created_by = "cristianmejia00@gmail.com",
   notes = "tm"
 )
