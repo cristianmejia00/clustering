@@ -8,21 +8,21 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q282tm_all_years",
+  project_folder = "Q286",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'See Q282 RIKEN all years',
-  query_id = "Q282", # This is the Folder name. Equivalent to Fukan's dataset
-  fukan_url = "",
-  downloaded_documents = "85811",
+  query = 'patent*',
+  query_id = "Q286", # This is the Folder name. Equivalent to Fukan's dataset
+  fukan_url = "https://academic-landscape.com/analysis/48200/0#c0",
+  downloaded_documents = "26485",
 
   # project
-  project_name = "RIKEN",
-  project_description = "Topic Model of RIKEN (2019-2023)",
-  date = "2023-09-21",
+  project_name = "PATENTS",
+  project_description = "Citation network of the topic patents",
+  date = "2023-10-01",
   created_by = "cristianmejia00@gmail.com",
-  notes = "tm"
+  notes = "Selected clusters from d48262: Q286 - TS = patent* (all years; update to Q248 and Q204). Clusters where patent means IP document. Manual selection."
 )
 
 ## General Parameters
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -51,7 +51,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.99999,
+    threshold = 0.9,
     
     # Top max clusters to analyze per iteration
     max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
@@ -67,10 +67,10 @@ if (settings$params$type_of_analysis == "citation_network") {
     ###   - We have a WOS dataset without X_C
 
     # Subcluster only if having this or more
-    size_limit = 500,
+    size_limit = 300,
 
     # Include cluster having collecting a minimum of __ articles
-    size_lower_limit = 0,
+    size_lower_limit = 20,
 
     # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
     remove_zero = FALSE,
