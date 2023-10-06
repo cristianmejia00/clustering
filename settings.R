@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -51,7 +51,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.9,
+    threshold = 0.98,
     
     # Top max clusters to analyze per iteration
     max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
