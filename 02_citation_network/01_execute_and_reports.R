@@ -24,8 +24,10 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   print(paste("...Starting reports for level", as.character(level_report), sep = " "))
 
   # Get the level path and create the directory
-  output_folder_level <- file.path(output_folder_reports, 
-                                   paste("level", as.character(level_report), sep = ""))
+  output_folder_level <- file.path(
+    output_folder_reports,
+    paste("level", as.character(level_report), sep = "")
+  )
   dir.create(output_folder_level)
 
   # Get the right dataset for the corresponding level
@@ -64,7 +66,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   print("Making article summary")
   source("03_reports/01_document_report_with_abstract.R")
   zz_env$x02 <- ls()
-  
+
   # Get detail reports reports by feature by cluster
   print("Clusters reports")
   source("03_reports/04_cluster_reports.R")
@@ -74,7 +76,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   print("Computing RCS")
   source("03_reports/02_rcs.R")
   zz_env$x04 <- ls()
-  
+
   # Keywords for heatmap # Now, do it for all.
   print("Heatmap keywords")
   source("03_reports/05_heatmap_keywords_part_1.R")
@@ -101,8 +103,8 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
     # source("03_reports/09_keywords_per_clusters.R")
     source("03_reports/10_rcs_keywords.R")
   }
-  zz_env$x05 <- c(zz_env$x04, 'papersText', 'myDataCorrect_SAMPLE', 'unified_keywords', 'PHI')
-  
+  zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
+
   # Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos") {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
@@ -110,14 +112,11 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
 
   # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
-  rm(list=setdiff(ls(),zz_env$x05))
+  rm(list = setdiff(ls(), zz_env$x05))
   save.image(rn$PROJECTenviron)
-  
+
   # Time per level
   time_02_finished <- Sys.time()
   time_03_taken <- time_02_finished - time_01_started
   print(time_03_taken)
 }
-
-
-      

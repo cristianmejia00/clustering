@@ -88,6 +88,7 @@ PHI <- PHI[, valid_names]
 print("-- Creating THETA table (Documents vs Keywords)")
 #########################################
 # Creating the Document X Keywords table
+list_of_clusters
 THETA <- lapply(list_of_clusters, function(x) {
   sss <- as.character(cluster_keywords_tf[[x]]$keywords)
   sss <- gsub(" ", "zqzq", sss)
