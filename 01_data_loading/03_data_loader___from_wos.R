@@ -1,0 +1,195 @@
+#==================================================
+#Created in R; 2016-03-14; Kajikawa-lab; C.Mejia
+#Working fine as of 2018-11-26.
+#==================================================
+
+# Call necessary libraries
+library(plyr)
+library(Opener5)
+library(data.table)
+library(dplyr)
+library(stringr)
+
+# Open a window to select the directory with the files to merge
+paths_to_files = list.files(path = choose.dir(), full.names= TRUE, pattern = "*.txt", recursive = TRUE)
+
+# Read each file and store them in a vector
+# fread sometimes fails when reading the header, what to do?
+list_of_all_files <- lapply(paths_to_files, function(a_path){
+  data1 <- fread(a_path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-8", quote = "")
+  #data1 <- read_from_wos(a_path) # NOTE: DO NOT USE read_from_wos() from package OPNER5, it cut off the lines before finish it, hence it does not read PY and UT for all rows.
+  #data1 <- read.table(a_path, sep = '\t', fill = TRUE, stringsAsFactors = FALSE, header = FALSE, check.names = FALSE, quote = "", comment.char="", encoding = "UTF-16")
+  #data1 <- read.csv(a_path, stringsAsFactors = FALSE, check.names = FALSE)
+  #data1 <- read.delim(a_path, stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-16", sep = "\t")
+  return(data1)})
+
+
+# This does the same as above. It is used for debugging when the above gets error.
+# In here, we continue reading files even if a file has errors. Then, the files with errors are shown.
+# It helps to debub.
+# list_of_all_files <- list()
+# list_of_all_errors <- character()
+# for (ii in c(1:length(paths_to_files))) {
+#   print(ii)
+#   tryCatch({
+#     list_of_all_files[[ii]] <- read_from_wos_2(paths_to_files[[ii]])}, error = function(e) {
+#     print(e)
+#     print(paths_to_files[[ii]])
+#     list_of_all_errors <- c(list_of_all_errors, paths_to_files[[ii]])
+#   })
+# }
+
+# Verify than the files have the expected number of rows: 500. Except for a few that were the tails.
+plot(unlist(sapply(list_of_all_files, nrow))) #The number of rows in each file, mostly 500.
+
+# Create the merged dataset
+dataset <- rbind.fill(list_of_all_files)
+dataset <- as.data.frame(dataset)
+if (colnames(dataset)[1] == "V1") {
+  colnames(dataset) <- c("PT", colnames(dataset)[3:length(colnames(dataset))], "END")
+  dataset["END"] <- NULL
+}
+
+# check for possible errors
+# Verify correct reading by inspecting the publication year. 
+# If several non numeric values are present, it means there, there was a problem reading the files.
+names(dataset)[1:20]
+
+
+# A record without PY, EA, or CY can be NA or "" empty string. We normalize anything to NA
+dataset$PY[dataset$PY == ""] <- NA
+dataset$EA[dataset$EA == ""] <- NA
+dataset$CY[dataset$CY == ""] <- NA
+
+# Correct records without PY
+table(dataset$PY)
+table(is.na(dataset$PY))
+
+dataset$PY[is.na(dataset$PY)] <- 2023
+
+# Correct records without PY
+table(dataset$PY)
+table(is.na(dataset$PY))
+
+dataset$TI[is.na(dataset$PY)]
+dataset$TI[grepl("innovation and design in the age", tolower(dataset$TI))]
+
+test <- dataset[grepl("innovation and design in the age", tolower(dataset$TI)),]
+
+# Conference papers may have the year in CY 
+# Early access paper may have the year in EA
+# So, we are going to complete from there
+idx <- is.na(dataset$PY) & !is.na(dataset$CY)
+dataset$PY[idx] <- sapply(dataset$CY[idx], function(x) {substr(x,nchar(x)-4, nchar(x))}) %>% as.numeric()
+
+idx <- is.na(dataset$PY) & !is.na(dataset$EA)
+dataset$PY[idx] <- sapply(dataset$EA[idx], function(x) {substr(x,nchar(x)-4, nchar(x))}) %>% as.numeric()
+
+table(is.na(dataset$PY))
+# A way to infer the PY of an article is by looking at the cited references. An article will cite articles 
+# that were published on the same year of publication at most. i.e. by extracting the max year in the CR
+# We know that the paper was published in that or a posterior year. Hence, we infer here that it was published 
+# On the same year of the last reference.
+
+## An extra way to know the PY is by looking at the copyright year in the Abstract. (But I have not yet implemented this)
+idx <- is.na(dataset$PY) & dataset$CR != ""
+CR_years_available <- str_extract_all(dataset$CR[idx], "[[:digit:]]{4},")
+CR_max_year <- sapply(CR_years_available, function(x) {
+  tmp <- gsub(",", "", x)
+  tmp <- as.numeric(tmp)
+  if (length(tmp) > 0) {
+    tmp <- tmp[tmp > 0]
+    tmp <- tmp[tmp <= 2021]
+    return(max(tmp))
+  } else {
+    return (NA)
+  }
+})
+dataset$PY[idx] <- CR_max_year
+
+table(is.na(dataset$PY))
+
+test <- dataset[!grepl("^WOS", dataset$UT),]
+
+
+# Correct records without UT
+table(grepl("^WOS", dataset$UT))
+
+idx <- !grepl("^WOS", dataset$UT)
+#dataset$UT[idx] <- paste(as.character(dataset$PY[idx]), gsub("[[:punct:]]| ", "", tolower(dataset$TI[idx])), sep = "") %>% sapply(., function(x) {substr(x,1,50)})
+dataset$UT
+# Remove files without UT
+#dataset <- dataset[!nchar(dataset$UT) != 19,]
+
+# Remove duplicated files
+dataset = dataset[!duplicated(dataset$UT),]
+
+# Remove columns that are not used anywhere (i.e. let only those that are used or can be used)
+# Usable columns as of 20181201
+usable_columns <- c("PT", "AU", "TI", "SO", "LA", "DT", "DE", "ID", "AB", "C1", "OI", "AF", 
+                    "RP", "FU", "FX", "CR", "NR", "TC", "Z9", "U1", "U2", "PU", "SN", "J9",  
+                    "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT")
+
+#dataset <- dataset[,usable_columns]
+dataset$PY <- as.character(dataset$PY)
+for (i in c(1:ncol(dataset))) {
+  dataset[,i]  <- as.character(dataset[,i]) %>% enc2utf8() 
+}
+
+
+dataset_design_kwds <- dataset
+save(dataset_design_kwds, file="dataset_design_kwds.rdata")
+getwd()
+#dataset_without_UT <- dataset_without_UT[,usable_columns]
+
+# # Clean the environment
+# rm(usable_columns)
+# rm(list=setdiff(ls(), c("dataset")))
+# cybermetrics <- dataset
+# save(cybermetrics, file = "cybermetrics.rdata")
+# getwd()
+# # END
+
+write_for_fukan(dataset, file_name = "dataset_232.tsv")
+
+business_title <-  dataset
+
+
+
+save(business_all, business_title, management_all, management_title, OM_all, OM_title, file = "expanded_datasets.rdata")
+
+
+
+
+# Next are additional codes for analysing by time.
+##############################################################################################
+##############################################################################################
+# all years data
+dataset <- rbind.fill(dataset_1900_2000, dataset_1900_2000_n, dataset_2001_2020)
+save(dataset, file = "sustainability_data.rdata")
+# Chunks for the second version
+
+# First request
+test <-seq(1960, 2000, 5)
+for (ii in c(1:9)) {
+  file_name <- paste("1900_to_", as.character(test[ii]), ".tsv", sep = "")
+  write_for_fukan(dataset[dataset$PY <= test[ii],], file_name = file_name)
+}
+
+# Second request
+write_for_fukan(dataset[dataset$PY <= 2005,], file_name = "1900_to_2005.tsv")
+write_for_fukan(dataset[dataset$PY <= 2010,], file_name = "1900_to_2010.tsv")
+write_for_fukan(dataset[dataset$PY <= 2015,], file_name = "1900_to_2015.tsv")
+write_for_fukan(dataset[dataset$PY >= 2001 & dataset$PY <= 2010,], file_name = "2001_to_2010.tsv")
+write_for_fukan(dataset[dataset$PY >= 2011 & dataset$PY <= 2020,], file_name = "2011_to_2020.tsv")
+
+# Extras
+write_for_fukan(dataset[dataset$PY >= 2001 & dataset$PY <= 2005,], file_name = "2001_to_2005.tsv")
+write_for_fukan(dataset[dataset$PY >= 2006 & dataset$PY <= 2010,], file_name = "2006_to_2010.tsv")
+write_for_fukan(dataset[dataset$PY >= 2011 & dataset$PY <= 2015,], file_name = "2011_to_2015.tsv")
+write_for_fukan(dataset[dataset$PY >= 2016 & dataset$PY <= 2020,], file_name = "2016_to_2020.tsv")
+
+# 
+write_for_fukan(dataset[dataset$PY >= 1991 & dataset$PY <= 2000,], file_name = "1991_to_2000.tsv")
+write_for_fukan(dataset[dataset$PY >= 1991 & dataset$PY <= 1995,], file_name = "1991_to_1995.tsv")
+write_for_fukan(dataset[dataset$PY >= 1996 & dataset$PY <= 2000,], file_name = "1996_to_2000.tsv")
