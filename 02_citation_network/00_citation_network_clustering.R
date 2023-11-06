@@ -23,6 +23,7 @@ if (settings$cno$threshold > 1) {
 # tmp_prop <- tmp_prop[settings$cno$threshold]
 # settings$cno$threshold <- tmp_prop + tmp_prop * 0.0001
 # settings$cno$threshold
+network <- ncol_file %>% as.data.frame()
 
 #####################################################
 # If any of these is TRUE, then we need a network object.
@@ -30,7 +31,8 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
   print("Clustering will be performed using the provided network")
   #####################################################
   # open network file.
-  if (settings$cno$using_mission_pairs_from_fukan) {
+  #if (settings$cno$using_mission_pairs_from_fukan) {
+  if (!settings$cno$using_mission_pairs_from_fukan) {
     # The network objects is based on "mission.pairs.tsv" from Fukan's NEWMAN results
     g1 <- graph_from_data_frame(network, directed = FALSE)
   } else {
@@ -47,7 +49,8 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
     valid_vertices <- V(g1) %>%
       names() %>%
       as.numeric()
-
+    
+    dataset_original <- dataset #backup
     orphans <- dataset[which(!dataset$X_N %in% valid_vertices), ]
     dataset <- dataset[which(dataset$X_N %in% valid_vertices), ]
 

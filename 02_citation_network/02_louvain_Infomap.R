@@ -15,8 +15,8 @@
 # The same mission.facet.all with louvain column (community), and degree column
 
 #####################################################################################
-if(algor == "louvain") {com <- multilevel.community(g1)}
-if(algor == "infomap") {com <- cluster_infomap(g1)}
+if(settings$cno$algor == "louvain") {com <- multilevel.community(g1)}
+if(settings$cno$algor == "infomap") {com <- cluster_infomap(g1)}
 
 m_com = membership(com)
 id_com = sort(unique(m_com))
@@ -45,6 +45,28 @@ dataset$community <- communities
 dataset$degrees <- degrees
 
 # Change names
-setnames(dataset, "X_C", "fukan_C")
-setnames(dataset, "community", "X_C")
+dataset$fukan_c <- dataset$X_C
+dataset$X_C <- dataset$community
+
+table(dataset$community)
+table(dataset$X_C)
+
+# Get orphans
+dataset_louvain <- dataset # backup
+dataset_wos <- dataset # reload from saved object
+orphans <- dataset_wos[!(dataset_wos$UT %in% dataset_louvain$UT),]
+dataset <- dataset_louvain
+
+# Let's check the orphans top titles
+orphans$TI[order(orphans$Z9, decreasing = TRUE)][1:10]
+
+
+# Let's check the clusters' top titles
+for (i in c(1:max(dataset$X_C))) {
+  print('===================================================')
+  print(as.character(i))
+  titles <- dataset %>% filter(X_C == i) %>% dplyr::arrange(desc(X_D)) %>% top_n(10, X_D)
+  print(titles$TI)
+}
+
 
