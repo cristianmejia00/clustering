@@ -2,6 +2,16 @@
 
 The main repo for clustering academic articles, news, and patents using citation networks and topic model.
 
+## Setting up a new project
+
+- Go to GitHub, and create a new repository. I use the convention `{id}-{longer_name}`.
+- Open R and create a new project from version control. Use the url from the recently created repository. Create the project in Desktop/GitHub/
+- Copy the copiable contents from  Desktop/GitHub/clustering including:
+  - the `renv` folder and `renv.lock`
+  - the `.gitignore` (i.e., we replace it)
+  - this README.
+- Open the project and run `renv::restore()`
+
 ## Processing:
 
 - Step 1: Create a `data.rdata` file.

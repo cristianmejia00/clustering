@@ -109,7 +109,39 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   if (settings$params$dataset_source == "wos") {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
   }
-
+  
+  ############################################################################
+  
+  # Dataset merged RCS
+  source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
+  
+  # figures
+  # Save PNG figures. Normal raster figures for easy navigation in PC.
+  extension <- 'png'
+  subfolder_dataset <- "charts_dataset"
+  subfolder_clusters <- "charts_clusters"
+  source(file.path(getwd(), "zz-charts_dataset.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats3.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats4.R"))
+  source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
+  
+  
+  # Save PNG figures. Needed for notebook.
+  extension <- 'svg'
+  subfolder_dataset <- "index_files/charts"
+  subfolder_clusters <- "index_files/charts"
+  source(file.path(getwd(), "zz-charts_dataset.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats3.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats4.R"))
+  source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
+  
+  ############################################################################
   # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
   rm(list = setdiff(ls(), zz_env$x05))

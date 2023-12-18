@@ -81,7 +81,7 @@ main_path <- file.path(bibliometrics_folder,
                        analysis_folder,
                        "<<level_folder>>")
 
-rcs_merged <- read.csv(file.path(main_path, "rcs_merged.csv"))
+#rcs_merged <- read.csv(file.path(main_path, "rcs_merged.csv"))
 ```
 ')
 qt$load_data
@@ -185,7 +185,7 @@ Cluster <<cluster>> stats.
 ')
   
 }
-
+list_of_clusters <- list_of_clusters[list_of_clusters != 99]
 qt$clusters <- ""
 for (cluster in list_of_clusters) {
   cluster_main_description <- glue("
@@ -207,7 +207,6 @@ for (cluster in list_of_clusters) {
 
                       ")
 }
-
 
 qt$figures <- glue_code("::: {#fig-elephants layout-ncol=2}
 

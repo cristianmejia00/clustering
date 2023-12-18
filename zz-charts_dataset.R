@@ -49,7 +49,12 @@ create_report_and_barchart <- function(column_data,
     strsplit("; ") %>%
     unlist() %>%
     tolower() %>%
-    str_to_title() %>%
+    toTitleCase() %>% 
+    gsub('Ieee', 'IEEE', .) %>%
+    gsub('International', 'Int.', .) %>% 
+    gsub('Usa', 'USA', .) %>%
+    gsub('Peoples r China', 'China', .) %>% 
+    substr(1,45) %>%
     table() %>%
     sort(decreasing = TRUE) %>%
     data.frame() %>%
@@ -64,7 +69,7 @@ create_report_and_barchart <- function(column_data,
 
   ggplot(stats_column[c(1:min(nrow(stats_column), top_items)), ], aes(x = Item, y = Documents)) +
     geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
-    # theme(axis.text=element_text(size=14)) +
+    theme(axis.text=element_text(size=14)) +
     coord_flip() +
     scale_x_discrete(name = item_label, limits = rev) +
     scale_y_continuous(name = document_label) +

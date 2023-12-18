@@ -110,11 +110,11 @@ summarize_two_columns <- function(df,
   
   # Get summary
   print('Phase 2')
-  tmp_column <- paste(df[[a_column]], ';', sep = '')
-  result_list <- lapply(names(a_column_values), function(c) {
-    category_data <- subset(df, grepl(paste(c,';',sep = ''), tmp_column))
+  tmp_column <- df[[a_column]] %>% as.character() %>% strsplit("; ")
+  result_list <- lapply(names(a_column_values), function(x) {
+    category_data <- subset(df, sapply(tmp_column, function(y) {as.character(x) %in% y}))
     category_top_subcategories <- get_top_items(category_data, column = b_column, decreasing = b_decreasing, include = b_include, exclude = b_exclude, top = 0)
-    return(format_long_table(category_top_subcategories, c))
+    return(format_long_table(category_top_subcategories, x))
   }) %>% rbind.fill()
   
   # Add the % based on subcategory
@@ -270,7 +270,7 @@ issue_palette <- c('economic'= "#999999", 'environmental'= "#009E73", 'health'= 
 ########################################################
 ########################################################
 dataset$DE <- tolower(dataset$DE)
-PY_max <- max(dataset$PY, na.rm = TRUE)
+PY_max <- min(max(dataset$PY, na.rm = TRUE), settings$rp$most_recent_year)
 PY_min <- PY_max - 10 + 1
 
 # Compute yearly trends of clusters
