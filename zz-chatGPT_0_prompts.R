@@ -3,6 +3,20 @@
 
 library(glue)
 
+
+###################################
+###################################
+# GLOBALS
+###################################
+
+# The topic used to infer the query
+MAIN_TOPIC <- 'Smart Cities'
+
+# It means that you know about ...
+MAIN_TOPIC_DESCRIPTION <- 'urban areas that use various types of technologies to collect data and then use insights gained from that data to manage assets, resources, and services efficiently. Smart cities encompass optimizing city functions and promoting economic growth while improving the quality of life for citizens through smart technology and data analysis. Key features often include Advanced Connectivity, Data-Driven Decision Making, Efficient Public Services, Environmental Sustainability, Citizen Engagement, and Governance.'
+
+
+
 ###################################
 ###################################
 # Article summary
@@ -11,10 +25,10 @@ prompt_summarize_a_paper <- function(topic, topic_description, article_text){
   list(
     list(
       'role' = 'system',
-      'content' = 'You are a researcher with a great record of publications and that understands what good academic writing is.
+      'content' = glue('You are a researcher with a great record of publications and that understands what good academic writing is.
                    Your writing style is that of authors in reputable journals like Nature or Science.
-                   Your answers are concise.
-                   Your research of expertice is on <<{topic}>>, meaning that you know about {topic_description}' 
+                   Your answers are concise and avoid adverbs.
+                   Your research of expertice is on <<{topic}>>, meaning that you know about {topic_description}') 
     ),
     list(
       'role' = 'user',
@@ -32,7 +46,7 @@ prompt_cluster_description <- function(topic, topic_description, cluster_text) {
   list(
     list(
       'role' = 'system',
-      'content' = 'You are a policy consultant with expertise on <<{topic}>>, meaning that you know about {topic_description}
+      'content' = glue('You are a policy consultant with expertise on <<{topic}>>, meaning that you know about {topic_description}
       You will be given multiple texts (a.k.a cluster) separated by #####. Your task is to read the texts and find their common topic. Ideally, the common topic should be framed in the context of <<{topic}>>.
       To find the topic name you will follow the next steps:
   
@@ -41,7 +55,7 @@ prompt_cluster_description <- function(topic, topic_description, cluster_text) {
       Step 3: You summarize all the text in a single paragraph taking into consideration the common keywords and themes.
       Step 4: You conclude by giving a name for the common topic shared by the articles. 
       
-      Your answers are concise.' 
+      Your answers are concise.') 
     ),
     list(
       'role' = 'user',
@@ -50,6 +64,18 @@ prompt_cluster_description <- function(topic, topic_description, cluster_text) {
   )
 }
 
+###################################
+###################################
+# Cluster description enhanced
+###################################
+prompt_cluster_description_enhanced <- function(cluster_description) {
+  list(
+    list(
+      'role' = 'user',
+      'content' = glue('Please synthesize the following text in a single cohesive paragraph. Do not mention the texts one by one, but in an integrated and coherent manner: {cluster_description}')
+    )
+  )
+}
 
 
 ###################################
@@ -60,10 +86,10 @@ prompt_cluster_name <- function(topic, topic_description, cluster_description) {
   list(
     list(
       'role' = 'system',
-      'content' = 'You are a policy consultant with expertise on <<{topic}>>, meaning that you know about {topic_description}
+      'content' = glue('You are a policy consultant with expertise on <<{topic}>>, meaning that you know about {topic_description}
       You will be given the decription of a cluster of documents. 
       Either extract the cluster name given in the description, or give a short name based on what you read. 
-      Your answers are concise and include only the name of the cluster without any further explanation or introduction.' 
+      Your answers are concise and include only the name of the cluster without any further explanation or introduction.') 
     ),
     list(
       'role' = 'user',

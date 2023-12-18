@@ -26,6 +26,7 @@ if (!("Opener5"     %in% rownames(installed.packages()))) {
 }
 if (!("DT"          %in% rownames(installed.packages()))) {install.packages("DT")}
 if (!("glue"        %in% rownames(installed.packages()))) {install.packages("glue")}
+if (!("svglite"        %in% rownames(installed.packages()))) {install.packages("svglite")}
 ####################################################
 # Load libraries
 

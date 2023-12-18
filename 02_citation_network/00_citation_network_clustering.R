@@ -23,7 +23,7 @@ if (settings$cno$threshold > 1) {
 # tmp_prop <- tmp_prop[settings$cno$threshold]
 # settings$cno$threshold <- tmp_prop + tmp_prop * 0.0001
 # settings$cno$threshold
-network <- ncol_file %>% as.data.frame()
+
 
 #####################################################
 # If any of these is TRUE, then we need a network object.
@@ -31,39 +31,11 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
   print("Clustering will be performed using the provided network")
   #####################################################
   # open network file.
-  #if (settings$cno$using_mission_pairs_from_fukan) {
   if (!settings$cno$using_mission_pairs_from_fukan) {
     # The network objects is based on "mission.pairs.tsv" from Fukan's NEWMAN results
     g1 <- graph_from_data_frame(network, directed = FALSE)
   } else {
     g1 <- read.graph(network, format = "ncol")
-  }
-
-  #####################################################
-  # If we computed our network
-  if (!settings$cno$using_mission_pairs_from_fukan) {
-    ggt <- decompose(g1, min.vertices = 100)
-    ttt <- sapply(ggt, vcount) %>% which.max()
-    g1 <- ggt[[ttt]]
-
-    valid_vertices <- V(g1) %>%
-      names() %>%
-      as.numeric()
-    
-    dataset_original <- dataset #backup
-    orphans <- dataset[which(!dataset$X_N %in% valid_vertices), ]
-    dataset <- dataset[which(dataset$X_N %in% valid_vertices), ]
-
-    # Order dataset to the order of nodes in the network
-    dataset <- dataset[match(valid_vertices, dataset$X_N), ]
-
-    # add missing columns from Fukan
-    dataset$X_D <- degree(g1, mode = "in")
-    dataset$X_E <- degree(g1, mode = "all")
-    dataset$X_C <- 9999
-
-    # Remove objects
-    rm(ggt, ttt, valid_vertices)
   }
 
   #####################################################
@@ -94,3 +66,8 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
 ####################################################
 # Recursive clustering
 source("02_citation_network/03_recursive_clustering_WOS.R")
+
+if (!settings$cno$using_initial_column_C_from_fukan) {
+  dataset$fukan_c <- dataset$X_C
+  dataset$X_C <- dataset$level0
+}

@@ -8,21 +8,21 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q286",
+  project_folder = "Q288",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'patent*',
-  query_id = "Q286", # This is the Folder name. Equivalent to Fukan's dataset
-  fukan_url = "https://academic-landscape.com/analysis/48200/0#c0",
-  downloaded_documents = "26485",
+  query = '"smart city" OR "smart cities"',
+  query_id = "Q288", # This is the Folder name. Equivalent to Fukan's dataset
+  fukan_url = "Not apply. Compute directly",
+  downloaded_documents = "25290",
 
   # project
-  project_name = "PATENTS",
-  project_description = "Citation network of the topic patents",
-  date = "2023-10-01",
+  project_name = "smart_cities",
+  project_description = "Citation network of the smart cities research",
+  date = "2023-12-16",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Selected clusters from d48262: Q286 - TS = patent* (all years; update to Q248 and Q204). Clusters where patent means IP document. Manual selection."
+  notes = ""
 )
 
 ## General Parameters
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -41,12 +41,12 @@ if (settings$params$type_of_analysis == "citation_network") {
   settings$cno <- list(
     # Shall we use the network file from Fukan System (i.e. mission.pairs.tsv is available)
     # if False, we create our own network file from scratch.
-    using_mission_pairs_from_fukan = TRUE,
+    using_mission_pairs_from_fukan = FALSE,
 
     # Shall we use the initial clustering solution from Fukan System?
     # If TRUE, we use the column "_C" in mission.facet.all, and hence we can use the figure from Fukan System
     # If FALSE, we compute a new "_C" column based on the algorithm of choice.
-    using_initial_column_C_from_fukan = TRUE,
+    using_initial_column_C_from_fukan = FALSE,
 
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
@@ -70,7 +70,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     size_limit = 300,
 
     # Include cluster having collecting a minimum of __ articles
-    size_lower_limit = 20,
+    size_lower_limit = 30,
 
     # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
     remove_zero = FALSE,
@@ -133,6 +133,7 @@ settings$addons <- list(
 ########################################################### for 00_reports.R
 ## Reporting
 settings$rp <- list(
+  most_recent_year = 2023, # This is needed so the charts do not plot 2024, or future years where data is incomplete
   top_documents = 0, # 0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze
@@ -165,6 +166,7 @@ if (settings$params$dataset_source == 'wos') {
     "DI" = "DOI",
     "WC" = "Categories",
     "DE" = "Author Keywords",
+    "ID" = "WOS Keywords",
     "Z9" = "Citations",
     "score" = "Score",
     "sentiment" = "Sentiment score",
@@ -250,3 +252,4 @@ settings$stopwords$myStopWords <- c(
   settings$stopwords$article_StopWords,
   settings$stopwords$news_Stopwords
 )
+

@@ -125,6 +125,20 @@ if (!("C1" %in% available_columns)) {
   print("warning: no C1")
 }
 
+#################################################################################
+# Fix future years
+# Near the end of the year we have papers having a PY on the next year. 
+# Because they are already accepted and available online, but for printing and official date
+# They will be published next year.
+
+# From bibliometrics standpoint, these papers are already there. Hence we treat papers with a future
+# year as if they were published this year. 
+this_year <- format(Sys.Date(), "%Y") %>% as.numeric()
+future_year_papers <- sum(dataset$PY > this_year)
+if (future_year_papers > 0) {
+  print(glue('we found {future_year_papers} that will be published next year, and we treat them as published this year.'))
+  dataset$PY[dataset$PY > this_year] <- this_year
+}
 
 ##########################################################################
 # Add columns
