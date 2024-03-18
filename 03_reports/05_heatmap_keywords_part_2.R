@@ -162,3 +162,5 @@ papersText <- gsub("NA ", "", papersText)
 # Attach to sample
 myDataCorrect_SAMPLE$papersText <- papersText
 
+# Save the objects
+save(myDataCorrect_SAMPLE, papersText, file = file.path(output_folder_reports, 'papersText.rdata'))

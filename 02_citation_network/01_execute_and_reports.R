@@ -79,6 +79,9 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
 
   # Keywords for heatmap # Now, do it for all.
   print("Heatmap keywords")
+  if (file.exists(file.path(output_folder_reports, 'papersText.rdata'))) {
+    load(file.path(output_folder_reports, 'papersText.rdata'))
+  }
   source("03_reports/05_heatmap_keywords_part_1.R")
   if (!exists("papersText")) {
     source("03_reports/05_heatmap_keywords_part_2.R")
