@@ -10,7 +10,7 @@
 # - all saved to the `/inputs` folder
 
 # "Properly formatted" means to remove unnecessary columns, check column types, and check column headers.
-
+base::file.choose()
 ###########################################################################################
 # OPTIONS
 ###########################################################################################
@@ -19,8 +19,8 @@ dataset_folder <- choose.dir()
 
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q286", 
-                         "fukan_url" = "https://academic-landscape.com/dataset/48267")
+dataset_metadata <- list("query_id" = "Q232", 
+                         "fukan_url" = "https://academic-landscape.com/analysis/44375/0/overview")
 
 
 ###########################################################################################

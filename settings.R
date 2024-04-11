@@ -8,19 +8,19 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q288",
+  project_folder = "Q232",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = '"smart city" OR "smart cities"',
-  query_id = "Q288", # This is the Folder name. Equivalent to Fukan's dataset
+  query = '"palm oil"',
+  query_id = "Q232", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "25290",
+  downloaded_documents = "23440",
 
   # project
-  project_name = "smart_cities",
+  project_name = "palm oil",
   project_description = "Citation network of the smart cities research",
-  date = "2023-12-16",
+  date = "2024-03-23",
   created_by = "cristianmejia00@gmail.com",
   notes = ""
 )
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -46,12 +46,12 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Shall we use the initial clustering solution from Fukan System?
     # If TRUE, we use the column "_C" in mission.facet.all, and hence we can use the figure from Fukan System
     # If FALSE, we compute a new "_C" column based on the algorithm of choice.
-    using_initial_column_C_from_fukan = FALSE,
+    using_initial_column_C_from_fukan = TRUE,
 
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.98,
+    threshold = 0.99,
     
     # Top max clusters to analyze per iteration
     max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
@@ -133,7 +133,7 @@ settings$addons <- list(
 ########################################################### for 00_reports.R
 ## Reporting
 settings$rp <- list(
-  most_recent_year = 2023, # This is needed so the charts do not plot 2024, or future years where data is incomplete
+  most_recent_year = 2024, # This is needed so the charts do not plot 2024, or future years where data is incomplete
   top_documents = 0, # 0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze
