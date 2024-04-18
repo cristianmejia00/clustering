@@ -8,19 +8,19 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q232",
+  project_folder = "Q292",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = '"palm oil"',
-  query_id = "Q232", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'Q292 Rs for EV batteries',
+  query_id = "Q292", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "23440",
+  downloaded_documents = "13290",
 
   # project
-  project_name = "palm oil",
-  project_description = "Citation network of the smart cities research",
-  date = "2024-03-23",
+  project_name = "ev_batteries_r",
+  project_description = "Citation network of Rs for EV batteries",
+  date = "2024-04-15",
   created_by = "cristianmejia00@gmail.com",
   notes = ""
 )
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -46,7 +46,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Shall we use the initial clustering solution from Fukan System?
     # If TRUE, we use the column "_C" in mission.facet.all, and hence we can use the figure from Fukan System
     # If FALSE, we compute a new "_C" column based on the algorithm of choice.
-    using_initial_column_C_from_fukan = TRUE,
+    using_initial_column_C_from_fukan = FALSE,
 
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )

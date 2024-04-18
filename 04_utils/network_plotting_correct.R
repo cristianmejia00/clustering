@@ -98,9 +98,13 @@ edge_list[,4] <- node_to_cluster[(edge_list[,2])]
 # Intracluster links
 edge_list[,5] <- edge_list[,3] == edge_list[,4]
 table(edge_list[,5])
+
+# Color the edge. Either strategy will color intracluster edges the same.
 # Edge color based on largest-cluster incident node
 # edge_list[,6] <- sapply(c(1:nrow(edge_list)), function(x) {max(edge_list[x,3], edge_list[x,4])})
+# Edge color based on smallest-cluster incident node <- This is preferred because we can 
 edge_list[,6] <- sapply(c(1:nrow(edge_list)), function(x) {min(edge_list[x,3], edge_list[x,4], na.rm = TRUE)})
+
 # From cluster to color
 # edge_list[,7] <- adjustcolor(color_palette[edge_list[,6]], alpha.f = 0.4)
 edge_list[,7] <- paste(color_palette[edge_list[,6]], "66", sep = "")

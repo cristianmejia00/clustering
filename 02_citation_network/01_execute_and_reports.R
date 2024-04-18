@@ -147,7 +147,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   ############################################################################
   # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
-  rm(list = setdiff(ls(), zz_env$x05))
+  #rm(list = setdiff(ls(), zz_env$x05))
   save.image(rn$PROJECTenviron)
 
   # Time per level

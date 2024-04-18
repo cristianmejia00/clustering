@@ -93,8 +93,15 @@ save(dataset, file = file.path(settings$analysis_metadata$bibliometrics_folder,
                                settings$analysis_metadata$analysis_folder,
                                "dataset_clustering.rdata"))
 
+save(network, file = file.path(settings$analysis_metadata$bibliometrics_folder, 
+                               settings$analysis_metadata$project_folder, 
+                               settings$analysis_metadata$analysis_folder,
+                               "network.rdata"))
+
 save.image(file.path(settings$analysis_metadata$bibliometrics_folder, 
                      settings$analysis_metadata$project_folder, 
                      settings$analysis_metadata$analysis_folder,
                      "environ_clustering.rdata"))
+
+
 rm(list = ls())

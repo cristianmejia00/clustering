@@ -11,13 +11,14 @@ library(dplyr)
 library(stringr)
 
 
-
+choose.files()
+file.choose()
 ###########################################################################################
 # OPTIONS
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q288", 
+dataset_metadata <- list("query_id" = "Q292", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
 
@@ -90,7 +91,7 @@ dataset$CY[dataset$CY == ""] <- NA
 table(dataset$PY)
 table(is.na(dataset$PY))
 
-dataset$PY[is.na(dataset$PY)] <- 2023
+dataset$PY[is.na(dataset$PY)] <- 2024
 
 # Correct records without PY
 table(dataset$PY)

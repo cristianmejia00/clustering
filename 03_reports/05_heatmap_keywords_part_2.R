@@ -163,4 +163,8 @@ papersText <- gsub("NA ", "", papersText)
 myDataCorrect_SAMPLE$papersText <- papersText
 
 # Save the objects
-save(myDataCorrect_SAMPLE, papersText, file = file.path(output_folder_reports, 'papersText.rdata'))
+save(myDataCorrect_SAMPLE, 
+     papersText, 
+     from_raw_to_stem,
+     from_stem_to_raw,
+     file = file.path(output_folder_reports, 'papersText.rdata'))

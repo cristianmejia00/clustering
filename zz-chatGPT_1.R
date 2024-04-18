@@ -7,6 +7,14 @@
 library(reticulate)
 library(glue)
 
+##########################################################
+# Load libraries
+source("04_utils/02_libraries.R")
+
+# Load settings from the project we are interested in
+source("settings.R")
+
+
 # One time operation to generate a python env
 #reticulate::conda_create(envname = 'openai_env', packages = 'openai', python_version = '3.9')
 
@@ -32,7 +40,7 @@ client = openai$OpenAI(api_key = readr::read_file('05_assets/credentials/openai.
 #' @param n INTEGER. Number of reply variations to get.
 #' @returns The JSON reply from OpenAI in R's LIST form. The actual reply text is located at `x$choices[[1]]$message$content` 
 ask_gpt <- function(prompt, 
-                    model = 'gpt-3.5-turbo-0613', 
+                    model = 'gpt-3.5-turbo-0125', 
                     temperature = 0.1, 
                     max_tokens = 500, 
                     n = 1) {
@@ -111,7 +119,7 @@ get_papers_summary <- function(cl_dataset) {
 rcs_merged$description <- ''
 rcs_merged$name <- ''
 dataset$summary <- ''
-source("zz-prompts.R")
+source("zz-chatGPT_0_prompts.R")
 
 ###################################
 ###################################
@@ -185,7 +193,7 @@ for (cluster in list_of_clusters) {
       cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
                                                                 topic_description = MAIN_TOPIC_DESCRIPTION,
                                                                 cluster_text = my_texts),
-                                     model='gpt-4',
+                                     model='gpt-3.5-turbo-0125',#'gpt-4',
                                      temperature = 0.2)
       cluster_description <- cluster_description$choices[[1]]$message$content
       cluster_completed <- TRUE
@@ -206,7 +214,7 @@ for (cluster in list_of_clusters) {
       cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
                                                   topic_description = MAIN_TOPIC_DESCRIPTION,
                                                   cluster_description = cluster_description), 
-                              model='gpt-4',
+                              model='gpt-3.5-turbo-0125',#'gpt-4',
                               max_tokens = 60,
                               temperature = 0.3)
       cluster_name <- cluster_name$choices[[1]]$message$content
@@ -238,7 +246,7 @@ for (cluster in list_of_clusters) {
   while(!cluster_completed) {
     tmp <- tryCatch({
       cluster_description <- ask_gpt(prompt_cluster_description_enhanced(cluster_description = rcs_merged$detailed_description[rcs_merged$cluster == cluster]),
-                                     model='gpt-4',
+                                     model='gpt-3.5-turbo-0125',#'gpt-4',
                                      temperature = 1)
       cluster_description <- cluster_description$choices[[1]]$message$content
       cluster_completed <- TRUE
@@ -251,6 +259,10 @@ for (cluster in list_of_clusters) {
   rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
 }
 
+colnames(rcs_merged)
+test <- rcs_merged[,c("cluster","cluster_name", "description")]
+write.csv(test, file='Q293_llm_names.csv')
+getwd()
 ###################################
 ###################################
 # Cluster figure caption

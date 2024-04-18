@@ -10,10 +10,10 @@ library(glue)
 ###################################
 
 # The topic used to infer the query
-MAIN_TOPIC <- 'Smart Cities'
+MAIN_TOPIC <- 'payment for ecosystem service'
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- 'urban areas that use various types of technologies to collect data and then use insights gained from that data to manage assets, resources, and services efficiently. Smart cities encompass optimizing city functions and promoting economic growth while improving the quality of life for citizens through smart technology and data analysis. Key features often include Advanced Connectivity, Data-Driven Decision Making, Efficient Public Services, Environmental Sustainability, Citizen Engagement, and Governance.'
+MAIN_TOPIC_DESCRIPTION <- "incentives given to landowners and farmers in exchange for managing their land to provide ecological services. PES is a market-based instrument that is increasingly used to finance nature conservation."
 
 
 
@@ -72,7 +72,7 @@ prompt_cluster_description_enhanced <- function(cluster_description) {
   list(
     list(
       'role' = 'user',
-      'content' = glue('Please synthesize the following text in a single cohesive paragraph. Do not mention the texts one by one, but in an integrated and coherent manner: {cluster_description}')
+      'content' = glue('Please synthesize the following text in a single cohesive paragraph. Do not mention the texts one by one, but in an integrated and coherent manner. Do not use the word "delve" and do not define "payment for ecosystem services": {cluster_description}')
     )
   )
 }
@@ -170,3 +170,4 @@ prompt_cluster_sentiment_description <- function(topic, topic_description, senti
     )
   )
 }
+
