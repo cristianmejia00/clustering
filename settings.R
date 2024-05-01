@@ -8,19 +8,19 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q292",
+  project_folder = "Q296",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'Q292 Rs for EV batteries',
-  query_id = "Q292", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'Q296',
+  query_id = "Q296", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "13290",
+  downloaded_documents = "969",
 
   # project
-  project_name = "ev_batteries_r",
-  project_description = "Citation network of Rs for EV batteries",
-  date = "2024-04-15",
+  project_name = "just transition",
+  project_description = "Citation network of just transition",
+  date = "2024-05-01",
   created_by = "cristianmejia00@gmail.com",
   notes = ""
 )

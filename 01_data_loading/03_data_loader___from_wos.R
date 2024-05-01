@@ -18,7 +18,7 @@ file.choose()
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q292", 
+dataset_metadata <- list("query_id" = "Q296", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
 

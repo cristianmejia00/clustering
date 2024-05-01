@@ -19,8 +19,8 @@ dataset_folder <- choose.dir()
 
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q232", 
-                         "fukan_url" = "https://academic-landscape.com/analysis/44375/0/overview")
+dataset_metadata <- list("query_id" = "Q295", 
+                         "fukan_url" = "NA")
 
 
 ###########################################################################################

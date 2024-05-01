@@ -35,6 +35,7 @@ load(file.path(
 table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot
 table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum
 table(dataset$X_C) %>% sort(decreasing = TRUE) %>%  plot()
+table(dataset$X_C)
 # Update the threshold in settings file.
 
 ##########################################################
