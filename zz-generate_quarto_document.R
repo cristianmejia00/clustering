@@ -15,7 +15,7 @@ library(quarto)
 bibliometrics_folder <- settings$analysis_metadata$bibliometrics_folder
 project_folder <- settings$analysis_metadata$project_folder
 analysis_folder <- settings$analysis_metadata$analysis_folder
-level_folder <- "level0"
+level_folder <- "level1"
 
 dataset <- dataset
 dataset_bibliography <- dataset_bibliography
@@ -24,6 +24,10 @@ if(settings$params$type_of_analysis == 'topic_model') {
 }
   
 # # Initialization
+# adjust types
+rcs_merged$cluster_code <- as.character(rcs_merged$cluster_code)
+dataset$X_C <- as.character(dataset$X_C)
+
 # main_path
 main_path <- file.path(
   bibliometrics_folder,
@@ -95,10 +99,10 @@ qt$load_data
 ###################################
 # Data
 ###################################
-if ((!settings$analysis_metadata$fukan_url %in% c("", "NA")) | is.na(settings$analysis_metadata$fukan_url)) {
+if (grepl("academic-landscape.com", settings$analysis_metadata$fukan_url)) {
   fukan_url <- glue("[Link]({settings$analysis_metadata$fukan_url})")
 } else {
-  fukan_url <- ""
+  fukan_url <- "Not apply."
 }
 qt$data <- glue("
 | Query           | {settings$analysis_metadata$query}         |
@@ -107,7 +111,7 @@ qt$data <- glue("
 | Documents       | {settings$analysis_metadata$downloaded_documents}|
 | Date retrieved  | {settings$analysis_metadata$date}          |
 | Fukan Analysis  | {fukan_url}                       |
-| ID              | {settings$analysis_metadata$project_name}  |
+| ID              | {settings$analysis_metadata$query_id}  |
 : Metadata
 ")
 
@@ -186,7 +190,7 @@ Dataset stats.
 ## Clusters
 # List of cluster
 cluster_names_list <- ''
-tmp <- paste(rcs_merged$cluster, '. ', rcs_merged$cluster_name, sep = '')
+tmp <- paste(rcs_merged$cluster_code, '. ', rcs_merged$cluster_name, sep = '')
 for (i in tmp) {
   cluster_names_list <- glue('{cluster_names_list}
                   {i}  
@@ -199,9 +203,9 @@ qt$clusters_figures <- glue_code('
 
 :::: panel-tabset
 
-## Network
+## Clusters
 
-![](index_files/charts/network.png)
+![](index_files/charts/fig_scatter_clusters_PY_x_Z9.svg)
 
 ## Size  
 
@@ -246,7 +250,8 @@ qt$clusters_figures <- glue_code('
 qt$results_table <- '
 ```{r}
 #| echo: false
-tmp <- rcs_merged[,c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label")]
+tmp <- rcs_merged[,c("cluster_code", "cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label")]
+tmp$cluster_code <- gsub("---", "", tmp$cluster_code)
 if(all(is.na(rcs_merged$cluster_name))|all(rcs_merged$cluster_name == "")) {
   tmp$cluster_name <- sapply(rcs_merged$frequent_keywords, function(x) {
     k <- strsplit(x, "; ") %>% unlist()
@@ -258,10 +263,10 @@ if(all(is.na(rcs_merged$cluster_name))|all(rcs_merged$cluster_name == "")) {
 tmp$PY_Mean <- round(tmp$PY_Mean, 1)
 tmp$Z9_Mean <- round(tmp$Z9_Mean, 1)
 setnames(tmp,
-         c("cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label"),
-         c("Cluster", "Documents", "Documents %", "Year Median", "Year Mean", "Cites Median", "Cites Mean", "Label"))
+         c("cluster_code","cluster_name", "documents", "documents_percent", "PY_Median", "PY_Mean", "Z9_Median", "Z9_Mean", "rcs_label"),
+         c("Cluster","Name", "Documents", "Documents %", "Year Median", "Year Mean", "Cites Median", "Cites Mean", "Label"))
 # Not to display the Cluster name in the table because space.
-tmp$Cluster <- NULL
+tmp$Name <- NULL # uncomment this to see the names in the table
 datatable(tmp)
 ```
 '
@@ -270,23 +275,27 @@ list_of_clusters <- dataset$X_C %>%
   unique() %>%
   sort()
 
-char_size <- nchar(as.character(length(list_of_clusters)))
+# We need a conversion vector to translate from cluster_code to cluster_id
+cluster_conversion <- rcs_merged$cluster
+names(cluster_conversion) <- rcs_merged$cluster_code
 
-# Charts of cluster 99 are saved as x, where x is the main_clusters + 1
-# If there are 27 clusters + 99, then 99 is the cluster 28.
-list_of_clusters_edited <- list_of_clusters
-list_of_clusters_edited[length(list_of_clusters_edited)] <- length(list_of_clusters_edited)
+
+# We need the length of digits of the largest cluster id so we can add a padding to match the name 
+char_size <- nchar(as.character(length(cluster_conversion)))
+
+
 cluster_chart_panel <- list()
 
-for (cluster in list_of_clusters_edited) {
+for (cluster in list_of_clusters) {
+  cluster_id <- cluster_conversion[cluster]
   cluster_barcharts <- ''
   for (chart in displayable_charts) {
     cluster_barcharts <- glue_code('<<cluster_barcharts>>
   
-                                    ![](index_files/charts/by_clusters/fig_<<str_pad(cluster, char_size, "left", "0")>>_<<chart>>.svg)
+                                    ![](index_files/charts/by_clusters/fig_<<str_pad(cluster_id, char_size, "left", "0")>>_<<chart>>.svg)
                                     ')}
   
-  cluster_chart_panel[[cluster]] <- glue_code('
+  cluster_chart_panel[[cluster_id]] <- glue_code('
   
 
 ::: {#fig-panel-<<cluster>> layout-ncol=3}
@@ -315,30 +324,13 @@ for (cluster in list_of_clusters) {
   cluster_papers_description <- paste(cluster_papers_description, collapse = "\n")
   qt$clusters <- glue("{qt$clusters}
                       {cluster_main_description}
-                      {cluster_chart_panel[[min(length(list_of_clusters), cluster)]]}
+                      {cluster_chart_panel[[min(length(list_of_clusters), cluster_conversion[cluster])]]}
                       **Articles:**
                       {cluster_papers_description}
                       ---
 
                       ")
 }
-
-
-qt$figures <- glue_code("::: {#fig-elephants layout-ncol=2}
-
-![Surus](index_files/images/fig_clusters_year_x_cites.jpg){#fig-surus}
-
-![Hanno](index_files/images/fig_clusters_year_x_size.jpg){#fig-hanno}
-
-![Surus](index_files/images/fig_clusters_PY_boxplot.jpg){#fig-surus}
-
-![Hanno](index_files/images/fig_clusters_Z9_boxplot.jpg){#fig-hanno}
-
-Famous Elephants
-
-:::
-
-")
 
 ###################################
 ###################################
@@ -364,14 +356,13 @@ quarto_document <- glue('
 {qt$cluster_names}  
 
 {qt$clusters_figures}
-{figure_caption$choices[[1]]$message$content}  
+{figure_caption}  
 
 {qt$results_table}
 
 {qt$clusters}
 
 ')
-#{qt$clusters_}
 
 if (nchar(quarto_document) == 0) {
   stop('The generated quarto ducument is blank.')

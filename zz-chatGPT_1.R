@@ -32,7 +32,7 @@ client = openai$OpenAI(api_key = readr::read_file('05_assets/credentials/openai.
 
 # utils
 #' @description
-#' Get answers from OpenAI's GPT. Here used for summarization.
+#' Get answers from OpenAI's GPT. Here used for ARTICLE summarization.
 #' @param prompt LIST. A prompt in the format of OpenAI. See the code `zz-prompts.R` for details.
 #' @param model STRING {gpt-3.5-turbo-0613} the OpenAI Moodel to use. Options: gpt-3.5-turbo-0613, gpt-4, 'gpt-4-0613'
 #' @param temperature NUMBER. Between 0 and 2. 0 means less randomness and 2 more creative.
@@ -40,7 +40,7 @@ client = openai$OpenAI(api_key = readr::read_file('05_assets/credentials/openai.
 #' @param n INTEGER. Number of reply variations to get.
 #' @returns The JSON reply from OpenAI in R's LIST form. The actual reply text is located at `x$choices[[1]]$message$content` 
 ask_gpt <- function(prompt, 
-                    model = 'gpt-3.5-turbo-0125', 
+                    model = 'gpt-4o',#'gpt-3.5-turbo-0125', 
                     temperature = 0.1, 
                     max_tokens = 500, 
                     n = 1) {
@@ -116,6 +116,7 @@ get_papers_summary <- function(cl_dataset) {
 ###################################
 # Initialize
 ###################################
+#rcs_merged <- rcs
 rcs_merged$description <- ''
 rcs_merged$name <- ''
 dataset$summary <- ''
@@ -127,8 +128,8 @@ source("zz-chatGPT_0_prompts.R")
 ###################################
 # The oldest article(s) in the dataset.
 # When there are many "old papers" we analyze only the two most cited.
-oldest_year <- min(dataset$PY, na.rm = TRUE)
-oldest_data <- subset(dataset, PY == oldest_year)
+oldest_year <- 1910#min(dataset$PY, na.rm = TRUE)
+oldest_data <- subset(dataset, PY <= oldest_year)#subset(dataset, PY == oldest_year)
 if (nrow(oldest_data) > 2) {
   oldest_data <- oldest_data[order(oldest_data$Z9, decreasing = FALSE)[c(1:2)],]
 }
@@ -158,10 +159,22 @@ for (i in nrow(oldest_data)) {
 #list_of_clusters <- dataset$X_C %>% unique() %>% sort()
 
 # Start where the loop was interrupted
-list_of_clusters <- dataset$X_C %>% unique() %>% sort()
-list_of_clusters <- list_of_clusters[list_of_clusters != 99]
+# list_of_clusters <- dataset$X_C %>% unique() %>% sort()
+# list_of_clusters <- list_of_clusters[list_of_clusters != 99]
+list_of_clusters <- paste(c("9-3", "9-2", "7-6", "3-7", "19-0",
+                      "10-5", "10-4", "10-6", "11-5", "11-1",
+                      "4-4", "4-8", "4-1", "4-3", "4-10",
+                      "7-7", "13-0", "1-1", "11-6", "1-6", 
+                      "2-1", "1-1", "1-2", "5-1", "1-3"), "---",  sep = '')
+list_of_clusters <- rcs$cluster[gsub("---","",rcs$cluster_code) %in% c("9-3", "9-2", "7-6", "3-7", "19-0",
+                                                                      "10-5", "10-4", "10-6", "11-5", "11-1",
+                                                                      "4-4", "4-8", "4-1", "4-3", "4-10",
+                                                                      "7-7", "13-0", "1-1", "11-6", "1-6", 
+                                                                      "2-1", "1-1", "1-2", "5-1", "1-3")]
 # list_of_clusters <- list_of_clusters[c(13:length(list_of_clusters))]
 # list_of_clusters <- list(5)
+dataset$X_C <- dataset$subcluster_label1
+rcs_merged$cluster <- rcs$cluster_code
 
 for (cluster in list_of_clusters) {
   # Get this cluster tops
@@ -193,7 +206,7 @@ for (cluster in list_of_clusters) {
       cluster_description <- ask_gpt(prompt_cluster_description(topic = MAIN_TOPIC, 
                                                                 topic_description = MAIN_TOPIC_DESCRIPTION,
                                                                 cluster_text = my_texts),
-                                     model='gpt-3.5-turbo-0125',#'gpt-4',
+                                     model='gpt-4o', #'gpt-3.5-turbo-0125',#'gpt-4',
                                      temperature = 0.2)
       cluster_description <- cluster_description$choices[[1]]$message$content
       cluster_completed <- TRUE
@@ -214,7 +227,7 @@ for (cluster in list_of_clusters) {
       cluster_name <- ask_gpt(prompt_cluster_name(topic = MAIN_TOPIC, 
                                                   topic_description = MAIN_TOPIC_DESCRIPTION,
                                                   cluster_description = cluster_description), 
-                              model='gpt-3.5-turbo-0125',#'gpt-4',
+                              model='gpt-4', #'gpt-3.5-turbo-0125',#'gpt-4',
                               max_tokens = 60,
                               temperature = 0.3)
       cluster_name <- cluster_name$choices[[1]]$message$content
@@ -246,7 +259,7 @@ for (cluster in list_of_clusters) {
   while(!cluster_completed) {
     tmp <- tryCatch({
       cluster_description <- ask_gpt(prompt_cluster_description_enhanced(cluster_description = rcs_merged$detailed_description[rcs_merged$cluster == cluster]),
-                                     model='gpt-3.5-turbo-0125',#'gpt-4',
+                                     model='gpt-4o', #'gpt-3.5-turbo-0125',#'gpt-4',
                                      temperature = 1)
       cluster_description <- cluster_description$choices[[1]]$message$content
       cluster_completed <- TRUE

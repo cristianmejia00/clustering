@@ -66,7 +66,6 @@ citation_keys <- sapply(1:nrow(dataset), \(x) {
 citation_keys[duplicated(citation_keys)] <- paste(citation_keys[duplicated(citation_keys)], c(1:length(citation_keys[duplicated(citation_keys)])), sep = '')
 dataset$citation_key <- citation_keys
 
-
 # We get the files that have a summary. 
 # Because those are the only ones we reference in the generated article
 dataset_bibliography <- subset(dataset, summary != '')
