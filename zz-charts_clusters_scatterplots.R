@@ -39,6 +39,18 @@ if (exists("topic_names")) {
   rm(topic_names)
 }
 
+#################################################################
+# In case of sub-clusters we may want to have the main cluster in the RCS as well
+main_cluster <- gsub("---|-0", "", rcs$cluster_code)
+main_cluster <- strsplit(main_cluster, "-")
+main_cluster <- sapply(main_cluster, function(x) {x[[1]]})
+rcs_merged$main_cluster <- factor(main_cluster, levels = as.numeric(main_cluster) %>% unique() %>% sort() %>% as.character())
+
+# Add palette
+default_palette <- c("#E69F00", "#56B4E9", "#009E73", "#8B0000", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#9b5de5", "#2270e7", "#e5e510", "#f00f15", "#3524ae", "#26cc3a", "#ec058e", "#9cb8c2", "#fffdd0", "#b40e68", "#AFA100", "#F67963")
+default_palette[length(unique(rcs_merged$main_cluster))] <- "#d3d3d3"
+
+
 # Load files
 # load(file.path(settings$analysis_metadata$bibliometrics_folder, 
 #                settings$analysis_metadata$project_folder, 
@@ -56,7 +68,7 @@ if (unit_of_analysis %in% c("topic", "topics", "cluster", "clusters") &
   all(rcs_merged$cluster_name == "")) {
   print("Unnamed clusters. Attaching topic/cluster based on cluster number")
   dataset$X_C_name <- as.character(dataset$X_C)
-  rcs_merged$X_C_name <- as.character(rcs$cluster)
+  rcs_merged$X_C_name <- as.character(rcs$cluster_code)
 }
 
 # Use cluster names if all clusters have been named in rcs_merged.csv
@@ -64,7 +76,8 @@ if (unit_of_analysis %in% c("topic", "topics", "cluster", "clusters") &
   !all(rcs_merged$cluster_name == "")) {
   print("Attaching topic/cluster names from file")
   dataset$X_C_name <- rcs_merged$cluster_name[match(dataset$X_C, rcs_merged$X_C)]
-  rcs_merged$X_C_name <- paste(rcs$cluster, ' ', rcs_merged$cluster_name, sep = '') %>% substr(start = 1, stop = 27)
+  rcs_merged$cluster_code2 <- gsub('---', '', rcs_merged$cluster_code)
+  rcs_merged$X_C_name <- paste(rcs_merged$cluster_code2, '. ', rcs_merged$cluster_name, sep = '') %>% substr(start = 1, stop = 27)
 }
 
 # Get the cluster name from the dataset. This only applies to facet datasets
@@ -74,14 +87,6 @@ if (!(unit_of_analysis %in% c("topic", "topics", "cluster", "clusters"))) {
   rcs_merged$X_C_name <- topic_names$X_C_name[match(rcs_merged$cluster, topic_names$X_C)]
 }
 
-#################################################################
-# In case of sub-clusters we may want to have the main cluster in the RCS as well
-main_cluster <- gsub("---|-0", "", rcs$cluster_code)
-main_cluster <- strsplit(main_cluster, "-")
-main_cluster <- sapply(main_cluster, function(x) {
-  x[[1]]
-})
-rcs_merged$main_cluster <- factor(main_cluster, levels = as.numeric(main_cluster) %>% unique() %>% sort() %>% as.character())
 
 #################################################################
 # Backups
@@ -118,12 +123,13 @@ plot_scatter <- function(rcs_data,
     geom_point() +
     xlab(x_column_label) +
     ylab(y_column_label)
-  p <- p + geom_point(aes(color = color, size = size))
+  p <- p + geom_point(aes(colour = color, 
+                          size = size)) + 
+    scale_color_manual(values = default_palette)
   p <- p + geom_text_repel(aes(label = gsub("---|-0", "", labels)))
   p <- p + theme_bw() + theme(legend.position = "none")
   p
 }
-
 
 # - years x citations (or score)
 # - years x size
