@@ -314,6 +314,7 @@ qt$clusters <- ""
 for (cluster in list_of_clusters) {
   cluster_main_description <- glue("
   #### Cluster {cluster}: {rcs_merged$cluster_name[rcs_merged$cluster_code == cluster]}
+  `Documents: {rcs_merged$documents[rcs_merged$cluster_code == cluster]}; Ave. Year: {round(rcs_merged$PY_Mean[rcs_merged$cluster_code == cluster],1)}; Ave. Citations: {round(rcs_merged$Z9_Mean[rcs_merged$cluster_code == cluster],1)}`  
   {rcs_merged$description[rcs_merged$cluster_code == cluster]}
   ")
   cluster_data <- subset(dataset_bibliography, X_C == cluster)
