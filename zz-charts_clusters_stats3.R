@@ -37,7 +37,7 @@ plot_clusters <- function(rcs,
     scale_color_gradientn(name = color_label,
                           colors = color_gradient,
                           limits = color_gradient_limits) +
-    geom_text_repel(aes(label = gsub("---|-0", "", cluster_name)), 
+    geom_text_repel(aes(label = gsub("---|-0", "", X_C_name)), 
                     size=3, 
                     color='black') + 
     theme(panel.background = element_blank(),
@@ -48,7 +48,6 @@ plot_clusters <- function(rcs,
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
 }
-
 
 ############################################################
 # Get the coords
