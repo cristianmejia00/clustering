@@ -359,7 +359,6 @@ quarto_document <- glue('
 {qt$cluster_names}  
 
 {qt$clusters_figures}
-{figure_caption}  
 
 {qt$results_table}
 

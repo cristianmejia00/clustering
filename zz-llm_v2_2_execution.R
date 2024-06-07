@@ -166,9 +166,10 @@ for (cluster in list_of_clusters) {
   rcs_merged$description[which(rcs_merged$cluster_code == cluster)] <- cluster_description
 }
 
-figure_caption <- "Figure."
 
-test <- rcs_merged[,c("cluster","cluster_code","cluster_name", "description")]
-write.csv(test, file='Q293_claude_names.csv')
-getwd()
+# Save
+write.csv(rcs_merged, 
+          file.path(output_folder_level, "rcs_merged_llm.csv"), 
+          row.names = FALSE)
+
 

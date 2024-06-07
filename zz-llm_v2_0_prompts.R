@@ -8,10 +8,10 @@ library(glue)
 ###################################
 
 # The topic used to infer the query
-MAIN_TOPIC <- 'payment for ecosystem services'
+MAIN_TOPIC <- settings$llm$theme
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- "the process that occur when the beneficiaries or users of an ecosystem service make payments to the providers of that service"
+MAIN_TOPIC_DESCRIPTION <- settings$llm$description
 
 
 

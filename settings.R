@@ -128,7 +128,12 @@ settings$addons <- list(
   "betweeness_centrality" = FALSE
 )
 
-
+########################################################### 
+## For LLM
+settings$llm <- list(
+  "theme" =  "nature finance and nature capital",
+  "description" = "to the world's stock of natural resources, which include geology, soils, air, water, and all living organisms. It is an extension of the economic concept of capital (resources that are used to create wealth), and it plays a critical role in providing ecosystem services that benefit humans"
+)
 
 ########################################################### for 00_reports.R
 ## Reporting
