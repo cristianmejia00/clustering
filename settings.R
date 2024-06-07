@@ -8,19 +8,19 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q296",
+  project_folder = "Q298",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'Q296',
-  query_id = "Q296", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'TS = ((“nature” OR "natural" OR "environmental” OR "green" OR "sustainab*" OR "climate" OR "biodiversity" OR "transition" OR "resilience" OR "adaptation") NEAR/1 ("financ*" OR "investment*" OR "disclosure" OR "credit*" OR “bank*” OR “fund*” OR "capital*" OR "asset*")) OR TS = ("green bond*" OR "sustainable bond*" OR "sustainability bond*" OR "natural capital" )',
+  query_id = "Q298", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "969",
+  downloaded_documents = "42009",
 
   # project
-  project_name = "just transition",
-  project_description = "Citation network of just transition",
-  date = "2024-05-01",
+  project_name = "Nature Finance / Nature Capital",
+  project_description = "Citation network of nature finance",
+  date = "2024-06-06",
   created_by = "cristianmejia00@gmail.com",
   notes = ""
 )
@@ -51,7 +51,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.99,
+    threshold = 0.97,
     
     # Top max clusters to analyze per iteration
     max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
@@ -67,10 +67,10 @@ if (settings$params$type_of_analysis == "citation_network") {
     ###   - We have a WOS dataset without X_C
 
     # Subcluster only if having this or more
-    size_limit = 300,
+    size_limit = 350,
 
     # Include cluster having collecting a minimum of __ articles
-    size_lower_limit = 30,
+    size_lower_limit = 70,
 
     # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
     remove_zero = FALSE,

@@ -1,3 +1,5 @@
+print("###################### zz-charts_clusters_stats4_heatmap.R")
+
 # 20230729
 # Save the self-heatmap
 # i.e. A squared heatmap with diagonals = 1 based on the cosine similarity of tfidf

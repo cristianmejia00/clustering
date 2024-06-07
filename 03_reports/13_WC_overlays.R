@@ -1,9 +1,9 @@
+print("###################### reports/13_WC_overlays.R")
+
 # 20220821; 20171206
 # Create the files to be used in VosViewer.
 # It does the same as the WC15.exe from Leydesdorff page. https://www.leydesdorff.net/wc15/index.htm
 # To recreate the overlay_master see at the end
-
-print("###################### reports/13_WC_overlays.R")
 
 # As input we need the "overlay_master" object
 # And the WC_per_cluster_count object

@@ -1,3 +1,5 @@
+print("###################### zz-create_bib_file.R")
+
 # 20230717
 
 # Create bibliography.

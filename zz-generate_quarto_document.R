@@ -1,3 +1,5 @@
+print("###################### zz-generate_quarto_document.R")
+
 # 20230717
 
 # Create a Quarto publishable document

@@ -1,3 +1,5 @@
+print("###################### zz-trend_and_clustered_bars.R")
+
 # 2023-07-06 Exploratory Data analysis of a dataset
 
 # We expect a dataset with WOS format:
@@ -11,6 +13,8 @@ output_folder_level <- output_folder_level
 subfolder_dataset <- subfolder_dataset
 subfolder_clusters <- subfolder_clusters
 extension <- extension
+
+
 
 ###############################################################################
 library(glue)

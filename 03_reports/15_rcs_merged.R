@@ -1,6 +1,8 @@
 # 20230714
 # Bring all RCS-related summaries as a single RCS
 
+print("###################### reports/15-RCS_merged.R")
+
 # Input
 output_folder_level <- output_folder_level
 

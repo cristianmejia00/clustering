@@ -1,3 +1,5 @@
+print("###################### zz-charts_dataset.R")
+
 # 2023/07/13
 # Dataset-level stats
 # All bar charts in this dataset for rp$categorical_long_reports:
@@ -20,6 +22,7 @@ categorical_long_reports <- settings$rp$categorical_long_reports
 
 # Create directory to store charts
 dir.create(file.path(output_folder_level, subfolder_dataset), recursive = TRUE)
+
 
 ##################################################################
 ##################################################################

@@ -120,28 +120,30 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   
   # figures
   # Save PNG figures. Normal raster figures for easy navigation in PC.
+  print("###################### PNG CHARTS")
   extension <- 'png'
   subfolder_dataset <- "charts_dataset"
   subfolder_clusters <- "charts_clusters"
   source(file.path(getwd(), "zz-charts_dataset.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats3.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats4.R"))
   source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats1_bp.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats2_bars.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
   source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
   
   
   # Save PNG figures. Needed for notebook.
+  print("###################### SVG CHARTS")
   extension <- 'svg'
   subfolder_dataset <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
   source(file.path(getwd(), "zz-charts_dataset.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats1.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats2.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats3.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats4.R"))
   source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats1_bp.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats2_bars.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
+  source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
   source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
   
   ############################################################################

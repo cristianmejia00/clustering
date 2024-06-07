@@ -30,13 +30,7 @@ load(file.path(
   "dataset.rdata"
 ))
 
-# Auxiliary code to find the right number of clusters. And update the threshold.
-# Get the clusters collecting 90% of papers or the top 10, whatever is the smallest number.
-table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot
-table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum
-table(dataset$X_C) %>% sort(decreasing = TRUE) %>%  plot()
-table(dataset$X_C)
-# Update the threshold in settings file.
+
 
 ##########################################################
 # Check all documents have a cluster assigned
@@ -51,6 +45,20 @@ if (any(is.na(dataset$X_C))) {
 if (settings$params$type_of_analysis == "citation_network") {
   source(file.path(getwd(), "02_citation_network", "00_citation_network_clustering.R"))
 }
+
+
+# Auxiliary code to find the right number of clusters. And update the threshold.
+# Get the clusters collecting 90% of papers or the top 10, whatever is the smallest number.
+table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot
+table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum
+table(dataset$X_C) %>% sort(decreasing = TRUE) %>%  plot()
+table(dataset$X_C)
+table(dataset$subcluster_label1)
+table(dataset$subcluster_label1) %>% sort(decreasing = TRUE)
+# Update the threshold in settings file.
+
+
+
 if (settings$params$type_of_analysis == "topic_model") {
   source(file.path(getwd(), "02_topic_model", "00_topic_model_clustering.R"))
 }
