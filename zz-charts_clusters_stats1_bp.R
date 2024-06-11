@@ -16,8 +16,10 @@ subfolder_clusters <- subfolder_clusters
 extension <- extension
 
 # Passed to the function 
-default_palette <- default_palette
 rcs_merged <- rcs_merged
+default_palette <- c("#E69F00", "#56B4E9", "#009E73", "#8B0000", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#9b5de5", "#2270e7", "#e5e510", "#f00f15", "#3524ae", "#26cc3a", "#ec058e", "#9cb8c2", "#fffdd0", "#b40e68", "#AFA100", "#F67963")
+default_palette[length(unique(rcs_merged$main_cluster))] <- "#d3d3d3"
+
 
 ## From settings
 document_label <- toTitleCase(settings$params$type_of_dataset)
@@ -80,9 +82,15 @@ plot_boxplots <- function(dataset,
                           value_label = value_column,
                           category_label = category_column) {
   
+  
   # Get mean and median for sorting
   compound_mean <- tapply(dataset[[value_column]], dataset[[category_column]], mean, na.rm = TRUE)
   compound_median <- tapply(dataset[[value_column]], dataset[[category_column]], median, na.rm = TRUE)
+  
+  # Match to the sort in RCS_merged
+  compound_mean <- compound_mean[rcs_merged$cluster_code]
+  compound_median <- compound_median[rcs_merged$cluster_code]
+  
   
   # Prepare df
   long <- dataset[, c(category_column, value_column)]
@@ -95,20 +103,30 @@ plot_boxplots <- function(dataset,
   
   long$main_cluster <- strsplit(as.character(long$category), "-")
   long$main_cluster <- sapply(long$main_cluster, function(x) {x[[1]]})
-
-  bp <- ggplot(long, aes(x = category, y = values, fill = main_cluster)) +
+  long$main_cluster <- factor(long$main_cluster,
+                              levels = long$main_cluster %>% 
+                                unique() %>% 
+                                as.numeric() %>% 
+                                sort())
+  
+  bp <- ggplot(long, aes(x = category, 
+                         y = values, 
+                         fill = main_cluster)) +
     geom_boxplot(
       width = 0.7
     ) +
     xlab(category_label) +
-    ylab(value_label)
-  # bp + coord_flip()
+    ylab(value_label) +
+    scale_fill_manual(values = default_palette) +
+    theme_bw()
+  
   K <- length(unique(dataset[[category_column]]))
   if (K > 20) {
     bp <- bp + theme(axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust = 1))
   }
-  bp + scale_fill_manual(values = default_palette)  + theme_bw()
+  return(bp)
 }
+
 
 
 # Plot

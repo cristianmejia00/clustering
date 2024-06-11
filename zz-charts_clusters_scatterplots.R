@@ -52,7 +52,6 @@ rcs_merged$main_cluster <- factor(main_cluster, levels = as.numeric(main_cluster
 default_palette <- c("#E69F00", "#56B4E9", "#009E73", "#8B0000", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#9b5de5", "#2270e7", "#e5e510", "#f00f15", "#3524ae", "#26cc3a", "#ec058e", "#9cb8c2", "#fffdd0", "#b40e68", "#AFA100", "#F67963")
 default_palette[length(unique(rcs_merged$main_cluster))] <- "#d3d3d3"
 
-
 # Load files
 # load(file.path(settings$analysis_metadata$bibliometrics_folder, 
 #                settings$analysis_metadata$project_folder, 

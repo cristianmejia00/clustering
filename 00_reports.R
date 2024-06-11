@@ -88,7 +88,7 @@ source("zz-llm_v2_2_execution.R")
 source("zz-create_bib_file.R")
 
 source("zz-generate_quarto_document.R")
-source("zz-generate_quarto_word.R")
+#source("zz-generate_quarto_word.R")
 
 ###############################################
 # Send to display
