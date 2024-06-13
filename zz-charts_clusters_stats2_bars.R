@@ -114,6 +114,8 @@ for (i in available_charts) {
   clusters_n <- clusters_n[clusters_n != 0]
   char_size <- get_digits(max(clusters_n))
   for (j in clusters_n) {
+    print(i)
+    print(j)
     if (tolower(i) %in% c('keyword', 'keywords')) {
       plot_cluster_data(tmp, j, column_data_position = 5, item_label = column_labels[i], document_label ='TFIDF')
     } else {

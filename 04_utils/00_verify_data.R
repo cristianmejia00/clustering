@@ -100,11 +100,23 @@ if (!("X_N" %in% available_columns)) {
 if (!("UT" %in% available_columns)) {
   dataset$UT <- dataset$X_N
 }
+
+get_keywords_split <- function(a_column) {
+  text<- a_column %>%
+    tolower() %>%  # Convert text to lowercase
+    removeNumbers() %>%  # Remove numbers
+    removePunctuation() %>%  # Remove punctuation
+    removeWords(stopwords("english")) %>%  # Remove English stopwords
+    stripWhitespace() %>% # Remove extra whitespace
+    str_replace_all("\\s+", "; ") 
+  return(text)
+}
+
 if (!("DE" %in% available_columns)) {
-  dataset$DE <- dataset$TI
+  dataset$DE <- get_keywords_split(dataset$TI)
 }
 if (!("ID" %in% available_columns)) {
-  dataset$ID <- dataset$TI
+  dataset$ID <- get_keywords_split(dataset$TI)
 }
 
 #################################################################################

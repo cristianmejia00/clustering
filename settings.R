@@ -7,31 +7,31 @@ settings <- list()
 ## Metadata
 settings$analysis_metadata <- list(
   # Directory path
-  bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q298",
+  bibliometrics_folder = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
+  project_folder = "Q299",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'TS = ((“nature” OR "natural" OR "environmental” OR "green" OR "sustainab*" OR "climate" OR "biodiversity" OR "transition" OR "resilience" OR "adaptation") NEAR/1 ("financ*" OR "investment*" OR "disclosure" OR "credit*" OR “bank*” OR “fund*” OR "capital*" OR "asset*")) OR TS = ("green bond*" OR "sustainable bond*" OR "sustainability bond*" OR "natural capital" )',
-  query_id = "Q298", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'Kubota, Deere, CNH from 2010',
+  query_id = "Q299", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "42009",
+  downloaded_documents = "11797",
 
   # project
-  project_name = "Nature Finance / Nature Capital",
-  project_description = "Citation network of nature finance",
-  date = "2024-06-06",
+  project_name = "Kubota Competitors",
+  project_description = "Topic Model of Kobota and Competitors",
+  date = "2024-06-13",
   created_by = "cristianmejia00@gmail.com",
   notes = ""
 )
 
 ## General Parameters
 settings$params <- list(
-  type_of_dataset = "papers", # "papers", "patents" or "news"
+  type_of_dataset = "patents", # "papers", "patents" or "news"
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -131,8 +131,8 @@ settings$addons <- list(
 ########################################################### 
 ## For LLM
 settings$llm <- list(
-  "theme" =  "nature finance and nature capital",
-  "description" = "to the world's stock of natural resources, which include geology, soils, air, water, and all living organisms. It is an extension of the economic concept of capital (resources that are used to create wealth), and it plays a critical role in providing ecosystem services that benefit humans"
+  "theme" =  "patent analysis of agriculture machinery",
+  "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate. "
 )
 
 ########################################################### for 00_reports.R
@@ -188,7 +188,7 @@ if (settings$params$dataset_source == 'derwent') {
     "AU" = "Inventors",
     "PY" = "Publication Years",
     "X_E" = "Degree", 
-    #"SO" = "Journals",
+    "SO" = "Firms",
     "Countries" = "Countries",
     "Institutions" = "Asignees",
     "DI" = "DOI",

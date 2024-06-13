@@ -71,17 +71,27 @@ generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
   }
 
   ## Insert `cluster 0` summary
-  if (with_all) {
+  if (with_all & a_column != 'AU') {
     cluster_zero <- TopSomething(df, coll = a_column, top = top) %>%
                     format_long_table(a_cluster = 0, top = top)
     result_list <- rbind(cluster_zero, result_list)
   }
 
   ## Romat and write
-  colnames(result_list) <- c(a_column, "X", "Freq", "Cluster")
+  if (ncol(result_list) ==3) {
+    colnames(result_list) <- c(a_column, "Freq", "Cluster")
+  }
+  if (ncol(result_list) == 4) {
+    colnames(result_list) <- c(a_column, "X", "Freq", "Cluster")
+  }
   result_list$X <- NULL
   result_list <- result_list[!is.na(result_list[, c(a_column)]), ]
   write.csv(result_list, file = file.path(output_folder_level, paste("report_", a_column, ".csv", sep = "")), row.names = FALSE)
+}
+
+## Write reports
+for (cc in categorical_long_reports) {
+  generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = settings$rp$top_items)
 }
 
 
