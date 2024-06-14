@@ -111,38 +111,41 @@ plot_scatter <- function(rcs_data,
                          point_labels,
                          x_column,
                          y_column,
-                         color_column,
+                         color_hex_column,
+                         color_labels,
                          size_column,
                          x_column_label = x_column,
                          y_column_label = y_column) {
   # format the df
-  df <- rcs_data[, c(point_labels, x_column, y_column, color_column, size_column)]
-  colnames(df) <- c("labels", "x", "y", "color", "size")
-  df$labels <- as.character(df$labels)
-  print(colnames(df))
+  df <- rcs_data[, c(point_labels, x_column, y_column, color_hex_column, color_labels, size_column)]
+  colnames(df) <- c("point_labels", "x", "y", "color_hex", "color_label", "size")
+  df$labels <- as.character(df$point_labels)
   p <- ggplot(df, aes(x = x, y = y)) +
-    geom_point() +
+    geom_point(aes(colour = color_label, 
+                   size = size)) +
+    scale_color_manual(values = unique(df$color_hex)) +
     xlab(x_column_label) +
     ylab(y_column_label)
-  p <- p + geom_point(aes(colour = color, 
-                          size = size)) + 
-    scale_color_manual(values = default_palette)
   p <- p + geom_text_repel(aes(label = gsub("---|-0", "", labels)))
   p <- p + theme_bw() + theme(legend.position = "none")
   p
 }
 
+# assign hex colors
+rcs_tmp$main_cluster <- rcs_tmp$cluster
+rcs_tmp$color_hex <- default_palette[as.integer(rcs_tmp$main_cluster)]
+rcs_tmp$color_hex[is.na(rcs_tmp$color_hex)] <- "#d3d3d3"
+
 # - years x citations (or score)
 # - years x size
 # - size x citations
-
-plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "Z9_Mean", "main_cluster", "documents", "Ave. Publication Year", "Ave. Citations")
+plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "Z9_Mean", "color_hex", "main_cluster", "documents", "Ave. Publication Year", "Ave. Citations")
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_scatter_clusters_PY_x_Z9.{extension}")))
 
-plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "documents", "main_cluster", "Z9_Mean", "Ave. Publication Year", "Documents")
+plot_scatter(rcs_tmp, "X_C_name", "PY_Mean", "documents", "color_hex", "main_cluster", "Z9_Mean", "Ave. Publication Year", "Documents")
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_scatter_clusters_PY_x_size.{extension}")))
 
-plot_scatter(rcs_tmp, "X_C_name", "documents", "Z9_Mean", "main_cluster", "PY_Mean", "Documents", "Ave. Citations")
+plot_scatter(rcs_tmp, "X_C_name", "documents", "Z9_Mean", "color_hex", "main_cluster", "PY_Mean", "Documents", "Ave. Citations")
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_scatter_clusters_size_x_Z9.{extension}")))
 
 
