@@ -19,7 +19,12 @@ if (!("level0" %in% colnames(myDataCorrect))) {
 n_cluster_listed <- c(1:length(unique(myDataCorrect$level0)))
 names(n_cluster_listed) <- names(table(myDataCorrect$level0))
 myDataCorrect$X_C <- n_cluster_listed[as.character(myDataCorrect$level0)]
-myDataCorrect$cluster_code <- myDataCorrect$level0
+if ('X_C_label' %in% colnames(myDataCorrect)) {
+  myDataCorrect$cluster_code <- myDataCorrect$X_C_label
+} else {
+  myDataCorrect$cluster_code <- myDataCorrect$level0
+}
+
 
 # Cleaning up
 rm('n_cluster_listed')

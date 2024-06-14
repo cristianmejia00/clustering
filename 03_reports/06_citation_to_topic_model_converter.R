@@ -173,8 +173,8 @@ if (level_report <= 4) {
 
   # Create the files
   serVis(json,
-    out.dir = paste(output_folder_level, "\\keyword_explorer", sep = ""),
+    out.dir = file.path(output_folder_level, 'keyword_explorer'), 
     open.browser = FALSE
-  ) # TRUE to open in the console
+  ) 
 }
 
