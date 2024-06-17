@@ -8,6 +8,13 @@
 # setwd(choose.dir()) #Windows
 getwd()
 
+dataset <- read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
+dataset$X_C <- dataset$X_C + 1
+dataset$X_C_name <- dataset$X_C_label
+dataset$level0 <- dataset$X_C
+dataset$level1 <- dataset$X_C
+dataset$subcluster_level1 <- dataset$X_C_label
+
 ##########################################################
 # Load libraries
 source("04_utils/02_libraries.R")

@@ -131,7 +131,18 @@ plot_scatter <- function(rcs_data,
   p
 }
 
-# assign hex colors
+# Note: consider dynamic color changing. Currecntly we can assign color as follows:
+# Categoricals
+# - All same color:
+# - Color based on the `main_cluster` <- THIS IS USED
+# - Color based on the `sentiment_label`
+# - Color based on the `rcs_label`
+# - Color based on custom partition (is this possible)
+
+# Gradients:
+# - PY, Z9, growth, participation
+
+# assign hex colors based on main_cluster
 rcs_tmp$main_cluster <- rcs_tmp$cluster
 rcs_tmp$color_hex <- default_palette[as.integer(rcs_tmp$main_cluster)]
 rcs_tmp$color_hex[is.na(rcs_tmp$color_hex)] <- "#d3d3d3"
