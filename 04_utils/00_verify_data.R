@@ -86,7 +86,7 @@ if (!("X_E" %in% available_columns)) {
   }
 }
 if (!("PY" %in% available_columns)) {
-  dataset$PY <- 2000
+  dataset$PY <- settings$rp$most_recent_year
 }
 if (!("DT" %in% available_columns)) {
   dataset$DT <- "Article"
@@ -146,6 +146,7 @@ if (!("C1" %in% available_columns)) {
 # From bibliometrics standpoint, these papers are already there. Hence we treat papers with a future
 # year as if they were published this year. 
 this_year <- format(Sys.Date(), "%Y") %>% as.numeric()
+dataset$PY[is.na(dataset$PY)] <- this_year
 future_year_papers <- sum(dataset$PY > this_year)
 if (future_year_papers > 0) {
   print(glue('we found {future_year_papers} that will be published next year, and we treat them as published this year.'))

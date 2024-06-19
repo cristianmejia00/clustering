@@ -19,12 +19,13 @@ file.choose()
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q299", 
+dataset_metadata <- list("query_id" = "Qgmo", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
 
 # Open a window to select the directory with the files to merge
-dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads/Q299 kubota and competitors"
+dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/00-Research projects/58 - GMO - Deals and Patents/Patents/00-Data/Update20240505"
+#dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads/Q299 kubota and competitors"
 paths_to_files = list.files(path = dir_path, full.names= TRUE, pattern = "*.csv", recursive = TRUE)
 paths_to_files = paths_to_files[grepl('.csv$', paths_to_files)]
 
@@ -95,10 +96,13 @@ piped_columns <- c(
   "Cited Refs - Patent",
   "DWPI Family Members"
 )
-for (ii in piped_columns){
+
+# Convert to ; for what is available
+available_piped_columns <- piped_columns[piped_columns %in% colnames(dataset)]
+for (ii in available_piped_columns){
   dataset[,ii] <- gsub(" \\| ", "; ", dataset[,ii]) %>% as.character()
 }
-  
+
 # Change names to equivalents
 new_names <- c(
   UT =  "Publication Number",
@@ -175,7 +179,7 @@ dataset <- dataset %>% filter(AU != 'OTHER')
 #################################################
 ## Create directories
 save(dataset, 
-     dataset_original,
+     #dataset_original,
      dataset_metadata, 
      file = file.path(bibliometrics_folder, 
                       dataset_metadata$query_id, 

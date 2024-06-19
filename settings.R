@@ -8,26 +8,26 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Q299",
+  project_folder = "Qgmo",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'Kubota, Deere, CNH from 2010',
-  query_id = "Q299", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'GMO topic model',
+  query_id = "Qgmo", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "11797",
+  downloaded_documents = "39767",
 
   # project
-  project_name = "Kubota Competitors",
-  project_description = "Topic Model of Kobota and Competitors",
-  date = "2024-06-13",
+  project_name = "GMO topic model",
+  project_description = "Topic Model of gmo patents",
+  date = "2024-06-17",
   created_by = "cristianmejia00@gmail.com",
   notes = ""
 )
 
 ## General Parameters
 settings$params <- list(
-  type_of_dataset = "patents", # "papers", "patents" or "news"
+  type_of_dataset = "papers", # "papers", "patents" or "news"
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
@@ -132,8 +132,9 @@ settings$addons <- list(
 ## For LLM
 settings$llm <- list(
   "theme" =  "patent analysis of agriculture machinery",
-  "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate. "
-)
+  "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
+  "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
+  )
 
 ########################################################### for 00_reports.R
 ## Reporting

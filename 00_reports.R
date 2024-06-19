@@ -7,10 +7,21 @@
 # setwd("/var/container/MAIN TOPIC-CLUSTERING") #Linux
 # setwd(choose.dir()) #Windows
 getwd()
-
+dataset <- read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Qgmo/results_full_Qgmo_2024-06-17.csv")
 dataset <- read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
-dataset$X_C <- dataset$X_C + 1
-dataset$X_C_name <- dataset$X_C_label
+
+
+if (min(dataset$X_C, na.rm = TRUE) == 0) {
+  print('Cluster 0 found. Correcting')
+  dataset$X_C <- dataset$X_C + 1
+}
+if (min(dataset$X_C, na.rm = TRUE) == -1) {
+  print('Cluster -1 found. Correcting')
+  dataset$X_C <- dataset$X_C + 1
+}
+
+dataset$X_C_label <- dataset$Top_n_words
+dataset$X_C_name <- dataset$Top_n_words
 dataset$level0 <- dataset$X_C
 dataset$level1 <- dataset$X_C
 dataset$subcluster_level1 <- dataset$X_C_label
