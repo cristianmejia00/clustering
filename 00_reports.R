@@ -7,8 +7,8 @@
 # setwd("/var/container/MAIN TOPIC-CLUSTERING") #Linux
 # setwd(choose.dir()) #Windows
 getwd()
-dataset <- read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Qgmo/results_full_Qgmo_2024-06-17.csv")
-dataset <- read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
+dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Qgmo/results_full_Qgmo_2024-06-17.csv")
+dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
 
 
 if (min(dataset$X_C, na.rm = TRUE) == 0) {
