@@ -12,7 +12,7 @@ source("settings.R")
 library(httr)
 library(jsonlite)
 
-claude_api_key = readr::read_file('05_assets/credentials/claude.key')
+claude_api_key = readr::read_file(file.path('05_assets', 'credentials', 'claude.key'))
 
 #' @description
 #' Get answers from OpenAI's GPT. Here used for ARTICLE summarization.
@@ -123,6 +123,7 @@ ask_gpt <- function(system_prompt,
                                                  )
                                                )
                                              )
+  return(response$choices[[1]]$message$content)
 }
 
 
@@ -136,8 +137,9 @@ ask_gpt <- function(system_prompt,
 #' @param dataset DATAFRAME. the dataset
 #' @param cluster INTEGER. the cluster number to subset. Compatible with X_C, meaning sypport for cluster 99.
 #' @returns DATAFRAME. The largest possible is of `top * 3` when all 3 conditions are different
-get_cluster_data <- function(dataset, cluster, top = 5) {
-  cluster_data <- subset(dataset, X_C == cluster, select = c('X_C','TI','AB','AU','PY','UT','Z9','X_E', 'summary'))
+get_cluster_data <- function(dataset_, cluster_, top = 5) {
+  cluster_data <- dataset_ %>% filter(X_C == cluster_) %>% select(all_of(c('X_C','TI','AB','AU','PY','UT','Z9','X_E', 'summary')))
+  print(cluster_data$X_C)
   if (nrow(cluster_data) > top) {
     selected_papers <- c(
       # Most connected
@@ -174,10 +176,10 @@ get_papers_summary <- function(cl_dataset) {
           prompt_summary <- prompt_summarize_a_paper(topic = MAIN_TOPIC,
                                              topic_description = MAIN_TOPIC_DESCRIPTION,
                                              article_text = cl_dataset$text[idx])
-          article_summary <- ask_gpt(system_prompt = prompt_summary$system,
+          article_summary <- ask_claude(system_prompt = prompt_summary$system,
                                      user_prompt = prompt_summary$user,
                                      temperature = 0.7)
-          cl_dataset$summary[idx] <- article_summary$choices[[1]]$message$content
+          cl_dataset$summary[idx] <- article_summary
         }
       },
       error = function(err){

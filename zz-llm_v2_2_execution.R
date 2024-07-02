@@ -30,10 +30,10 @@ for (i in nrow(oldest_data)) {
   prompt_old <- prompt_summarize_a_paper(topic = MAIN_TOPIC,
                                          topic_description = MAIN_TOPIC_DESCRIPTION,
                                          article_text = paste(oldest_data$TI[i], oldest_data$AB[i], sep = ' '))
-  old_summary <- ask_gpt(system_prompt = prompt_old$system,
+  old_summary <- ask_claude(system_prompt = prompt_old$system,
                          user_prompt = prompt_old$user)
-  oldest_data$summary[i] <- old_summary$choices[[1]]$message$content
-  dataset$summary[which(dataset$UT == old_UT)] <- old_summary$choices[[1]]$message$content
+  oldest_data$summary[i] <- old_summary
+  dataset$summary[which(dataset$UT == old_UT)] <- old_summary
 }
 
 # The following are needed but they are covered in the next block. 
@@ -56,7 +56,6 @@ dataset$X_C_backup <- dataset$X_C
 dataset$X_C <- dataset$subcluster_label1
 list_of_clusters <- dataset$X_C %>% unique() %>% sort()
 
-
 # Compute summaries
 COMPUTE_SUMMARIES = TRUE
 
@@ -65,7 +64,8 @@ for (cluster in list_of_clusters) {
     # Get this cluster tops
     print('=================================================================')
     print(glue('cluster: {cluster}'))
-    cluster_data <- get_cluster_data(dataset, cluster = cluster, top = 3)
+    cluster_data <- get_cluster_data(dataset, cluster_ = cluster, top = 3)
+    print(cluster_data$X_C)
     # Summarize each of the selected papers
     cluster_data <- get_papers_summary(cluster_data)
     # Assign the summaries to the main dataset

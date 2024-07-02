@@ -8,10 +8,10 @@ library(glue)
 ###################################
 
 # The topic used to infer the query
-MAIN_TOPIC <- settings$llm$theme
+MAIN_TOPIC <- 'palm oil'#settings$llm$theme
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- settings$llm$description
+MAIN_TOPIC_DESCRIPTION <- "Palm oil is an edible vegetable oil derived from the mesocarp (reddish pulp) of the fruit of oil palms. The oil is used in food manufacturing, in beauty products, and as biofuel. "#settings$llm$description
 
 
 
