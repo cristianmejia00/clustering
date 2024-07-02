@@ -19,13 +19,13 @@ file.choose()
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Qgmo", 
+dataset_metadata <- list("query_id" = "Q299 2nd", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
 
 # Open a window to select the directory with the files to merge
-dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/00-Research projects/58 - GMO - Deals and Patents/Patents/00-Data/Update20240505"
-#dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads/Q299 kubota and competitors"
+#dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/00-Research projects/58 - GMO - Deals and Patents/Patents/00-Data/Update20240505"
+dir_path = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads/Q299 kubota and competitors"
 paths_to_files = list.files(path = dir_path, full.names= TRUE, pattern = "*.csv", recursive = TRUE)
 paths_to_files = paths_to_files[grepl('.csv$', paths_to_files)]
 
