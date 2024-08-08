@@ -227,7 +227,7 @@ myplot <- function(network, ...) {
 
 ########################################################################
 # Print the colored full network
-png(file="network1_20.png", width=1280, height=800)
+png(file="networkQ300_20.png", width=1280, height=800)
 par(bg = "black")
 myplot(g_by_cluster[[length(g_by_cluster)]])
 for (i in rev(id_com[1:length(id_com) - 1])) {
