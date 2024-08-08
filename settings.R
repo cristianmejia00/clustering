@@ -7,22 +7,22 @@ settings <- list()
 ## Metadata
 settings$analysis_metadata <- list(
   # Directory path
-  bibliometrics_folder = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",
-  project_folder = "Qgmo",
+  bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#"/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#
+  project_folder = "Q300",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'GMO topic model',
-  query_id = "Qgmo", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'TS = ((“nature” OR "natural" OR "environmental” OR "green" OR "sustainab*" OR "climate" OR "biodiversity" OR "transition" OR "resilience" OR "adaptation") NEAR/1 ("financ*" OR "investment*" OR "disclosure" OR "credit*" OR “bank*” OR “fund*” OR "capital*" OR "asset*")) OR TS = ("green bond*" OR "sustainable bond*" OR "sustainability bond*" OR "natural capital" )',
+  query_id = "Q300", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "39767",
+  downloaded_documents = "44082",
 
   # project
-  project_name = "GMO topic model",
-  project_description = "Topic Model of gmo patents",
-  date = "2024-06-17",
+  project_name = "Nature Capital Update",
+  project_description = "Citation Network of Nature Capital",
+  date = "2024-08-08",
   created_by = "cristianmejia00@gmail.com",
-  notes = ""
+  notes = "updates to Q298"
 )
 
 ## General Parameters
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
