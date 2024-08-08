@@ -139,6 +139,24 @@ coords_all_centers$X_C[coords_all_centers$X_C == 99] <- nrow(coords_all_centers)
 coords_all_centers$mean_x <- scale(coords_all_centers$mean_x)
 coords_all_centers$mean_y <- scale(coords_all_centers$mean_y)
 
+
+# Correction of outliers
+bpx <- boxplot(coords_all_centers$mean_x)
+bpy <- boxplot(coords_all_centers$mean_y)
+
+# The correction is to substract the delta between the whisker and the outliers
+# Correct x axis
+coords_all_centers$mean_x[coords_all_centers$mean_x > bpx$stats[5,1]] <- coords_all_centers$mean_x[coords_all_centers$mean_x > bpx$stats[5,1]] - abs(coords_all_centers$mean_x[coords_all_centers$mean_x > bpx$stats[5,1]] - bpx$stats[5,1])
+coords_all_centers$mean_x[coords_all_centers$mean_x < bpx$stats[1,1]] <- coords_all_centers$mean_x[coords_all_centers$mean_x < bpx$stats[1,1]] + abs(coords_all_centers$mean_x[coords_all_centers$mean_x < bpx$stats[1,1]] - bpx$stats[1,1])
+
+# Correct y axis
+coords_all_centers$mean_y[coords_all_centers$mean_y > bpy$stats[5,1]] <- coords_all_centers$mean_y[coords_all_centers$mean_y > bpy$stats[5,1]] - abs(coords_all_centers$mean_y[coords_all_centers$mean_y > bpy$stats[5,1]] - bpy$stats[5,1])
+coords_all_centers$mean_y[coords_all_centers$mean_y < bpy$stats[1,1]] <- coords_all_centers$mean_y[coords_all_centers$mean_y < bpy$stats[1,1]] + abs(coords_all_centers$mean_y[coords_all_centers$mean_y < bpy$stats[1,1]] - bpy$stats[1,1])
+
+# Verify: The boxplot without outliers
+bpx <- boxplot(coords_all_centers$mean_x)
+bpy <- boxplot(coords_all_centers$mean_y)
+
 ########################################################################
 # Each cluster is plot with LGL
 coords_special <- lapply(c(id_com), function(i) {
@@ -158,9 +176,9 @@ coords_special <- lapply(c(id_com), function(i) {
   
   gtmp_coords_df <- data.frame('node' = V(gtmp)$name,
                                'x' = scale(gtmp_coords[,1]) + 
-                                     coords_all_centers$mean_x[coords_all_centers$X_C == i] * 1.5,
+                                     coords_all_centers$mean_x[coords_all_centers$X_C == i] * 10.5,
                                'y' = scale(gtmp_coords[,2]) + 
-                                     coords_all_centers$mean_y[coords_all_centers$X_C == i] * 1.5)
+                                     coords_all_centers$mean_y[coords_all_centers$X_C == i] * 10.5)
 }) %>% rbind.fill()
 
 coords_special2 <- coords_special[match(V(g1)$name, coords_special$node),]
@@ -180,10 +198,12 @@ ylim <- c(min(V(g1)$y), max(V(g1)$y))
 
 
 # Create the colored clusters
+# Hex transparency codes: https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4
+# 1A = 10%, 33=20%, FF=100%; 100% = Solid, 0% full transparent
 g_by_cluster <- lapply(id_com, function(i) {
   this_cluster_ids <- myDataCorrect$X_N[myDataCorrect$X_C == i] %>% as.character()
   gtmp <- induced_subgraph(g1, this_cluster_ids)
-  E(gtmp)$color <- paste(color_palette[i], "1A", sep = "")
+  E(gtmp)$color <- paste(color_palette[i], "33", sep = "")
   if (i == length(id_com)) {
     print("last cluster transparent")
     E(gtmp)$color <- "#00000000"
@@ -207,7 +227,7 @@ myplot <- function(network, ...) {
 
 ########################################################################
 # Print the colored full network
-png(file="network.png", width=1280, height=800)
+png(file="network1_20.png", width=1280, height=800)
 par(bg = "black")
 myplot(g_by_cluster[[length(g_by_cluster)]])
 for (i in rev(id_com[1:length(id_com) - 1])) {
@@ -224,7 +244,7 @@ st <- Sys.time()
 for (cc in c(1:min(length(id_com),15))) { 
   print("==============")
   print(cc)
-  png(file=paste("Cluster_", cc,".png", sep = ""), width=1280, height=800)
+  png(file=paste("Cluster_gbk_", cc,".png", sep = ""), width=1280, height=800)
   par(bg = "black")
   # plot the inital being the last one
   myplot(g_by_cluster[[length(g_by_cluster)]])
@@ -245,37 +265,37 @@ Sys.time() - st
 
 
 ########################################################################
-# # Print by cluster over black background
-# for (cc in c(1:min(length(id_com),15))) { 
-#   print(cc)
-#   png(file=paste("Cluster_", cc,".png", sep = ""), width=1280, height=800)
-#   par(bg = "black")
-#   myplot(g_by_cluster[[cc]], main=paste("Cluster ", cc))
-#   dev.off()
-# }
-# 
-# # Print the grey full network (This will serve as the silhoutte background)
-# png(file="grey.png", width=1280, height=800)
-# par(bg = "black")
-# myplot(g_by_cluster[[length(g_by_cluster)]], edge.color = adjustcolor("grey40", alpha.f = 0.3))
-# for (i in rev(id_com[1:length(id_com) - 1])) {
-#   print(i)
-#   gtmp <- g_by_cluster[[i]]
-#   myplot(gtmp, add = TRUE, edge.color = adjustcolor("grey40", alpha.f = 0.3))
-# }
-# dev.off()
+# Print by cluster over black background
+for (cc in c(1:min(length(id_com),15))) {
+  print(cc)
+  png(file=paste("Cluster_", cc,".png", sep = ""), width=1280, height=800)
+  par(bg = "black")
+  myplot(g_by_cluster[[cc]], main=paste("Cluster ", cc))
+  dev.off()
+}
 
-# # Print by cluster with the silhoutte background
-# gb <- readPNG("grey.png")
-# for (cc in c(10:min(length(id_com),15))) { 
-#   print(cc)
-#   png(file=paste("Clusterg_", cc,".png", sep = ""), width=1280, height=800)
-#   myplot(g_by_cluster[[18]])
-#   lim <- par()
-#   rasterImage(gb, lim$usr[1] - 2, lim$usr[3], lim$usr[2], lim$usr[4])#xleft = xlim[1], xright = xlim[2], ybottom = ylim[1], ytop = ylim[2])
-#   myplot(g_by_cluster[[cc]], add = TRUE)
-#   dev.off()
-# }
+# Print the grey full network (This will serve as the silhoutte background)
+png(file="grey.png", width=1280, height=800)
+par(bg = "black")
+myplot(g_by_cluster[[length(g_by_cluster)]], edge.color = adjustcolor("grey40", alpha.f = 0.3))
+for (i in rev(id_com[1:length(id_com) - 1])) {
+  print(i)
+  gtmp <- g_by_cluster[[i]]
+  myplot(gtmp, add = TRUE, edge.color = adjustcolor("grey40", alpha.f = 0.3))
+}
+dev.off()
+
+# Print by cluster with the silhoutte background
+gb <- readPNG("grey.png")
+for (cc in c(1:min(length(id_com),15))) {
+  print(cc)
+  png(file=paste("Clusterg_", cc,".png", sep = ""), width=1280, height=800)
+  myplot(g_by_cluster[[cc]])
+  lim <- par()
+  rasterImage(gb, lim$usr[1] - 2, lim$usr[3], lim$usr[2], lim$usr[4])#xleft = xlim[1], xright = xlim[2], ybottom = ylim[1], ytop = ylim[2])
+  myplot(g_by_cluster[[cc]], add = TRUE)
+  dev.off()
+}
 
 
 
