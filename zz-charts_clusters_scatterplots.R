@@ -103,6 +103,10 @@ if (!(unit_of_analysis %in% c("topic", "topics", "cluster", "clusters"))) {
   rcs_tmp <- rcs[rcs$X_C_name %in% selected_clusters, ]
 }
 
+# Remove the -99 subclusters and 99
+rcs_tmp <- rcs_tmp %>% 
+  filter(!grepl("-99", cluster_code)) %>% 
+  filter(!grepl("99", cluster_code))
 
 ##################################################################
 # SCATTERPLOT: Ave. Year x Cites
@@ -143,7 +147,6 @@ plot_scatter <- function(rcs_data,
 # - PY, Z9, growth, participation
 
 # assign hex colors based on main_cluster
-rcs_tmp$main_cluster <- rcs_tmp$cluster
 rcs_tmp$color_hex <- default_palette[as.integer(rcs_tmp$main_cluster)]
 rcs_tmp$color_hex[is.na(rcs_tmp$color_hex)] <- "#d3d3d3"
 
@@ -159,7 +162,7 @@ ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_scatter_clus
 plot_scatter(rcs_tmp, "X_C_name", "documents", "Z9_Mean", "color_hex", "main_cluster", "PY_Mean", "Documents", "Ave. Citations")
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_scatter_clusters_size_x_Z9.{extension}")))
 
-
+getwd()
 # Only for datasets with sentiment:
 # - years x sentiment
 # - citations x sentiment

@@ -53,7 +53,7 @@ for (i in nrow(oldest_data)) {
 
 # Start where the loop was interrupted
 dataset$X_C_backup <- dataset$X_C
-dataset$X_C <- dataset$subcluster_label1
+dataset$X_C <- dataset$level0
 list_of_clusters <- dataset$X_C %>% unique() %>% sort()
 
 # Compute summaries

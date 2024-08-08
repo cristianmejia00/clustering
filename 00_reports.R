@@ -111,3 +111,6 @@ source("zz-generate_quarto_document.R")
 ###############################################
 # Send to display
 source("zzz-send_to_display_repo.R")
+
+# Save Global environment
+save.image(file.path(output_folder_level, "environ_zzz_llm.rdata"))

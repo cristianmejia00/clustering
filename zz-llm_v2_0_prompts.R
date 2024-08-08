@@ -8,10 +8,10 @@ library(glue)
 ###################################
 
 # The topic used to infer the query
-MAIN_TOPIC <- 'palm oil'#settings$llm$theme
+MAIN_TOPIC <- 'Payment for Ecosystem Services'#settings$llm$theme
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- "Palm oil is an edible vegetable oil derived from the mesocarp (reddish pulp) of the fruit of oil palms. The oil is used in food manufacturing, in beauty products, and as biofuel. "#settings$llm$description
+MAIN_TOPIC_DESCRIPTION <- "a market-based approach that offers financial incentives to landowners or farmers in exchange for managing their land to provide ecological services. PES programs are becoming more popular around the world and can help to: Preserve natural resources, Improve rural areas and lifestyles, and Ensure that ecosystem services continue into the future."#settings$llm$description
 
 
 

@@ -8,21 +8,21 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#"/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#
-  project_folder = "Q300",
+  project_folder = "Q301",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'TS = ((“nature” OR "natural" OR "environmental” OR "green" OR "sustainab*" OR "climate" OR "biodiversity" OR "transition" OR "resilience" OR "adaptation") NEAR/1 ("financ*" OR "investment*" OR "disclosure" OR "credit*" OR “bank*” OR “fund*” OR "capital*" OR "asset*")) OR TS = ("green bond*" OR "sustainable bond*" OR "sustainability bond*" OR "natural capital" )',
-  query_id = "Q300", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'TS=("pay*" NEAR/2 "ecosystem* service*") OR TS=("pay*" NEAR/2 "environment* service*")',
+  query_id = "Q301", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "44082",
+  downloaded_documents = "2605",
 
   # project
-  project_name = "Nature Capital Update",
-  project_description = "Citation Network of Nature Capital",
+  project_name = "Payment for Ecosystem Service",
+  project_description = "Citation Network of Payment for Ecosystem Service",
   date = "2024-08-08",
   created_by = "cristianmejia00@gmail.com",
-  notes = "updates to Q298"
+  notes = "updates to Q293"
 )
 
 ## General Parameters
