@@ -121,9 +121,9 @@ plot_scatter <- function(rcs_data,
   colnames(df) <- c("point_labels", "x", "y", "color_hex", "color_label", "size")
   df$labels <- as.character(df$point_labels)
   p <- ggplot(df, aes(x = x, y = y)) +
-    geom_point(aes(colour = color_label, 
+    geom_point(aes(color = color_hex, 
                    size = size)) +
-    scale_color_manual(values = unique(df$color_hex)) +
+    scale_color_identity(df$color_hex) +
     xlab(x_column_label) +
     ylab(y_column_label)
   p <- p + geom_text_repel(aes(label = gsub("---|-0", "", labels)))

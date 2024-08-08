@@ -3,28 +3,28 @@
 
 ##########################################################
 # Select root directory
-# It should be the directory where this code (00_general_parameters.R) is placed.
-# setwd("/var/container/MAIN TOPIC-CLUSTERING") #Linux
-# setwd(choose.dir()) #Windows
-getwd()
-dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Qgmo/results_full_Qgmo_2024-06-17.csv")
-dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
-
-
-if (min(dataset$X_C, na.rm = TRUE) == 0) {
-  print('Cluster 0 found. Correcting')
-  dataset$X_C <- dataset$X_C + 1
-}
-if (min(dataset$X_C, na.rm = TRUE) == -1) {
-  print('Cluster -1 found. Correcting')
-  dataset$X_C <- dataset$X_C + 1
-}
-
-dataset$X_C_label <- dataset$Top_n_words
-dataset$X_C_name <- dataset$Top_n_words
-dataset$level0 <- dataset$X_C
-dataset$level1 <- dataset$X_C
-dataset$subcluster_level1 <- dataset$X_C_label
+# # It should be the directory where this code (00_general_parameters.R) is placed.
+# # setwd("/var/container/MAIN TOPIC-CLUSTERING") #Linux
+# # setwd(choose.dir()) #Windows
+# getwd()
+# dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Qgmo/results_full_Qgmo_2024-06-17.csv")
+# dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
+# 
+# 
+# if (min(dataset$X_C, na.rm = TRUE) == 0) {
+#   print('Cluster 0 found. Correcting')
+#   dataset$X_C <- dataset$X_C + 1
+# }
+# if (min(dataset$X_C, na.rm = TRUE) == -1) {
+#   print('Cluster -1 found. Correcting')
+#   dataset$X_C <- dataset$X_C + 1
+# }
+# 
+# dataset$X_C_label <- dataset$Top_n_words
+# dataset$X_C_name <- dataset$Top_n_words
+# dataset$level0 <- dataset$X_C
+# dataset$level1 <- dataset$X_C
+# dataset$subcluster_level1 <- dataset$X_C_label
 
 ##########################################################
 # Load libraries
@@ -54,8 +54,8 @@ load(file.path(
 ##########################################################
 # Verify the data is correctly formatted for reports
 source(file.path(getwd(), "04_utils", "00_verify_data.R"))
-#dataset$X_E <- dataset$Z9
-dataset$X_E[is.na(dataset$X_E)] <- 0
+dataset$X_E <- dataset$Z9
+#dataset$X_E[is.na(dataset$X_E)] <- 0
 zz_env <- list('x01' = ls())
 
 # Reporting clusters
