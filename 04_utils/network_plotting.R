@@ -90,7 +90,8 @@ if (exists("coords")) {
 
 # Verify the assignation is correct. It must be TRUE
 all(as.numeric(names(V(g1))) == node_cluster$`_N`)
-
+vcount(g1)
+vertex_attr_names(g1)
 ########################################################################
 # Create color palette
 fukan_colors <- c("#f00f15","#2270e7","#e5e510","#ff8103","#4f3dd1","#26cc3a","#ec058e","#9cb8c2","#fffdd0","#b40e68")
@@ -128,9 +129,9 @@ edge_list[,7][edge_list[,6] == max(id_com)] <- "#00000000"
 E(g1)$color <- edge_list[,7]
 
 # Save image
-png(file="/var/container/ALL_Clusters.png", width=1280, height=800)
+png(file="ALL_Clusters.png", width=1280, height=800)
 par(bg = "black")
-plot(g1, layout = coords, vertex.size = 0, vertex.color = NA, vertex.frame.color = NA, vertex.label = NA)
+plot(g1, layout = coords_igraph_drl, vertex.size = 0, vertex.color = NA, vertex.frame.color = NA, vertex.label = NA)
 dev.off()
 getwd()
 

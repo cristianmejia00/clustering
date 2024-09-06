@@ -70,10 +70,10 @@ g1 <- permute(g1, idx)
 # Set the GLOBAL layout
 # We choose to compute the centroids of clusters based on DRL
 # Given that is the one with more distributed effects. 
-coords_igraph_drl <- layout_with_drl(g1)
+#coords_igraph_drl <- layout_with_drl(g1)
 #coords_igraph_lgl <- layout_with_lgl(g1, maxiter = 1000)
 #coords_igraph_mds <- layout_with_mds(g1)
-#coords_igraph_kk <- layout_with_kk(g1)
+coords_igraph_kk <- layout_with_kk(g1)
 
 
 # Verify the assignation is correct. It must be TRUE
@@ -120,8 +120,8 @@ max(id_com)
 ########################################################################
 # Special Layout
 coords_all_df <- data.frame('node' = V(g1)$name %>% as.numeric(),
-                            'x'= coords_igraph_drl[,1],
-                            'y'= coords_igraph_drl[,2])
+                            'x'= coords_igraph_kk[,1],
+                            'y'= coords_igraph_kk[,2])
 
 coords_all_df <- merge(coords_all_df, 
                        myDataCorrect[,c('X_N', 'X_C')], 
@@ -163,7 +163,7 @@ coords_special <- lapply(c(id_com), function(i) {
   print(i)
   this_cluster_ids <- myDataCorrect$X_N[myDataCorrect$X_C == i] %>% as.character()
   gtmp <- induced_subgraph(g1, this_cluster_ids)
-  gtmp_coords <- layout_with_lgl(gtmp) %>% as.data.frame()
+  gtmp_coords <- layout_with_kk(gtmp) %>% as.data.frame()
   colnames(gtmp_coords) <- c('x','y')
   
   # Treat outliers
@@ -176,9 +176,9 @@ coords_special <- lapply(c(id_com), function(i) {
   
   gtmp_coords_df <- data.frame('node' = V(gtmp)$name,
                                'x' = scale(gtmp_coords[,1]) + 
-                                     coords_all_centers$mean_x[coords_all_centers$X_C == i] * 10.5,
+                                     coords_all_centers$mean_x[coords_all_centers$X_C == i] * 1.5,
                                'y' = scale(gtmp_coords[,2]) + 
-                                     coords_all_centers$mean_y[coords_all_centers$X_C == i] * 10.5)
+                                     coords_all_centers$mean_y[coords_all_centers$X_C == i] * 1.5)
 }) %>% rbind.fill()
 
 coords_special2 <- coords_special[match(V(g1)$name, coords_special$node),]
@@ -192,7 +192,8 @@ library(png)
 
 V(g1)$x <- coords_special2[,1]
 V(g1)$y <- coords_special2[,2]
-
+V(g1)$x <- coords_igraph_kk[,1]
+V(g1)$y <- coords_igraph_kk[,2]
 xlim <- c(min(V(g1)$x), max(V(g1)$x))
 ylim <- c(min(V(g1)$y), max(V(g1)$y))
 
@@ -203,7 +204,7 @@ ylim <- c(min(V(g1)$y), max(V(g1)$y))
 g_by_cluster <- lapply(id_com, function(i) {
   this_cluster_ids <- myDataCorrect$X_N[myDataCorrect$X_C == i] %>% as.character()
   gtmp <- induced_subgraph(g1, this_cluster_ids)
-  E(gtmp)$color <- paste(color_palette[i], "33", sep = "")
+  E(gtmp)$color <- paste(color_palette[i], "FF", sep = "")
   if (i == length(id_com)) {
     print("last cluster transparent")
     E(gtmp)$color <- "#00000000"
@@ -227,7 +228,7 @@ myplot <- function(network, ...) {
 
 ########################################################################
 # Print the colored full network
-png(file="networkQ300_20.png", width=1280, height=800)
+png(file="networkQ302_9.png", width=1280, height=800)
 par(bg = "black")
 myplot(g_by_cluster[[length(g_by_cluster)]])
 for (i in rev(id_com[1:length(id_com) - 1])) {
@@ -245,7 +246,7 @@ for (cc in c(1:min(length(id_com),15))) {
   print("==============")
   print(cc)
   png(file=paste("Cluster_gbk_", cc,".png", sep = ""), width=1280, height=800)
-  par(bg = "black")
+  par(bg = "#222222")
   # plot the inital being the last one
   myplot(g_by_cluster[[length(g_by_cluster)]])
   # Print in grey every cluster that is not cc
@@ -253,7 +254,7 @@ for (cc in c(1:min(length(id_com),15))) {
     if ((i != cc) && (i != length(id_com))) {
       print(i)
       gtmp <- g_by_cluster[[i]]
-      myplot(gtmp, add = TRUE, edge.color = adjustcolor("grey40", alpha.f = 0.2))
+      myplot(gtmp, add = TRUE, edge.color = adjustcolor("grey40", alpha.f = 0.8))
     }
   }
   # print cc
