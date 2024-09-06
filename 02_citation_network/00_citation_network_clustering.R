@@ -32,19 +32,19 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
   #####################################################
   # open network file.
   if (!settings$cno$using_mission_pairs_from_fukan) {
-    print('Loading computed network')
+    print("Loading computed network")
     g1 <- graph_from_data_frame(network, directed = FALSE)
   } else {
     # The network objects is based on "mission.pairs.tsv" from Fukan's results
-    print('Graph from mission pairs')
+    print("Graph from mission pairs")
     g1 <- read.graph(network, format = "ncol")
   }
 
   #####################################################
   # Verify some properties of the graph
   network_description <- list(
-    is_directed = is.directed(g1), # Confirms that the network is directed
-    is_weighted = is.weighted(g1), # Confirms that the network is weighted
+    is_directed = is_directed(g1), # Confirms that the network is directed
+    is_weighted = is_weighted(g1), # Confirms that the network is weighted
     edges = ecount(g1), # Return the number of edges
     nodes = vcount(g1) # Return the number of vertices
   )

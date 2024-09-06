@@ -121,7 +121,7 @@ if (settings$params$recursive_level > 0) {
   ## Note: for the first level is a good idea to subcluster the very first cluster 99.
   # for (i in 1:cl_threshold) {
   for (i in c(1:cl_threshold, 99)) {
-    subg <- induced.subgraph(g1, which(V(g1)$level0 == i))
+    subg <- induced_subgraph(g1, which(V(g1)$level0 == i))
     # if (vcount(subg) > settings$cno$size_limit && resol_limit1[i] > 0) {
     if (vcount(subg) > settings$cno$size_limit) {
       communi <- clusterize(subg, algorithm = settings$cno$algor)
@@ -156,7 +156,7 @@ if (settings$params$recursive_level > 0) {
   selected <- selected[grep("-0|99", selected, invert = TRUE)] # Do not subcluster the aggregated subclusters (that finish)
 
   for (i in selected) {
-    subg <- induced.subgraph(g1, which(V(g1)$level1 == i))
+    subg <- induced_subgraph(g1, which(V(g1)$level1 == i))
     if ((vcount(subg) > settings$cno$size_limit) && (resol_limit2[i] > 0)) {
       communi <- clusterize(subg, algorithm = settings$cno$algor)
       temp_threshold <- cl_selector(communi, threshold = settings$cno$threshold, size_lower_limit = settings$cno$size_lower_limit, max_cluster = settings$cno$max_clusters)
@@ -193,7 +193,7 @@ if (settings$params$recursive_level > 0) {
   selected <- selected[grep("-0|-99", selected, invert = TRUE)] # Do not subcluster the aggregated subclusters (that finish)
 
   for (i in selected) {
-    subg <- induced.subgraph(g1, which(V(g1)$level2 == i))
+    subg <- induced_subgraph(g1, which(V(g1)$level2 == i))
     if (vcount(subg) > settings$cno$size_limit && resol_limit3[i] > 0) {
       communi <- clusterize(subg, algorithm = settings$cno$algor)
       temp_threshold <- cl_selector(communi, threshold = settings$cno$threshold, size_lower_limit = settings$cno$size_lower_limit, max_cluster = cnoo$max_clusters)

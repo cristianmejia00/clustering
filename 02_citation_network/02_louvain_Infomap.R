@@ -18,7 +18,7 @@
 print("Executing: 02_citation_network/02_louvain_infomap.R")
 
 if (settings$cno$algor == "louvain") {
-  com <- multilevel.community(g1)
+  com <- cluster_louvain(g1)
 }
 if (settings$cno$algor == "infomap") {
   com <- cluster_infomap(g1)

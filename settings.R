@@ -7,22 +7,22 @@ settings <- list()
 ## Metadata
 settings$analysis_metadata <- list(
   # Directory path
-  bibliometrics_folder = "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#"/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#
-  project_folder = "Q301",
+  bibliometrics_folder = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
+  project_folder = "Q302",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'TS=("pay*" NEAR/2 "ecosystem* service*") OR TS=("pay*" NEAR/2 "environment* service*")',
-  query_id = "Q301", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'TS=("human* augmentation" OR "human* enhancement" OR "augmenting human*" OR "enhancing human*")',
+  query_id = "Q302", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "2605",
+  downloaded_documents = "2339",
 
   # project
-  project_name = "Payment for Ecosystem Service",
-  project_description = "Citation Network of Payment for Ecosystem Service",
-  date = "2024-08-08",
+  project_name = "Human Augmentation",
+  project_description = "Citation Network",
+  date = "2024-09-06",
   created_by = "cristianmejia00@gmail.com",
-  notes = "updates to Q293"
+  notes = "Mitsubishi project"
 )
 
 ## General Parameters
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -51,7 +51,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     # Either...
     # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
     # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.97,
+    threshold = 0.95,
     
     # Top max clusters to analyze per iteration
     max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
@@ -70,7 +70,7 @@ if (settings$params$type_of_analysis == "citation_network") {
     size_limit = 350,
 
     # Include cluster having collecting a minimum of __ articles
-    size_lower_limit = 70,
+    size_lower_limit = 30,
 
     # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
     remove_zero = FALSE,

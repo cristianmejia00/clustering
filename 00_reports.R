@@ -54,7 +54,7 @@ load(file.path(
 ##########################################################
 # Verify the data is correctly formatted for reports
 source(file.path(getwd(), "04_utils", "00_verify_data.R"))
-dataset$X_E <- dataset$Z9
+#dataset$X_E <- dataset$Z9
 #dataset$X_E[is.na(dataset$X_E)] <- 0
 zz_env <- list('x01' = ls())
 
