@@ -20,10 +20,10 @@ library(stringr)
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q302", 
+dataset_metadata <- list("query_id" = "Q303", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
-download_folder_name <- "Q302 human augmentation"
+download_folder_name <- "Q302 Q303 human augmentation"
 ###########################################################################################
 # Find system and root 
 if (Sys.info()["sysname"] == "Windows") {
@@ -108,6 +108,12 @@ table(dataset$PY)
 table(is.na(dataset$PY))
 
 dataset$PY[is.na(dataset$PY)] <- 2024
+
+test <- sapply(dataset$PY, function(x) {
+ return(nchar(as.character(x)))
+}) %>% unname()
+
+dataset <- dataset %>% filter(test == 4)
 
 # Correct records without PY
 table(dataset$PY)

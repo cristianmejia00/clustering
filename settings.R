@@ -8,19 +8,19 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q302",
+  project_folder = "Q303",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'TS=("human* augmentation" OR "human* enhancement" OR "augmenting human*" OR "enhancing human*")',
-  query_id = "Q302", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'CITING + CORE TS=("human* augmentation" OR "human* enhancement" OR "augmenting human*" OR "enhancing human*")',
+  query_id = "Q303", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
-  downloaded_documents = "2339",
+  downloaded_documents = "32200",
 
   # project
   project_name = "Human Augmentation",
   project_description = "Citation Network",
-  date = "2024-09-06",
+  date = "2024-09-09",
   created_by = "cristianmejia00@gmail.com",
   notes = "Mitsubishi project"
 )
@@ -31,7 +31,7 @@ settings$params <- list(
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "citation_network", # "topic_model" or "citation_network"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
-  recursive_level = 0,   # Reports will be generated to this level. Topic Models are always 0.
+  recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
