@@ -20,10 +20,10 @@ library(stringr)
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q303", 
+dataset_metadata <- list("query_id" = "Q305", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
-download_folder_name <- "Q302 Q303 human augmentation"
+download_folder_name <- "Q281 PIK - all"
 ###########################################################################################
 # Find system and root 
 if (Sys.info()["sysname"] == "Windows") {
@@ -97,6 +97,8 @@ if (colnames(dataset)[1] == "V1") {
 # If several non numeric values are present, it means there, there was a problem reading the files.
 names(dataset)[1:20]
 
+# Remove duplicated records
+dataset = dataset[!duplicated(dataset$UT),]
 
 # A record without PY, EA, or CY can be NA or "" empty string. We normalize anything to NA
 dataset$PY[dataset$PY == ""] <- NA
@@ -169,8 +171,7 @@ dataset$TI[is.na(dataset$PY)]
 # # Remove files without UT
 # #dataset <- dataset[!nchar(dataset$UT) != 19,]
 
-# Remove duplicated files
-dataset = dataset[!duplicated(dataset$UT),]
+
 # 
 # # Remove columns that are not used anywhere (i.e. let only those that are used or can be used)
 # # Usable columns as of 20181201

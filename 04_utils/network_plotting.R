@@ -130,7 +130,7 @@ E(g1)$color <- edge_list[,7]
 
 # Save image
 png(file="ALL_Clusters.png", width=1280, height=800)
-par(bg = "black")
+par(bg = "white")
 plot(g1, layout = coords_igraph_drl, vertex.size = 0, vertex.color = NA, vertex.frame.color = NA, vertex.label = NA)
 dev.off()
 getwd()
