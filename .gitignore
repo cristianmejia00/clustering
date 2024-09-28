@@ -1,9 +1,10 @@
-/*.csv
-/*.tsv
-/*.rdata
+*.csv
+*.tsv
+*.rdata
+*.xlsx
 /05_assets/credentials/
 .Rproj.user
 .Rhistory
-.RData
+*.RData
 .RdataTmp
 .Ruserdata
