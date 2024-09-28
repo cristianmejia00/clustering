@@ -169,7 +169,7 @@ for (cluster in list_of_clusters) {
 
 # Save
 write.csv(rcs_merged, 
-          file.path(output_folder_level, "rcs_merged_llm.csv"), 
+          file.path(output_folder_level, "rcs_merged_PIK_llm.csv"), 
           row.names = FALSE)
 
 

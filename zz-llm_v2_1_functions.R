@@ -61,7 +61,9 @@ ask_claude <- function(system_prompt,
   # Check the response status
   if (response$status_code == 200) {
     # Parse the JSON response
-    result <- fromJSON(httr::content(response, as = "text"))
+    result <- fromJSON(httr::content(response, 
+                                     as = "text",
+                                     encoding = "UTF-8"))
     # Extract and print the assistant's response
     assistant_response <- result$content$text
     return(assistant_response)
