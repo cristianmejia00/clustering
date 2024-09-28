@@ -20,10 +20,10 @@ library(stringr)
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q305", 
+dataset_metadata <- list("query_id" = "Q307", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
-download_folder_name <- "Q281 PIK - all"
+download_folder_name <- "Q307 biodiversity plant"
 ###########################################################################################
 # Find system and root 
 if (Sys.info()["sysname"] == "Windows") {
@@ -194,7 +194,7 @@ if (COMPUTE_NETWORK) {
   dataset_original <- data.frame()
 }
 
-
+write.csv(dataset, file = 'dataset_Q307_bio.csv', row.names = FALSE)
 #################################################
 # Save and FINISH!
 #################################################

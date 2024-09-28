@@ -8,10 +8,21 @@ library(glue)
 ###################################
 
 # The topic used to infer the query
-MAIN_TOPIC <- 'Payment for Ecosystem Services'#settings$llm$theme
+MAIN_TOPIC <- 'Plant Science, Biodiversity, and Climate Change'#settings$llm$theme
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- "a market-based approach that offers financial incentives to landowners or farmers in exchange for managing their land to provide ecological services. PES programs are becoming more popular around the world and can help to: Preserve natural resources, Improve rural areas and lifestyles, and Ensure that ecosystem services continue into the future."#settings$llm$description
+MAIN_TOPIC_DESCRIPTION <- "From an academic research perspective, Plant Science, Biodiversity, and Climate Change have several important interconnections:
+
+Ecosystem resilience: Plant science and biodiversity studies inform our understanding of how diverse plant communities respond to and potentially mitigate climate change impacts. More biodiverse ecosystems are often more resilient to environmental stressors.
+Carbon sequestration: Plants play a crucial role in carbon capture and storage. Research in plant science helps identify species and ecosystems most effective at sequestering carbon, which is vital for climate change mitigation strategies.
+Adaptation strategies: Understanding plant adaptations to changing environments helps predict how species and ecosystems might respond to climate change. This knowledge is crucial for conservation efforts and maintaining biodiversity.
+Agricultural sustainability: Climate change affects crop yields and distribution. Plant science research aims to develop climate-resilient crop varieties, which is essential for food security in a changing climate.
+Feedback loops: Climate change affects plant distributions and biodiversity, which in turn can influence local and global climate patterns. Studying these interactions is key to predicting future scenarios.
+Conservation priorities: Research in these fields helps identify vulnerable species and ecosystems, informing conservation strategies in the face of climate change.
+Invasive species management: Climate change can alter the spread and impact of invasive plant species, affecting native biodiversity. Interdisciplinary research helps predict and manage these changes.
+Phenology studies: Climate change affects plant life cycles, which has cascading effects on biodiversity. Research in this area connects all three fields.
+
+These interconnections make Plant Science, Biodiversity, and Climate Change highly complementary fields in academic research, often leading to interdisciplinary studies and collaborative projects."#settings$llm$description
 
 
 
