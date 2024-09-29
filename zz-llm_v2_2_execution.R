@@ -55,6 +55,7 @@ for (i in nrow(oldest_data)) {
 dataset$X_C_backup <- dataset$X_C
 dataset$X_C <- dataset$level0
 list_of_clusters <- dataset$X_C %>% unique() %>% sort()
+#list_of_clusters <- list_of_clusters[5:length(list_of_clusters)]
 
 # Compute summaries
 COMPUTE_SUMMARIES = TRUE
@@ -95,7 +96,7 @@ for (cluster in list_of_clusters) {
   cluster_completed <- FALSE
   while(!cluster_completed) {
     tmp <- tryCatch({
-      cluster_description <- ask_claude(system_prompt = prompt_desc$system,
+      cluster_description <- ask_gpt(system_prompt = prompt_desc$system,
                                         user_prompt = prompt_desc$user,
                                         temperature = 0.2)
       cluster_completed <- TRUE
@@ -116,7 +117,7 @@ for (cluster in list_of_clusters) {
       prompt <- prompt_cluster_name(topic = MAIN_TOPIC, 
                                     topic_description = MAIN_TOPIC_DESCRIPTION,
                                     cluster_description = cluster_description)
-      cluster_name <- ask_claude(system_prompt = prompt$system, 
+      cluster_name <- ask_gpt(system_prompt = prompt$system, 
                                  user_prompt = prompt$user,
                                  max_tokens = 60,
                                  temperature = 0.3)
@@ -169,7 +170,8 @@ for (cluster in list_of_clusters) {
 
 # Save
 write.csv(rcs_merged, 
-          file.path(output_folder_level, "rcs_merged_PIK_llm.csv"), 
+          file.path(file="rcs_merged_core_llm__.csv"), 
           row.names = FALSE)
 
+save.image(file = "env20240930_core_llm_completed")
 
