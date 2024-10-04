@@ -14,7 +14,8 @@ library(stringr)
 #dataset <- dataset[!duplicated(dataset$UT),]
 dataset <- dataset
 file_name <- file.path(output_folder_level, 'index_files', 'bibliography.bib')
-
+file_name <- file.path(, 'index_files', 'bibliography.bib')
+file.choose()
 # Check columns
 if (!all(c("TI", "AU", "PY", "SO", "VL", "IS", "BP", "DI") %in% colnames(dataset))) {
   stop('Necessary column for .bib is missing.')
@@ -67,7 +68,7 @@ citation_keys <- sapply(1:nrow(dataset), \(x) {
 
 citation_keys[duplicated(citation_keys)] <- paste(citation_keys[duplicated(citation_keys)], c(1:length(citation_keys[duplicated(citation_keys)])), sep = '')
 dataset$citation_key <- citation_keys
-
+#file_name = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q302 human augmentation (core)/001/level0/index_files/bibliography.bib"
 # We get the files that have a summary. 
 # Because those are the only ones we reference in the generated article
 dataset_bibliography <- subset(dataset, summary != '')
