@@ -45,8 +45,7 @@ if (any(is.na(dataset$X_C))) {
 if (settings$params$type_of_analysis == "citation_network") {
   source(file.path(getwd(), "02_citation_network", "00_citation_network_clustering.R"))
 }
-
-
+colnames(dataset)
 # Auxiliary code to find the right number of clusters. And update the threshold.
 # Get the clusters collecting 90% of papers or the top 10, whatever is the smallest number.
 table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot

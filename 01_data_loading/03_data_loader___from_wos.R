@@ -20,10 +20,10 @@ library(stringr)
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q310", 
+dataset_metadata <- list("query_id" = "Q311", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
-download_folder_name <- "Q310 innovation"
+download_folder_name <- "Q311 innovativeness"
 ###########################################################################################
 # Find system and root 
 if (Sys.info()["sysname"] == "Windows") {
