@@ -61,7 +61,6 @@ zz_env <- list('x01' = ls())
 # Reporting clusters
 source(file.path(getwd(), "02_citation_network", "01_execute_and_reports.R"))
 
-
 # Save code snapshot
 files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
 files_to_omit <- list.files(file.path(getwd(),'renv','library'), full.names = TRUE, recursive = TRUE)

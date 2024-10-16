@@ -8,21 +8,21 @@ settings <- list()
 settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q303",
+  project_folder = "Q310",
   analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
 
   # Query and data
-  query = 'CITING + CORE TS=("human* augmentation" OR "human* enhancement" OR "augmenting human*" OR "enhancing human*")',
-  query_id = "Q303", # This is the Folder name. Equivalent to Fukan's dataset
+  query = 'Yousif - innovation framework',
+  query_id = "Q310", # This is the Folder name. Equivalent to Fukan's dataset
   fukan_url = "Not apply. Compute directly",
   downloaded_documents = "32200",
 
   # project
-  project_name = "Human Augmentation",
+  project_name = "Innovation Framework",
   project_description = "Citation Network",
-  date = "2024-09-09",
+  date = "2024-09-10",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Mitsubishi project"
+  notes = "Yousif project"
 )
 
 ## General Parameters
@@ -130,11 +130,11 @@ settings$addons <- list(
 
 ########################################################### 
 ## For LLM
-settings$llm <- list(
-  "theme" =  "patent analysis of agriculture machinery",
-  "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
-  "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
-  )
+# settings$llm <- list(
+#   "theme" =  "patent analysis of agriculture machinery",
+#   "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
+#   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
+#   )
 
 ########################################################### for 00_reports.R
 ## Reporting

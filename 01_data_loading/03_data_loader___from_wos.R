@@ -20,10 +20,10 @@ library(stringr)
 ###########################################################################################
 ## Query_id 
 ## This has de form Qxxx whith the query number from the query control file
-dataset_metadata <- list("query_id" = "Q309", 
+dataset_metadata <- list("query_id" = "Q310", 
                          "fukan_url" = "Not apply. Directly from WOS")
 
-download_folder_name <- "Q309"
+download_folder_name <- "Q310 innovation"
 ###########################################################################################
 # Find system and root 
 if (Sys.info()["sysname"] == "Windows") {
@@ -58,9 +58,9 @@ dir.create(file.path(bibliometrics_folder, dataset_metadata$query_id), showWarni
 # Read each file and store them in a vector
 # fread sometimes fails when reading the header, what to do?
 list_of_all_files <- lapply(paths_to_files, function(a_path){
-  #data1 <- fread(a_path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-8", quote = "")
+  data1 <- fread(a_path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-8", quote = "")
   #data1 <- read_from_wos(a_path) # NOTE: DO NOT USE read_from_wos() from package OPNER5, it cut off the lines before finish it, hence it does not read PY and UT for all rows.
-  data1 <- read.table(a_path, sep = '\t', fill = TRUE, stringsAsFactors = FALSE, header = TRUE, check.names = FALSE, quote = "", comment.char="", encoding = "UTF-16")
+  #data1 <- read.table(a_path, sep = '\t', fill = TRUE, stringsAsFactors = FALSE, header = TRUE, check.names = FALSE, quote = "", comment.char="", encoding = "UTF-16")
   #data1 <- read.csv(a_path, stringsAsFactors = FALSE, check.names = FALSE)
   #data1 <- read.delim(a_path, stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-16", sep = "\t")
   return(data1)})
