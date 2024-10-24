@@ -47,6 +47,7 @@ dir.create(output_folder_reports)
 load(file.path(
   settings$analysis_metadata$bibliometrics_folder,
   settings$analysis_metadata$project_folder,
+  paste("network_", settings$analysis_metadata$date, sep = ""),
   settings$analysis_metadata$analysis_folder,
   "dataset_clustering.rdata"
 ))

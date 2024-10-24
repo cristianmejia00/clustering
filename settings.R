@@ -1,6 +1,4 @@
-# input_folder -> bibliometrics_folder
-# project_name -> project_folder
-# project_id -> analysis_folder
+# Settings file
 
 settings <- list()
 
@@ -9,18 +7,19 @@ settings$analysis_metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
   project_folder = "Q311_innovativeness",
-  analysis_folder = "001", # Equivalent to Fukan's analysis (i.e. the order inside dataset)
+  
+  # Analysis ID (the date + number is the label of this analysis)
+  date_id = format(Sys.Date(), "%Y-%m-%d"),
+  analysis_id = "001", 
 
   # Query and data
   query = 'Yousif - innovativeness framework',
-  #query_id = "Q311_innovativeness", # This is the Folder name. Equivalent to Fukan's dataset
-  #fukan_url = "Not apply. Compute directly",
-  #downloaded_documents = "1350",
 
   # project
   project_name = "Innovativeness Framework",
+  project_name_suffix = "innovs", #suffix is used for file names
+  project_short_label = "IVS", #short label is used in charts
   project_description = "Citation Network",
-  date = format(Sys.Date(), "%Y-%m-%d"),
   created_by = "cristianmejia00@gmail.com",
   notes = "Yousif project"
 )
@@ -29,15 +28,27 @@ settings$analysis_metadata <- list(
 settings$params <- list(
   type_of_dataset = "papers", # "papers", "patents" or "news"
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "citation_network", # "topic_model" or "citation_network"
+  type_of_analysis = "both", # "topic_model", "citation_network", or "both"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   recursive_level = 1,   # Reports will be generated to this level. Topic Models are always 0.
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
+# Embed Parameters
+settings$embeds <- list(
+  # The text columns to combine to form the corpus
+  text_columns = c("TI", "AB"),
+  
+  # The column to use for the ID of the embeds
+  id_column = c("UT"),
+  
+  # The huggingface ID of the embed model
+  transformer_model = "all-MiniLM-L6-v2"
+)
+
 ########################################################### for 00_clustering.R
 ## Citation network options
-if (settings$params$type_of_analysis == "citation_network") {
+if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
   settings$cno <- list(
     # Shall we use the network file from Fukan System (i.e. mission.pairs.tsv is available)
     # if False, we create our own network file from scratch.
@@ -76,39 +87,31 @@ if (settings$params$type_of_analysis == "citation_network") {
     remove_zero = FALSE,
 
     # Algorithm to use
-    algor = "louvain" # "louvain", OR "newman" OR "infomap"
+    algor = "louvain", # "louvain", OR "newman" OR "infomap"
+    
+    # addons
+    # Compute centralities
+    centralities = list(
+      "page_rank" = FALSE,
+      "eigen_centrality" = FALSE,
+      "closeness_centrality" = FALSE,
+      "betweeness_centrality" = FALSE
+    )
   )
 }
 
 
 ## Topic Model options
-if (settings$params$type_of_analysis == "topic_model") {
+if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
   settings$tmo <- list(
-    # Shall we use the initial clustering solution included in the dataset?
-    # If TRUE, we use the column "X_C" in dataset, this column was previously computed 
-    # using a Topic Model algorithm, usually HDBScan or Kmeans from Python, or LDA from my other codes
-    # If FALSE, we compute a new "X_C" column based on the algorithm of choice. Usually LDA.
-    using_initial_column_x_C = TRUE
+    # The integer column with the Year of publication
+    year_column = "PY",
     
-    # # The `using_initial_column_x_C = TRUE`, then all the following 
-    # # are NOT necessary, because we do not compute the topic model here.
-    # # Select the number of topics
-    # K = 86, # select "0" zero to automatically detect the topics
-    # 
-    # # Gibbs sampling parameter
-    # G = 500, # iterations
-    # alpha = 0.02,
-    # eta = 0.02,
-    # 
-    # # More options
-    # useStemming = TRUE,
-    # fullReports = FALSE, # for KXD and WXK
-    # 
-    # # Select the level of relevance
-    # # 1 = Words ordered based on simple frequency within the topic
-    # # 0 = Words ordered based on how unique they are to the topic
-    # # 0.6 is recommended
-    # relevance_value = 1
+    # The number of topics to get. Use 0 to infer the topics with HDBScan
+    n_topics = 0,
+    
+    # The minimum size for a topic
+    min_topic_size = 30
   )
 }
 
@@ -120,21 +123,16 @@ settings$addons <- list(
   # The dataset must contain the columns:
   # - `sentiment` NUMERIC. with a score between -1 and 1
   # - `sentiment_factor` STRING ENUM[positive, neutral, negative] with the sentiment label
-  "sentiment_analysis" = FALSE,
-  # These are possible if we provide a network file. 
-  "page_rank" = FALSE,
-  "eigen_centrality" = FALSE,
-  "closeness_centrality" = FALSE,
-  "betweeness_centrality" = FALSE
+  "sentiment_analysis" = FALSE
 )
 
 ########################################################### 
 ## For LLM
-# settings$llm <- list(
-#   "theme" =  "patent analysis of agriculture machinery",
-#   "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
-#   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
-#   )
+settings$llm <- list(
+  "theme" =  "patent analysis of agriculture machinery",
+  "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
+  "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
+  )
 
 ########################################################### for 00_reports.R
 ## Reporting
@@ -149,12 +147,6 @@ settings$rp <- list(
   categorical_multi_wide_reports = c("WC", "Countries", "Institutions", "issues"), # Columns in the dataset with ';' for matrix type summary
   numerical_reports = c("PY", "Z9", "sentiment", "score"), # Numeric columns in the dataset for summary (min, max, mean, median, sd)
   methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
-#c('Data collection from Factiva',
-              #'Embeddings',
-              #'UMAP',
-              #'HDBScan')
-  # Need to capture the parameters of the topic model
-  #c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
 )
 
 # Column labels are used to format RCS columns and charts' labels
@@ -259,3 +251,17 @@ settings$stopwords$myStopWords <- c(
   settings$stopwords$news_Stopwords
 )
 
+
+###############################################################################
+settings_file_path = file.path(settings$analysis_metadata$bibliometrics_folder, 
+                               settings$analysis_metadata$project_folder,
+                               paste("settings_", 
+                                     settings$analysis_metadata$date, 
+                                     "_", 
+                                     settings$analysis_metadata$analysis_id, 
+                                     ".json",
+                                     sep = ""))
+
+# Save readable settings
+writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
+           settings_file_path)
