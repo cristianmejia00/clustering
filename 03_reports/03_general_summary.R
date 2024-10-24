@@ -45,6 +45,7 @@ write.csv(as.data.frame.list(general_summary) %>% t(),
   file = file.path(
     settings$analysis_metadata$bibliometrics_folder,
     settings$analysis_metadata$project_folder,
+    paste("network_", settings$analysis_metadata$date, sep = ""),
     settings$analysis_metadata$analysis_folder,
     "general_summary.csv"
   )

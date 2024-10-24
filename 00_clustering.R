@@ -27,6 +27,7 @@ source("settings.R")
 load(file.path(
   settings$analysis_metadata$bibliometrics_folder,
   settings$analysis_metadata$project_folder,
+  paste("network_", settings$analysis_metadata$date, sep=""),
   "dataset.rdata"
 ))
 
@@ -56,16 +57,15 @@ table(dataset$subcluster_label1)
 table(dataset$subcluster_label1) %>% sort(decreasing = TRUE)
 # Update the threshold in settings file.
 
-
-
-if (settings$params$type_of_analysis == "topic_model") {
-  source(file.path(getwd(), "02_topic_model", "00_topic_model_clustering.R"))
-}
+# if (settings$params$type_of_analysis == "topic_model") {
+#   source(file.path(getwd(), "02_topic_model", "00_topic_model_clustering.R"))
+# }
 
 # Create stats folder
 dir.create(file.path(
   settings$analysis_metadata$bibliometrics_folder,
   settings$analysis_metadata$project_folder,
+  paste("network_", settings$analysis_metadata$date, sep = ""),
   settings$analysis_metadata$analysis_folder
 ))
 source(file.path(getwd(), "03_reports", "03_general_summary.R"))
@@ -84,10 +84,10 @@ if (settings$params$type_of_analysis == "citation_network" &
 }
 
 ##########################################################
-# save objects
-if (settings$params$type_of_analysis == "topic_model") {
-  dataset <- myDataCorrect
-}
+# # save objects
+# if (settings$params$type_of_analysis == "topic_model") {
+#   dataset <- myDataCorrect
+# }
 
 # Use this when using subclusters as main clusters
 # if (settings$params$type_of_analysis == "citation_network") {
@@ -97,17 +97,20 @@ if (settings$params$type_of_analysis == "topic_model") {
 # }
 
 save(dataset, file = file.path(settings$analysis_metadata$bibliometrics_folder, 
-                               settings$analysis_metadata$project_folder, 
+                               settings$analysis_metadata$project_folder,
+                               paste("network_", settings$analysis_metadata$date, sep = ""),
                                settings$analysis_metadata$analysis_folder,
                                "dataset_clustering.rdata"))
 
 save(network, file = file.path(settings$analysis_metadata$bibliometrics_folder, 
-                               settings$analysis_metadata$project_folder, 
+                               settings$analysis_metadata$project_folder,
+                               paste("network_", settings$analysis_metadata$date, sep = ""),
                                settings$analysis_metadata$analysis_folder,
                                "network.rdata"))
 
 save.image(file.path(settings$analysis_metadata$bibliometrics_folder, 
-                     settings$analysis_metadata$project_folder, 
+                     settings$analysis_metadata$project_folder,
+                     paste("network_", settings$analysis_metadata$date, sep = ""),
                      settings$analysis_metadata$analysis_folder,
                      "environ_clustering.rdata"))
 
