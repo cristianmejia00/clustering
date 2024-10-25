@@ -27,20 +27,19 @@
 # dataset$subcluster_level1 <- dataset$X_C_label
 
 ##########################################################
+# Output Folder
+# output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_folder, 
+#                                    settings$analysis_metadata$project_folder, 
+#                                    settings$analysis_metadata$analysis_folder)
+# dir.create(output_folder_reports)
+
+##########################################################
 # Load libraries
 source("04_utils/02_libraries.R")
 
 # Load settings from the project we are interested in
 # source(file.choose())
 source("settings.R")
-#settings$params$recursive_level <- 1
-
-##########################################################
-# Output Folder
-output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_folder, 
-                                   settings$analysis_metadata$project_folder, 
-                                   settings$analysis_metadata$analysis_folder)
-dir.create(output_folder_reports)
 
 ##########################################################
 # Load data
@@ -60,7 +59,9 @@ source(file.path(getwd(), "04_utils", "00_verify_data.R"))
 zz_env <- list('x01' = ls())
 
 # Reporting clusters
-source(file.path(getwd(), "02_citation_network", "01_execute_and_reports.R"))
+source(file.path(getwd(), 
+                 "02_citation_network", 
+                 "01_execute_and_reports.R"))
 
 # Save code snapshot
 files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
@@ -73,11 +74,6 @@ files_to_save <- files_to_save[!grepl('rdata$', tolower(files_to_save))]
 zip(zipfile = file.path(output_folder_level, 'source_code'),
     files = files_to_save)
 
-# Save readable settings
-writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
-           file.path(output_folder_level, "settings.json"))
-# Save settings object
-save(settings, file = file.path(output_folder_level, "settings.rdata")) 
 
 # Save package list
 session_info <- sessionInfo()

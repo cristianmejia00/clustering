@@ -11,7 +11,6 @@
 # First we take the fukan system solution of the first level
 # i.e read the mission.facet.all
 library(uuid)
-install.packages("uuid")
 
 # Keep only index, cluster, and ID columns
 dataset_minimal <- dataset[, c("X_N", "X_C", "UT")]
@@ -20,9 +19,9 @@ dataset_minimal$uuid <- UUIDgenerate(n = nrow(dataset_minimal))
 # Add overall centralities
 dataset_minimal <- dataset_minimal %>% 
   mutate(
-    level0_page_rank <- page_rank(g1),
-    level0_degree <- degree(g1),
-    level0_in_degree <- degree(g1)
+    global_page_rank = page_rank(g1)$vector,
+    global_degree = degree(g1),
+    global_in_degree = degree(g1, mode="in")
   )
 
 
@@ -68,6 +67,7 @@ unifyer <- function(a_com, cl_threshold) {
 # Make comunities in descending order
 clusterize <- function(a_network, algorithm = "louvain") {
   net <- simplify(a_network)
+  net <- as.undirected(net)
   if (algorithm == "louvain") {
     net <- cluster_louvain(net)
   }
@@ -128,6 +128,10 @@ if (settings$params$recursive_level > 0) {
   ########################################################################################
   # LEVEL 1 ##############################################################################
   level1 <- rep(0, nrow(dataset))
+  
+  level0_page_rank <- rep(0, nrow(dataset))
+  level0_degree <- rep(0, nrow(dataset))
+  level0_in_degree <- rep(0, nrow(dataset))
 
   # Resolution limits
   edges0 <- ecount(g1)
@@ -143,11 +147,20 @@ if (settings$params$recursive_level > 0) {
       communi <- clusterize(subg, algorithm = settings$cno$algor)
       temp_threshold <- cl_selector(communi, threshold = settings$cno$threshold, size_lower_limit = settings$cno$size_lower_limit, max_cluster = settings$cno$max_clusters)
       new_communi <- unifyer(communi, temp_threshold)
-      level1[match(as.integer(names(V(subg))), dataset_minimal$X_N)] <- new_communi
+      
+      relevant_nodes <- match(as.integer(names(V(subg))), dataset_minimal$X_N)
+      level1[relevant_nodes] <- new_communi
+      level0_page_rank[relevant_nodes] <- page_rank(subg)$vector
+      level0_degree[relevant_nodes] <- degree(subg)
+      level0_in_degree[relevant_nodes] <- degree(subg, mode="in")
     }
   }
 
+  dataset_minimal$level0_page_rank <- level0_page_rank
+  dataset_minimal$level0_degree <- level0_degree
+  dataset_minimal$level0_in_degree <- level0_in_degree
   dataset_minimal$level1 <- level1
+  
   subclusters_label <- paste(V(g1)$level0, level1, sep = "-")
   table(subclusters_label)
   V(g1)$level1 <- dataset_minimal$subcluster_label1 <- subclusters_label
@@ -156,6 +169,11 @@ if (settings$params$recursive_level > 0) {
   ########################################################################################
   # LEVEL 2 ##############################################################################
   level2 <- rep(0, nrow(dataset))
+  
+  level1_page_rank <- rep(0, nrow(dataset))
+  level1_degree <- rep(0, nrow(dataset))
+  level1_in_degree <- rep(0, nrow(dataset))
+  
 
   # Resolution limit
   edges_level2 <- v_and_e(g1, V(g1)$level1)
@@ -178,11 +196,20 @@ if (settings$params$recursive_level > 0) {
       temp_threshold <- cl_selector(communi, threshold = settings$cno$threshold, size_lower_limit = settings$cno$size_lower_limit, max_cluster = settings$cno$max_clusters)
       print(temp_threshold)
       new_communi <- unifyer(communi, temp_threshold)
-      level2[match(as.integer(names(V(subg))), dataset_minimal$X_N)] <- new_communi
+      
+      relevant_nodes <- match(as.integer(names(V(subg))), dataset_minimal$X_N)
+      level2[relevant_nodes] <- new_communi
+      level1_page_rank[relevant_nodes] <- page_rank(subg)$vector
+      level1_degree[relevant_nodes] <- degree(subg)
+      level1_in_degree[relevant_nodes] <- degree(subg, mode="in")
     }
   }
 
+  dataset_minimal$level1_page_rank <- level1_page_rank
+  dataset_minimal$level1_degree <- level1_degree
+  dataset_minimal$level1_in_degree <- level1_in_degree
   dataset_minimal$level2 <- level2
+
   subclusters_label <- paste(V(g1)$level1, level2, sep = "-")
   table(subclusters_label)
   V(g1)$level2 <- dataset_minimal$subcluster_label2 <- subclusters_label
@@ -234,12 +261,12 @@ if (settings$params$recursive_level > 0) {
   dataset_minimal$cl_99 <- grepl("-99", subclusters_label) # Marks RECURSIVE cluster with 99, while untouching the clusters of the first level
 
   #######################################################################
-  # Add subclusters to the original dataset
-  # setnames(dataset_minimal, "_N", "XN")
-  # setnames(dataset, "_N", "XN")
-  dataset <- merge(dataset_minimal[, c(1, 4:12)], dataset, by = "X_N")
-  # setnames(dataset_minimal, "XN", "_N")
-  # setnames(dataset, "XN", "_N")
+  # # Add subclusters to the original dataset
+  # # setnames(dataset_minimal, "_N", "XN")
+  # # setnames(dataset, "_N", "XN")
+  # dataset <- merge(dataset_minimal[, c(1, 4:12)], dataset, by = "X_N")
+  # # setnames(dataset_minimal, "XN", "_N")
+  # # setnames(dataset, "XN", "_N")
 
   ####                                                                                ####
   ########################################################################################

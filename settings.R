@@ -9,7 +9,7 @@ settings$analysis_metadata <- list(
   project_folder = "Q311_innovativeness",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2024-10-24",#format(Sys.Date(), "%Y-%m-%d"),
   analysis_id = "001", 
 
   # Query and data

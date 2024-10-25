@@ -33,7 +33,7 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
   # open network file.
   if (!settings$cno$using_mission_pairs_from_fukan) {
     print("Loading computed network")
-    g1 <- graph_from_data_frame(network, directed = FALSE)
+    g1 <- graph_from_data_frame(network, directed = TRUE)
   } else {
     # The network objects is based on "mission.pairs.tsv" from Fukan's results
     print("Graph from mission pairs")

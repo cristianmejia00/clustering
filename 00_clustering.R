@@ -52,7 +52,7 @@ if (any(is.na(dataset$X_C))) {
 if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
   source(file.path(getwd(), "02_citation_network", "00_citation_network_clustering.R"))
 }
-colnames(dataset)
+
 # Auxiliary code to find the right number of clusters. And update the threshold.
 # Get the clusters collecting 90% of papers or the top 10, whatever is the smallest number.
 table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot
@@ -89,36 +89,15 @@ if (settings$params$type_of_analysis == "citation_network" &
   source(file.path(getwd(), "04_utils", "zz-centrality_meassures.R"))
 }
 
-##########################################################
-# # save objects
-# if (settings$params$type_of_analysis == "topic_model") {
-#   dataset <- myDataCorrect
-# }
+# ========================================================================
+# Save files
+report_path <- file.path(settings$analysis_metadata$bibliometrics_folder, 
+                          settings$analysis_metadata$project_folder,
+                          network_folder,
+                          settings$analysis_metadata$analysis_folder)
 
-# Use this when using subclusters as main clusters
-# if (settings$params$type_of_analysis == "citation_network") {
-#   dataset <- merge(dataset, dataset_minimal[, c("X_N", "level0")])
-#   setnames(dataset, "X_C", "fukan_X_C")
-#   setnames(dataset, "level0", "X_C")
-# }
-
-save(dataset, file = file.path(settings$analysis_metadata$bibliometrics_folder, 
-                               settings$analysis_metadata$project_folder,
-                               paste("network_", settings$analysis_metadata$date, sep = ""),
-                               settings$analysis_metadata$analysis_folder,
-                               "dataset_clustering.rdata"))
-
-save(network, file = file.path(settings$analysis_metadata$bibliometrics_folder, 
-                               settings$analysis_metadata$project_folder,
-                               paste("network_", settings$analysis_metadata$date, sep = ""),
-                               settings$analysis_metadata$analysis_folder,
-                               "network.rdata"))
-
-save.image(file.path(settings$analysis_metadata$bibliometrics_folder, 
-                     settings$analysis_metadata$project_folder,
-                     paste("network_", settings$analysis_metadata$date, sep = ""),
-                     settings$analysis_metadata$analysis_folder,
-                     "environ_clustering.rdata"))
-
+save(dataset, file = file.path(report_path, "dataset_clustering.rdata"))
+save(network, file = file.path(report_path, "network.rdata"))
+save.image(file.path(report_path, "environ_clustering.rdata"))
 
 rm(list = ls())
