@@ -21,13 +21,19 @@ getwd()
 source("04_utils/02_libraries.R")
 
 # Load input settings file
+#settings <- fromJSON("path/to/your/file.json")
 source("settings.R")
 
 # Load data
+network_folder <- paste("network_", 
+                        settings$analysis_metadata$date_id, 
+                        "_", 
+                        settings$analysis_metadata$analysis_id, 
+                        sep="")
 load(file.path(
   settings$analysis_metadata$bibliometrics_folder,
   settings$analysis_metadata$project_folder,
-  paste("network_", settings$analysis_metadata$date, sep=""),
+  network_folder,
   "dataset.rdata"
 ))
 
@@ -43,7 +49,7 @@ if (any(is.na(dataset$X_C))) {
 
 ##########################################################
 # Document classification (Get clusters or Get topics)
-if (settings$params$type_of_analysis == "citation_network") {
+if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
   source(file.path(getwd(), "02_citation_network", "00_citation_network_clustering.R"))
 }
 colnames(dataset)

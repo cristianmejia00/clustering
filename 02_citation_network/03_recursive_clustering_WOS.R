@@ -10,9 +10,21 @@
 
 # First we take the fukan system solution of the first level
 # i.e read the mission.facet.all
+library(uuid)
+install.packages("uuid")
 
 # Keep only index, cluster, and ID columns
 dataset_minimal <- dataset[, c("X_N", "X_C", "UT")]
+dataset_minimal$uuid <- UUIDgenerate(n = nrow(dataset_minimal))
+
+# Add overall centralities
+dataset_minimal <- dataset_minimal %>% 
+  mutate(
+    level0_page_rank <- page_rank(g1),
+    level0_degree <- degree(g1),
+    level0_in_degree <- degree(g1)
+  )
+
 
 ###############################
 # Function Selector
@@ -96,8 +108,12 @@ v_and_e <- function(a_network, a_com) {
 ########################################################################################
 # LEVEL 0 ##############################################################################
 # Assign fukan clusters to nodes
-cl_threshold <- cl_selector(dataset_minimal$X_C, threshold = settings$cno$threshold, size_lower_limit = settings$cno$size_lower_limit, max_cluster = settings$cno$max_clusters)
-dataset_minimal$level0 <- unifyer(dataset_minimal$X_C, cl_threshold)
+cl_threshold <- cl_selector(dataset_minimal$X_C, 
+                            threshold = settings$cno$threshold, 
+                            size_lower_limit = settings$cno$size_lower_limit, 
+                            max_cluster = settings$cno$max_clusters)
+dataset_minimal$level0 <- unifyer(dataset_minimal$X_C, 
+                                  cl_threshold)
 plot(sort(table(dataset_minimal$X_C)))
 
 
