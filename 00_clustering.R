@@ -17,14 +17,13 @@
 getwd()
 
 ##########################################################
-# Load libraries
+# Load libraries and assets
 source("04_utils/02_libraries.R")
-
-# Load input settings file
-#settings <- fromJSON("path/to/your/file.json")
 source("settings.R")
+#settings <- fromJSON("path/to/your/file.json")
 
-# Load data
+# Load data. 
+# `dataset.rdata` contains the dataset, orphans, dataset_orginal, and network.
 network_folder <- paste("network_", 
                         settings$analysis_metadata$date_id, 
                         "_", 
@@ -88,16 +87,21 @@ if (settings$params$type_of_analysis == "citation_network" &
     (settings$addons$page_rank | settings$addons$eigen_centrality | settings$addons$closeness_centrality | settings$addons$betweeness_centrality)) {
   source(file.path(getwd(), "04_utils", "zz-centrality_meassures.R"))
 }
-
+file.path(report_path, "dataset_clustering.csv")
+network_folder
 # ========================================================================
 # Save files
 report_path <- file.path(settings$analysis_metadata$bibliometrics_folder, 
                           settings$analysis_metadata$project_folder,
                           network_folder,
-                          settings$analysis_metadata$analysis_folder)
+                          settings$analysis_metadata$analysis_id)
 
-save(dataset, file = file.path(report_path, "dataset_clustering.rdata"))
-save(network, file = file.path(report_path, "network.rdata"))
-save.image(file.path(report_path, "environ_clustering.rdata"))
+dataset_clustering_results <- dataset_minimal
+write.csv(dataset_clustering_results, 
+          file = file.path(report_path, "dataset_clustering.csv"), 
+          row.names = FALSE)
+write.csv(network, 
+          file = file.path(report_path, "network.csv"),
+          row.names = FALSE)
 
 rm(list = ls())

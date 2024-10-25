@@ -255,6 +255,9 @@ settings$stopwords$myStopWords <- c(
 ###############################################################################
 settings_file_path = file.path(settings$analysis_metadata$bibliometrics_folder, 
                                settings$analysis_metadata$project_folder,
+                               paste(settings$analysis_metadata$date_id,
+                                     settings$analysis_metadata$analysis_id,
+                                     sep = "_"),
                                paste("settings_", 
                                      settings$analysis_metadata$date, 
                                      "_", 
