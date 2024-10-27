@@ -29,18 +29,16 @@ settings$metadata <- list(
 )
 
 ## Dataset General Parameters
-settings$params <- list(
-  filtering = list(
-    "f001" = list(
-      rows_filter = list(
-        removed_duplicated_UT = TRUE,
-        most_recent_year = format(Sys.Date(), "%Y")
-      ),
-      columns_filter = list(
-        columns_selected = c("PT", "AU", "TI", "SO", "LA", "DT", "DE", "ID", "AB", "C1", "OI", "AF", "OA",
-                             "RP", "FU", "FX", "CR", "NR", "TC", "Z9", "U1", "U2", "PU", "SN", "J9",
-                             "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT")
-      )
+settings$filtering = list(
+  "f001" = list(
+    rows_filter = list(
+      removed_duplicated_UT = TRUE,
+      most_recent_year = format(Sys.Date(), "%Y")
+    ),
+    columns_filter = list(
+      columns_selected = c("PT", "AU", "TI", "SO", "LA", "DT", "DE", "ID", "AB", "C1", "OI", "AF", "OA",
+                           "RP", "FU", "FX", "CR", "NR", "TC", "Z9", "U1", "U2", "PU", "SN", "J9",
+                           "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT")
     )
   )
 )
