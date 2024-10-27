@@ -22,21 +22,23 @@ source("04_utils/02_libraries.R")
 source("settings.R")
 #settings <- fromJSON("path/to/your/file.json")
 
-# Load data. 
-# `dataset.rdata` contains the dataset, orphans, dataset_orginal, and network.
-network_folder <- paste("network_", 
-                        settings$analysis_metadata$date_id, 
-                        "_", 
-                        settings$analysis_metadata$analysis_id, 
-                        sep="")
-load(file.path(
-  settings$analysis_metadata$bibliometrics_folder,
-  settings$analysis_metadata$project_folder,
-  network_folder,
-  "dataset.rdata"
-))
+# Read input files
+network_folder_path <- file.path(settings$analysis_metadata$bibliometrics_folder, 
+                                 settings$analysis_metadata$project_folder, 
+                                 paste(settings$analysis_metadata$date_id, 
+                                       settings$analysis_metadata$analysis_id, 
+                                       sep = "_"),
+                                 paste("network", 
+                                       settings$analysis_metadata$date_id, 
+                                       settings$analysis_metadata$analysis_id, 
+                                       sep = "_"))
 
-
+dataset <- readr::read_csv(file.path(network_folder_path, 
+                                     glue("dataset_largest_component.csv")))
+orphans <- readr::read_csv(file.path(network_folder_path, 
+                                     glue("orphans.csv")))
+network <- readr::read_csv(file.path(network_folder_path, 
+                                     glue("network.csv")))
 
 ##########################################################
 # Check all documents have a cluster assigned
@@ -54,54 +56,39 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
 
 # Auxiliary code to find the right number of clusters. And update the threshold.
 # Get the clusters collecting 90% of papers or the top 10, whatever is the smallest number.
-table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot
-table(dataset$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum
-table(dataset$X_C) %>% sort(decreasing = TRUE) %>%  plot()
-table(dataset$X_C)
-table(dataset$subcluster_label1)
-table(dataset$subcluster_label1) %>% sort(decreasing = TRUE)
+table(dataset_minimal$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum %>% plot
+table(dataset_minimal$X_C) %>% sort(decreasing = TRUE) %>% prop.table %>% cumsum
+table(dataset_minimal$X_C) %>% sort(decreasing = TRUE) %>%  plot()
+table(dataset_minimal$X_C)
+table(dataset_minimal$subcluster_label1)
+table(dataset_minimal$subcluster_label1) %>% sort(decreasing = TRUE)
 # Update the threshold in settings file.
 
-# if (settings$params$type_of_analysis == "topic_model") {
-#   source(file.path(getwd(), "02_topic_model", "00_topic_model_clustering.R"))
-# }
 
-# Create stats folder
-dir.create(file.path(
-  settings$analysis_metadata$bibliometrics_folder,
-  settings$analysis_metadata$project_folder,
-  paste("network_", settings$analysis_metadata$date, sep = ""),
-  settings$analysis_metadata$analysis_folder
-))
+# ========================================================================
+# Save files
+dataset_clustering_results <- dataset_minimal
+write.csv(dataset_clustering_results, 
+          file = file.path(network_folder_path, "dataset_clustering_results.csv"), 
+          row.names = FALSE)
+
+# ========================================================================
+# Create the summary
 source(file.path(getwd(), "03_reports", "03_general_summary.R"))
 
 
-# Orphans treatment
-if (settings$addons$include_orphans == "99" | settings$addons$include_orphans == "999") {
-  source(file.path(getwd(), "04_utils", "zz-append_orphans.R"))
-}
+# # Orphans treatment
+# if (settings$addons$include_orphans == "99" | settings$addons$include_orphans == "999") {
+#   source(file.path(getwd(), "04_utils", "zz-append_orphans.R"))
+# }
+# 
+# # Add-ons
+# if (settings$params$type_of_analysis == "citation_network" & 
+#     exists('g1') &
+#     (settings$addons$page_rank | settings$addons$eigen_centrality | settings$addons$closeness_centrality | settings$addons$betweeness_centrality)) {
+#   source(file.path(getwd(), "04_utils", "zz-centrality_meassures.R"))
+# }
+# file.path(report_path, "dataset_clustering.csv")
 
-# Add-ons
-if (settings$params$type_of_analysis == "citation_network" & 
-    exists('g1') &
-    (settings$addons$page_rank | settings$addons$eigen_centrality | settings$addons$closeness_centrality | settings$addons$betweeness_centrality)) {
-  source(file.path(getwd(), "04_utils", "zz-centrality_meassures.R"))
-}
-file.path(report_path, "dataset_clustering.csv")
-network_folder
-# ========================================================================
-# Save files
-report_path <- file.path(settings$analysis_metadata$bibliometrics_folder, 
-                          settings$analysis_metadata$project_folder,
-                          network_folder,
-                          settings$analysis_metadata$analysis_id)
-
-dataset_clustering_results <- dataset_minimal
-write.csv(dataset_clustering_results, 
-          file = file.path(report_path, "dataset_clustering.csv"), 
-          row.names = FALSE)
-write.csv(network, 
-          file = file.path(report_path, "network.csv"),
-          row.names = FALSE)
 
 rm(list = ls())

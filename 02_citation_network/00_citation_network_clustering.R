@@ -68,8 +68,3 @@ if (!settings$cno$using_initial_column_C_from_fukan | settings$params$recursive_
 ####################################################
 # Recursive clustering
 source("02_citation_network/03_recursive_clustering_WOS.R")
-
-if (!settings$cno$using_initial_column_C_from_fukan) {
-  dataset$fukan_c <- dataset$X_C
-  dataset$X_C <- dataset$level0
-}
