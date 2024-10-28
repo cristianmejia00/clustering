@@ -51,39 +51,46 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
       value = 1
     ),
     
-    # Algorithm to use
-    algor = "louvain", # "louvain", OR "newman" OR "infomap"
-    
-    # Reports will be generated to this level.
-    # 0 means clusters, 1 subclusters, 2 subclusters of subclusters
-    recursive_level = 1,   
-  
-    # Either...
-    # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
-    # - Number of cluster to consider from the Fukan System solution (1+)
-    threshold = 0.95,
-    
-    # Top max clusters to analyze per iteration
-    max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
-    
-    # Cluster scope
-    scope = "all", # "all" OR "cl99" OR "cl_99"
-    
-    ### Options for clustering or recursive clustering.
-    ### The following options are useful for any of these conditions
-    ### - We want recursive clustering
-    ### - we want clustering at level0, either because:
-    ###   - we don't want to use Fukan System X_C
-    ###   - We have a WOS dataset without X_C
-    
-    # Subcluster only if having this or more
-    size_limit = 350,
-    
-    # Include cluster having collecting a minimum of __ articles
-    size_lower_limit = 30,
-    
-    # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
-    remove_zero = FALSE
+    # Clustering
+    clustering = list(
+      algorithm = "louvain" # "louvain", OR "newman" OR "infomap"
+    ),
+
+    # Thresholding. 
+    # i.e. Creation of the `dataset_minimal`. Recursive clustering and aggregation of small clusters
+
+    thresholding = list(
+      # Reports will be generated to this level.
+      # 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+      
+      recursive_level = 1, 
+      # Either...
+      # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
+      # - Number of cluster to consider from the Fukan System solution (1+)
+      threshold = 0.95,
+      
+      # Top max clusters to analyze per iteration
+      max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
+      
+      # Cluster scope
+      scope = "all", # "all" OR "cl99" OR "cl_99"
+      
+      ### Options for clustering or recursive clustering.
+      ### The following options are useful for any of these conditions
+      ### - We want recursive clustering
+      ### - we want clustering at level0, either because:
+      ###   - we don't want to use Fukan System X_C
+      ###   - We have a WOS dataset without X_C
+      
+      # Subcluster only if having this or more
+      size_limit = 350,
+      
+      # Include cluster having collecting a minimum of __ articles
+      size_lower_limit = 30,
+      
+      # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
+      remove_zero = FALSE
+    )
   )
 }
 

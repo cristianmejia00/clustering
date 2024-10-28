@@ -10,11 +10,9 @@
 
 # First we take the fukan system solution of the first level
 # i.e read the mission.facet.all
-library(uuid)
 
 # Keep only index, cluster, and ID columns
-dataset_minimal <- dataset[, c("X_N", "X_C", "UT")]
-dataset_minimal$uuid <- UUIDgenerate(n = nrow(dataset_minimal))
+dataset_minimal <- dataset[, c("X_N", "X_C", "UT", "uuid")]
 
 # Add overall centralities
 dataset_minimal <- dataset_minimal %>% 
@@ -23,6 +21,19 @@ dataset_minimal <- dataset_minimal %>%
     global_degree = degree(g1),
     global_in_degree = degree(g1, mode="in")
   )
+
+# Adjust the threshold
+# The following is used when in `settings` we chose an Integer for the exact number of cluster.
+# Here, we convert the integer to a value between 0 and 1 representing the PROPORTION of clusters to take
+# This is needed because the clustering algorithm is designed to take a value from 0 to 1.
+if (settings$cno$threshold > 1) {
+  tmp_prop <- table(dataset$X_C) %>%
+    sort(decreasing = TRUE) %>%
+    prop.table() %>%
+    cumsum()
+  tmp_prop <- tmp_prop[settings$cno$threshold]
+  settings$cno$threshold <- tmp_prop + tmp_prop * 0.0001
+}
 
 
 ###############################
@@ -117,7 +128,7 @@ dataset_minimal$level0 <- unifyer(dataset_minimal$X_C,
 plot(sort(table(dataset_minimal$X_C)))
 
 
-if (settings$params$recursive_level > 0) {
+if (settings$cno$recursive_level > 0) {
   # Order dataset_minimal to the order of nodes in the network
   dataset_minimal <- dataset_minimal[match(as.integer(names(V(g1))), dataset_minimal$X_N), ]
 
@@ -260,13 +271,7 @@ if (settings$params$recursive_level > 0) {
   dataset_minimal$cl99 <- grepl("99", subclusters_label) # Marks all cluster with 99
   dataset_minimal$cl_99 <- grepl("-99", subclusters_label) # Marks RECURSIVE cluster with 99, while untouching the clusters of the first level
 
-  #######################################################################
-  # # Add subclusters to the original dataset
-  # # setnames(dataset_minimal, "_N", "XN")
-  # # setnames(dataset, "_N", "XN")
-  # dataset <- merge(dataset_minimal[, c(1, 4:12)], dataset, by = "X_N")
-  # # setnames(dataset_minimal, "XN", "_N")
-  # # setnames(dataset, "XN", "_N")
+
 
   ####                                                                                ####
   ########################################################################################
