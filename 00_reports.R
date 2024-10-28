@@ -48,7 +48,7 @@ load(file.path(
   settings$analysis_metadata$project_folder,
   paste("network_", settings$analysis_metadata$date, sep = ""),
   settings$analysis_metadata$analysis_folder,
-  "dataset_clustering.rdata"
+  "dataset_clustering_results.rdata"
 ))
 
 ##########################################################

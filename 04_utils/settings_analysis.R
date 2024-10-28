@@ -9,10 +9,9 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q311_innovativeness",
+  dataset_folder = "Q311_innovativeness",
   fitered_folder = "f001",
   analysis_id = "Q311_a01_f001_cn_dc_c0_lv"
-  
 )
 
 
@@ -38,12 +37,15 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
     # If FALSE, we compute a new "_C" column based on the algorithm of choice.
     using_initial_column_C_from_fukan = FALSE,
     
+    # Type of network
+    network_type = "direct_citation",
+    
     # The component subsetting
     # By default we take the largets comp
     # 'all' = everything 
     # 'top' = The top n components by size
     # 'component' = Only the selected component
-    # 'min.vertices' = The min size of vertex in comp to be considered
+    # 'min_vertices' = The min size of vertex in comp to be considered. For example value = 2, will remove all floating isolated nodes.
     component = list(
       strategy = 'top',
       value = 1
@@ -81,7 +83,7 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
     size_lower_limit = 30,
     
     # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
-    remove_zero = FALSE,
+    remove_zero = FALSE
   )
 }
 
@@ -239,9 +241,14 @@ settings$stopwords$myStopWords <- c(
 
 
 ###############################################################################
-settings_file_path = file.path(settings$metadata$bibliometrics_directory, 
-                               settings$metadata$dataset_folder,
-                               paste("settings_directive_analysis",
+# In the case of the analysis settings we must create the directory first.
+ana_lysis_results_folder_path <- file.path(settings$metadata$bibliometrics_folder,
+                                           settings$metadata$analysis_id)
+dir.create(ana_lysis_results_folder_path, showWarnings = FALSE)
+
+# Save the analysis directive
+settings_file_path = file.path(ana_lysis_results_folder_path,
+                               paste("settings_analysis_directive_",
                                      format(Sys.time(), "%Y-%m-%d-%H-%M"),
                                      ".json",
                                      sep = ""))

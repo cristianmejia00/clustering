@@ -95,7 +95,7 @@ settings$network <- list(
 ###############################################################################
 settings_file_path = file.path(settings$metadata$bibliometrics_directory, 
                                settings$metadata$dataset_folder,
-                               paste("settings_directive_",
+                               paste("settings_dataset_directive_",
                                      format(Sys.time(), "%Y-%m-%d-%H-%M"),
                                      ".json",
                                      sep = ""))
