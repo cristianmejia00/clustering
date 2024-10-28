@@ -26,7 +26,8 @@ if (!("Opener5"     %in% rownames(installed.packages()))) {
 }
 if (!("DT"          %in% rownames(installed.packages()))) {install.packages("DT")}
 if (!("glue"        %in% rownames(installed.packages()))) {install.packages("glue")}
-if (!("svglite"        %in% rownames(installed.packages()))) {install.packages("svglite")}
+if (!("svglite"     %in% rownames(installed.packages()))) {install.packages("svglite")}
+if (!("uuid"        %in% rownames(installed.packages()))) {install.packages("uuid")}
 ####################################################
 # Load libraries
 
@@ -59,3 +60,4 @@ library(Rtsne)
 library(tools)
 library(DT)
 library(glue)
+library(uuid)

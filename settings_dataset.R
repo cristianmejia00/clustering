@@ -48,14 +48,17 @@ settings$embeds <- list(
   # If copute embeds
   get_embeds = TRUE,
   
+  # The filtered label
+  from_filtered_dataset = "f001",
+  
   # Embeds parameters
   "e001" = list(
     # The text columns to combine to form the corpus
     text_columns = c("TI", "AB"),
     
     # Text preparation
-    remove_stopwords = FALSE,
-    to_lowercase = FALSE,
+    to_lowercase = TRUE,
+    remove_stopwords = TRUE,
     remove_numbers = FALSE,
     remove_symbols = FALSE,
     stemming = FALSE,
@@ -77,6 +80,9 @@ settings$network <- list(
   # If compute network
   get_network = TRUE,
   
+  # The filtered label
+  from_filtered_dataset = "f001",
+  
   # Type of network
   network_type = "direct_citation", # "direct_citation", "bibliographic_coupling", "co-citation"
   
@@ -97,3 +103,6 @@ settings_file_path = file.path(settings$metadata$bibliometrics_directory,
 # Save readable settings
 writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
            settings_file_path)
+
+# Print to console
+settings_file_path

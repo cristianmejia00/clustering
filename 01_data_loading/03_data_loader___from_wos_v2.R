@@ -4,38 +4,23 @@
 # Using the `settings_dataset.R` code.
 # And input here, the folder and file name of the directive file inside
 # GDrive/Bibliometrics_Drive/
-#==================================================
-
-# Call necessary libraries
-library(plyr)
-library(data.table)
-library(dplyr)
-library(stringr)
-
+#==============================================================================
 # The folder and settings_directive file
 dataset_folder_name <- "Q311_innovativeness"
 settings_directive <- "settings_directive_2024-10-27-17-23.json"
 
-###########################################################################################
-# Find system and root 
-if (Sys.info()["sysname"] == "Windows") {
-  print("You are running R on a Windows machine")
-  root_path_from <- "C:\\Users\\crist\\OneDrive\\Documentos"
-  root_path_to <- ""
-} else if (Sys.info()["sysname"] == "Darwin") {
-  print("You are running R on a Mac machine")
-  root_path_from <- "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos"
-  root_path_to   <- "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-} else {
-  print("You are running R on a different operating system")
-}
+###############################################################################
+# Call necessary libraries
+source("04_utils/02_libraries.R")
+source("04_utils/00_system_paths.R")
 
+###############################################################################
 # Load the directive file
 settings <- RJSONIO::fromJSON(file.path(root_path_to, 
                                dataset_folder_name,
                                settings_directive), 
                               simplify = FALSE)
-
+###############################################################################
 
 # Open a window to select the directory with the files to merge
 myfolder = file.path(settings$metadata$raw_input_directory,
@@ -76,7 +61,7 @@ names(dataset)[1:20]
 
 ############################################################################
 ############################################################################
-# Filtering
+# Filtering ----- ROWS
 ############################################################################
 ############################################################################
 
@@ -116,9 +101,24 @@ for (i in c(1:ncol(dataset))) {
   dataset[,i]  <- as.character(dataset[,i]) %>% enc2utf8() 
 }
 
-##########################
-# Retain only relevant columns
+############################################################################
+############################################################################
+# Filtering ----- COLUMNS
+############################################################################
+############################################################################
 dataset <- dataset %>% select(all_of(unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected)))
+
+
+############################################################################
+############################################################################
+# Filtering ----- IDs
+############################################################################
+############################################################################
+dataset <- dataset %>%
+  mutate(
+    X_N = c(1:n()),
+    uuid = UUIDgenerate(n = n())
+  )
 
 ##########################
 # Save the file
