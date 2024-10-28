@@ -33,7 +33,7 @@ values <- lapply(id_com, function(cluster) {
       hub_year_temp
     }
     hub_title <- cluster_data$"TI"[which(cluster_data$"X_N" == y)]
-    hub_type1 <- if (settings$params$type_of_dataset != "papers") {
+    hub_type1 <- if (settings$params$dataset_source != "wos") {
       "ARTICLE"
     } else {
       toupper(cluster_data$"DT"[which(cluster_data$"X_N" == y)])
@@ -53,7 +53,7 @@ values <- lapply(id_com, function(cluster) {
     return(row)
   })
 
-  valid_fields <- settings$rp$categorical_long_reports
+  valid_fields <- settings$rp$categorical_long_reports %>% unlist()
   valid_fields <- valid_fields[valid_fields %in% colnames(cluster_data)]
 
   tt <- c()

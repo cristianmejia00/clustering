@@ -3,10 +3,12 @@
 ####################################################
 # CITATION NETWORK
 ####################################################
-output_folder_reports <- file.path(settings$metadata$bibliometrics_folder,
-                                   settings$metadata$analysis_id,
-                                   settings$cno$clustering$algorithm,
-                                   settings$cno$thresholding$threshold %>% as.character())
+output_folder_reports <- file.path(
+  settings$metadata$bibliometrics_folder,
+  settings$metadata$analysis_id,
+  settings$cno$clustering$algorithm,
+  settings$cno$thresholding$threshold %>% as.character()
+)
 
 ####################################################
 # Reports
@@ -15,18 +17,20 @@ output_folder_reports <- file.path(settings$metadata$bibliometrics_folder,
 time_01_started <- Sys.time()
 
 # Data preparation
-for (level_report_iteration in c(0:settings$cno$thresholding$recursive_level)) {
+for (level_report_iteration in c(0:settings$params$recursive_level)) {
   level_report <<- level_report_iteration
-  print(paste("...Starting reports for level", 
-              as.character(level_report), 
-              sep = " "))
+  print(paste("...Starting reports for level",
+    as.character(level_report),
+    sep = " "
+  ))
 
   # Get the level path and create the directory
   output_folder_level <- file.path(
     output_folder_reports,
-    paste("level", 
-          as.character(level_report), 
-          sep = "")
+    paste("level",
+      as.character(level_report),
+      sep = ""
+    )
   )
   dir.create(output_folder_level)
 
@@ -79,8 +83,8 @@ for (level_report_iteration in c(0:settings$cno$thresholding$recursive_level)) {
 
   # Keywords for heatmap # Now, do it for all.
   print("Heatmap keywords")
-  if (file.exists(file.path(output_folder_reports, 'papersText.rdata'))) {
-    load(file.path(output_folder_reports, 'papersText.rdata'))
+  if (file.exists(file.path(output_folder_reports, "papersText.rdata"))) {
+    load(file.path(output_folder_reports, "papersText.rdata"))
   }
   source("03_reports/05_heatmap_keywords_part_1.R")
   if (!exists("papersText")) {
@@ -112,16 +116,16 @@ for (level_report_iteration in c(0:settings$cno$thresholding$recursive_level)) {
   if (settings$params$dataset_source == "wos") {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
   }
-  
+
   ############################################################################
-  
+
   # Dataset merged RCS
   source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
-  
+
   # figures
   # Save PNG figures. Normal raster figures for easy navigation in PC.
   print("###################### PNG CHARTS")
-  extension <- 'png'
+  extension <- "png"
   subfolder_dataset <- "charts_dataset"
   subfolder_clusters <- "charts_clusters"
   source(file.path(getwd(), "zz-charts_dataset.R"))
@@ -131,11 +135,11 @@ for (level_report_iteration in c(0:settings$cno$thresholding$recursive_level)) {
   source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
   source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
   source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
-  
-  
+
+
   # Save PNG figures. Needed for notebook.
   print("###################### SVG CHARTS")
-  extension <- 'svg'
+  extension <- "svg"
   subfolder_dataset <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
   source(file.path(getwd(), "zz-charts_dataset.R"))
@@ -145,11 +149,11 @@ for (level_report_iteration in c(0:settings$cno$thresholding$recursive_level)) {
   source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
   source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
   source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
-  
+
   ############################################################################
   # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
-  #rm(list = setdiff(ls(), zz_env$x05))
+  # rm(list = setdiff(ls(), zz_env$x05))
   save.image(rn$PROJECTenviron)
 
   # Time per level

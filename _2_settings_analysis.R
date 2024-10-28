@@ -17,6 +17,7 @@ settings$metadata <- list(
 
 ## General Parameters
 settings$params <- list(
+  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "both", # "topic_model", "citation_network", or "both"
@@ -60,10 +61,6 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
     # i.e. Creation of the `dataset_minimal`. Recursive clustering and aggregation of small clusters
 
     thresholding = list(
-      # Reports will be generated to this level.
-      # 0 means clusters, 1 subclusters, 2 subclusters of subclusters
-      
-      recursive_level = 1, 
       # Either...
       # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
       # - Number of cluster to consider from the Fukan System solution (1+)

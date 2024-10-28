@@ -15,11 +15,11 @@
 # i.e read the mission.facet.all
 
 # Add overall centralities
-dataset_minimal <- dataset_minimal %>% 
+dataset_minimal <- dataset_minimal %>%
   mutate(
     global_page_rank = page_rank(g1)$vector,
     global_degree = degree(g1),
-    global_in_degree = degree(g1, mode="in")
+    global_in_degree = degree(g1, mode = "in")
   )
 
 # Adjust the threshold
@@ -119,16 +119,19 @@ v_and_e <- function(a_network, a_com) {
 ########################################################################################
 # LEVEL 0 ##############################################################################
 # Assign fukan clusters to nodes
-cl_threshold <- cl_selector(dataset_minimal$X_C, 
-                            threshold = settings$cno$thresholding$threshold, 
-                            size_lower_limit = settings$cno$thresholding$size_lower_limit, 
-                            max_cluster = settings$cno$thresholding$max_clusters)
-dataset_minimal$level0 <- unifyer(dataset_minimal$X_C, 
-                                  cl_threshold)
+cl_threshold <- cl_selector(dataset_minimal$X_C,
+  threshold = settings$cno$thresholding$threshold,
+  size_lower_limit = settings$cno$thresholding$size_lower_limit,
+  max_cluster = settings$cno$thresholding$max_clusters
+)
+dataset_minimal$level0 <- unifyer(
+  dataset_minimal$X_C,
+  cl_threshold
+)
 plot(sort(table(dataset_minimal$X_C)))
 
 
-if (settings$cno$thresholding$recursive_level > 0) {
+if (settings$params$recursive_level > 0) {
   # Order dataset_minimal to the order of nodes in the network
   dataset_minimal <- dataset_minimal[match(as.integer(names(V(g1))), dataset_minimal$X_N), ]
 
@@ -139,7 +142,7 @@ if (settings$cno$thresholding$recursive_level > 0) {
   ########################################################################################
   # LEVEL 1 ##############################################################################
   level1 <- rep(0, nrow(dataset_minimal))
-  
+
   level0_page_rank <- rep(0, nrow(dataset_minimal))
   level0_degree <- rep(0, nrow(dataset_minimal))
   level0_in_degree <- rep(0, nrow(dataset_minimal))
@@ -156,17 +159,18 @@ if (settings$cno$thresholding$recursive_level > 0) {
     # if (vcount(subg) > settings$cno$thresholding$size_limit && resol_limit1[i] > 0) {
     if (vcount(subg) > settings$cno$thresholding$size_limit | TRUE) { # passtrough for level0, because we need the centralities
       communi <- clusterize(subg, algorithm = settings$cno$clustering$algorithm)
-      temp_threshold <- cl_selector(communi, 
-                                    threshold = settings$cno$thresholding$threshold, 
-                                    size_lower_limit = settings$cno$thresholding$size_lower_limit, 
-                                    max_cluster = settings$cno$thresholding$max_clusters)
+      temp_threshold <- cl_selector(communi,
+        threshold = settings$cno$thresholding$threshold,
+        size_lower_limit = settings$cno$thresholding$size_lower_limit,
+        max_cluster = settings$cno$thresholding$max_clusters
+      )
       new_communi <- unifyer(communi, temp_threshold)
-      
+
       relevant_nodes <- match(as.integer(names(V(subg))), dataset_minimal$X_N)
       level1[relevant_nodes] <- new_communi
       level0_page_rank[relevant_nodes] <- page_rank(subg)$vector
       level0_degree[relevant_nodes] <- degree(subg)
-      level0_in_degree[relevant_nodes] <- degree(subg, mode="in")
+      level0_in_degree[relevant_nodes] <- degree(subg, mode = "in")
     }
   }
 
@@ -174,7 +178,7 @@ if (settings$cno$thresholding$recursive_level > 0) {
   dataset_minimal$level0_degree <- level0_degree
   dataset_minimal$level0_in_degree <- level0_in_degree
   dataset_minimal$level1 <- level1
-  
+
   subclusters_label <- paste(V(g1)$level0, level1, sep = "-")
   table(subclusters_label)
   V(g1)$level1 <- dataset_minimal$subcluster_label1 <- subclusters_label
@@ -183,11 +187,11 @@ if (settings$cno$thresholding$recursive_level > 0) {
   ########################################################################################
   # LEVEL 2 ##############################################################################
   level2 <- rep(0, nrow(dataset_minimal))
-  
+
   level1_page_rank <- rep(0, nrow(dataset_minimal))
   level1_degree <- rep(0, nrow(dataset_minimal))
   level1_in_degree <- rep(0, nrow(dataset_minimal))
-  
+
 
   # Resolution limit
   edges_level2 <- v_and_e(g1, V(g1)$level1)
@@ -207,18 +211,19 @@ if (settings$cno$thresholding$recursive_level > 0) {
     subg <- induced_subgraph(g1, which(V(g1)$level1 == i))
     if ((vcount(subg) > settings$cno$thresholding$size_limit) && (resol_limit2[i] > 0)) {
       communi <- clusterize(subg, algorithm = settings$cno$clustering$algorithm)
-      temp_threshold <- cl_selector(communi, 
-                                    threshold = settings$cno$thresholding$threshold, 
-                                    size_lower_limit = settings$cno$thresholding$size_lower_limit, 
-                                    max_cluster = settings$cno$thresholding$max_clusters)
+      temp_threshold <- cl_selector(communi,
+        threshold = settings$cno$thresholding$threshold,
+        size_lower_limit = settings$cno$thresholding$size_lower_limit,
+        max_cluster = settings$cno$thresholding$max_clusters
+      )
       print(temp_threshold)
       new_communi <- unifyer(communi, temp_threshold)
-      
+
       relevant_nodes <- match(as.integer(names(V(subg))), dataset_minimal$X_N)
       level2[relevant_nodes] <- new_communi
       level1_page_rank[relevant_nodes] <- page_rank(subg)$vector
       level1_degree[relevant_nodes] <- degree(subg)
-      level1_in_degree[relevant_nodes] <- degree(subg, mode="in")
+      level1_in_degree[relevant_nodes] <- degree(subg, mode = "in")
     }
   }
 
@@ -256,10 +261,11 @@ if (settings$cno$thresholding$recursive_level > 0) {
     subg <- induced_subgraph(g1, which(V(g1)$level2 == i))
     if (vcount(subg) > settings$cno$thresholding$size_limit && resol_limit3[i] > 0) {
       communi <- clusterize(subg, algorithm = settings$cno$clustering$algorithm)
-      temp_threshold <- cl_selector(communi, 
-                                    threshold = settings$cno$thresholding$threshold, 
-                                    size_lower_limit = settings$cno$thresholding$size_lower_limit, 
-                                    max_cluster = settings$cno$thresholding$max_clusters)
+      temp_threshold <- cl_selector(communi,
+        threshold = settings$cno$thresholding$threshold,
+        size_lower_limit = settings$cno$thresholding$size_lower_limit,
+        max_cluster = settings$cno$thresholding$max_clusters
+      )
       new_communi <- unifyer(communi, temp_threshold)
       level3[match(as.integer(names(V(subg))), dataset_minimal$X_N)] <- new_communi
     }
