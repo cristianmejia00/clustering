@@ -1,21 +1,7 @@
 
-
 #==============================================================================
-# The folder and settings_directive file
-dataset_folder_name <- "Q311_innovativeness"
-settings_directive <- "settings_directive_2024-10-27-22-16.json"
+source('000_entry_dataset.R')
 
-###############################################################################
-# Call necessary libraries
-source("04_utils/02_libraries.R")
-source("04_utils/00_system_paths.R")
-
-###############################################################################
-# Load the directive file
-settings <- RJSONIO::fromJSON(file.path(root_path_to, 
-                                        dataset_folder_name,
-                                        settings_directive), 
-                              simplify = FALSE)
 ###############################################################################
 # Load dataset
 dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_directory, 
@@ -23,6 +9,9 @@ dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_directory,
                                      settings$network$from_filtered_dataset,
                                      "dataset.csv"))
 
+###############################################################################
+###############################################################################
+###############################################################################
 # Compute network if needed
 if (settings$network$get_network & settings$network$network_type == "direct_citation") {
   source('./01_data_loading/compute_direct_citation_network.R')
@@ -31,8 +20,9 @@ if (settings$network$get_network & settings$network$network_type == "direct_cita
 }
 
 ###############################################################################
-# Save and FINISH!
 ###############################################################################
+###############################################################################
+# Save
 results_folder_path <- file.path(root_path_to,
                                  dataset_folder_name,
                                  settings$network$from_filtered_dataset,

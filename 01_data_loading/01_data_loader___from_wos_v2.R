@@ -5,21 +5,8 @@
 # And input here, the folder and file name of the directive file inside
 # GDrive/Bibliometrics_Drive/
 #==============================================================================
-# The folder and settings_directive file
-dataset_folder_name <- "Q311_innovativeness"
-settings_directive <- "settings_directive_2024-10-27-17-23.json"
+source("_1_entry_dataset.R")
 
-###############################################################################
-# Call necessary libraries
-source("04_utils/02_libraries.R")
-source("04_utils/00_system_paths.R")
-
-###############################################################################
-# Load the directive file
-settings <- RJSONIO::fromJSON(file.path(root_path_to, 
-                               dataset_folder_name,
-                               settings_directive), 
-                              simplify = FALSE)
 ###############################################################################
 
 # Open a window to select the directory with the files to merge
