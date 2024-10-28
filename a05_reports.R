@@ -1,68 +1,51 @@
 # 20180323 -> 20220526
 # Framework for Citation Network Analysis with Recursive Clustering, or Topic Models.
 
-##########################################################
-# Select root directory
-# # It should be the directory where this code (00_general_parameters.R) is placed.
-# # setwd("/var/container/MAIN TOPIC-CLUSTERING") #Linux
-# # setwd(choose.dir()) #Windows
-# getwd()
-# dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Qgmo/results_full_Qgmo_2024-06-17.csv")
-# dataset <- readr::read_csv("~/Library/CloudStorage/OneDrive-Personal/Documentos/03-bibliometrics/Q299/dataset_updated_kubota_2024-06-13.csv")
-# 
-# 
-# if (min(dataset$X_C, na.rm = TRUE) == 0) {
-#   print('Cluster 0 found. Correcting')
-#   dataset$X_C <- dataset$X_C + 1
-# }
-# if (min(dataset$X_C, na.rm = TRUE) == -1) {
-#   print('Cluster -1 found. Correcting')
-#   dataset$X_C <- dataset$X_C + 1
-# }
-# 
-# dataset$X_C_label <- dataset$Top_n_words
-# dataset$X_C_name <- dataset$Top_n_words
-# dataset$level0 <- dataset$X_C
-# dataset$level1 <- dataset$X_C
-# dataset$subcluster_level1 <- dataset$X_C_label
+#==============================================================================
+# Load settings
+source("_3_entry_analysis.R")
 
-##########################################################
-# Output Folder
-# output_folder_reports <- file.path(settings$analysis_metadata$bibliometrics_folder, 
-#                                    settings$analysis_metadata$project_folder, 
-#                                    settings$analysis_metadata$analysis_folder)
-# dir.create(output_folder_reports)
-
-##########################################################
-# Load libraries
-source("04_utils/02_libraries.R")
-
-# Load settings from the project we are interested in
-# source(file.choose())
-source("settings.R")
-
-##########################################################
+###############################################################################
 # Load data
-load(file.path(
-  settings$analysis_metadata$bibliometrics_folder,
-  settings$analysis_metadata$project_folder,
-  paste("network_", settings$analysis_metadata$date, sep = ""),
-  settings$analysis_metadata$analysis_folder,
-  "dataset_clustering_results.rdata"
-))
+dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
+                                             settings$metadata$analysis_id, 
+                                             "dataset.csv"))
 
-##########################################################
+dataset_minimal <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
+                                             settings$metadata$analysis_id, 
+                                             settings$cno$clustering$algorithm,
+                                             settings$cno$thresholding$threshold %>% as.character(),
+                                             "dataset_minimal.csv"))
+
+# Ensure we have all the papers in the network
+stopifnot(all(dataset_minimal$uuid %in% dataset$uuid))
+
+# Merge them
+dataset <- merge(dataset_minimal %>% 
+                        select(all_of(c('uuid', 
+                                        setdiff(colnames(dataset_minimal), 
+                                                colnames(dataset))))),
+                     dataset,
+                     by = 'uuid',
+                     all.x = TRUE,
+                     all.y = TRUE)
+
 # Verify the data is correctly formatted for reports
 source(file.path(getwd(), "04_utils", "00_verify_data.R"))
-#dataset$X_E <- dataset$Z9
-#dataset$X_E[is.na(dataset$X_E)] <- 0
 zz_env <- list('x01' = ls())
 
+
+###############################################################################
+###############################################################################
+###############################################################################
 # Reporting clusters
 source(file.path(getwd(), 
                  "02_citation_network", 
                  "01_execute_and_reports.R"))
 
+###############################################################################
+###############################################################################
+###############################################################################
 # Save code snapshot
 files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
 files_to_omit <- list.files(file.path(getwd(),'renv','library'), full.names = TRUE, recursive = TRUE)

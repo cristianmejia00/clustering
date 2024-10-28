@@ -3,14 +3,10 @@
 ####################################################
 # CITATION NETWORK
 ####################################################
-
-# Special cases: When we need reports on a subset of articles:
-# The object "ABS_criteria_converter" comes from the file "ABS_criteria_converter.Rdata" generated from "02-select subset of ABS articles.R"
-
-# dataset_minimal <- dataset_minimal[ABS_criteria_converter[dataset_minimal$UT],]
-# dataset <- dataset[ABS_criteria_converter[dataset$UT],]
-
-# OR load environment "restart.Rdata" to restart the analysis.
+output_folder_reports <- file.path(settings$metadata$bibliometrics_folder,
+                                   settings$metadata$analysis_id,
+                                   settings$cno$clustering$algorithm,
+                                   settings$cno$thresholding$threshold %>% as.character())
 
 ####################################################
 # Reports
@@ -19,14 +15,18 @@
 time_01_started <- Sys.time()
 
 # Data preparation
-for (level_report_iteration in c(0:settings$params$recursive_level)) {
+for (level_report_iteration in c(0:settings$cno$thresholding$recursive_level)) {
   level_report <<- level_report_iteration
-  print(paste("...Starting reports for level", as.character(level_report), sep = " "))
+  print(paste("...Starting reports for level", 
+              as.character(level_report), 
+              sep = " "))
 
   # Get the level path and create the directory
   output_folder_level <- file.path(
     output_folder_reports,
-    paste("level", as.character(level_report), sep = "")
+    paste("level", 
+          as.character(level_report), 
+          sep = "")
   )
   dir.create(output_folder_level)
 
@@ -63,7 +63,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   K <- length(unique(myDataCorrect$X_C))
 
   # Document report
-  print("Making article summary")
+  print("Article report")
   source("03_reports/01_document_report_with_abstract.R")
   zz_env$x02 <- ls()
 

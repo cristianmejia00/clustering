@@ -88,6 +88,51 @@ for (i in c(1:ncol(dataset))) {
   dataset[,i]  <- as.character(dataset[,i]) %>% enc2utf8() 
 }
 
+
+############################################################################
+############################################################################
+# Appending 
+############################################################################
+############################################################################
+# IDs
+dataset <- dataset %>%
+  mutate(
+    X_N = c(1:n()),
+    uuid = UUIDgenerate(n = n())
+  )
+
+# Countries and Institutions
+
+# Load utils
+source("04_utils/zz_auxiliary_functions.R")
+
+
+# Add Countries column
+if ("C1" %in% colnames(dataset)) {
+    dataset$Countries <- getCountries(dataset$C1)
+    dataset$IsoCountries <- as.character(getIsoCountries(dataset$Countries))
+    dataset$IsoCountries <- gsub("NA; |; NA$", "", dataset$IsoCountries)
+    dataset$IsoCountries <- gsub("; NA", "", dataset$IsoCountries)
+    print("Countries column has been added")
+}
+
+# Add institutions column
+if ("C1" %in% columns(dataset)) {
+  dataset$Institutions <- as.character(getInstitutions(dataset$C1))
+  print("Institutions column has been added")
+}
+
+
+############################################################################
+############################################################################
+# Edits
+############################################################################
+############################################################################
+# Clean abstract
+dataset$AB <- remove_copyright_statements(dataset$AB)
+dataset$AB <- remove_word_counts_line(dataset$AB)
+
+
 ############################################################################
 ############################################################################
 # Filtering ----- COLUMNS
@@ -95,17 +140,6 @@ for (i in c(1:ncol(dataset))) {
 ############################################################################
 dataset <- dataset %>% select(all_of(unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected)))
 
-
-############################################################################
-############################################################################
-# Filtering ----- IDs
-############################################################################
-############################################################################
-dataset <- dataset %>%
-  mutate(
-    X_N = c(1:n()),
-    uuid = UUIDgenerate(n = n())
-  )
 
 ##########################
 # Save the file

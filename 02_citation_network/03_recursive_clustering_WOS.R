@@ -300,10 +300,3 @@ if (settings$cno$thresholding$recursive_level > 0) {
   dataset_minimal$subcluster_label1 <- paste(dataset_minimal$subcluster_label1, "---", sep = "")
   dataset_minimal$subcluster_label2 <- paste(dataset_minimal$subcluster_label2, "--", sep = "")
 }
-
-#. Deal with fukan columns
-if (!settings$cno$using_initial_column_C_from_fukan) {
-  dataset_minimal$fukan_c <- dataset_minimal$X_C
-  dataset_minimal$X_C <- dataset_minimal$level0
-}
-

@@ -22,7 +22,7 @@ myDataCorrect$X_C <- n_cluster_listed[as.character(myDataCorrect$level0)]
 if ('X_C_label' %in% colnames(myDataCorrect)) {
   myDataCorrect$cluster_code <- myDataCorrect$X_C_label
 } else {
-  myDataCorrect$cluster_code <- myDataCorrect$level0
+  myDataCorrect$cluster_code <- myDataCorrect$level0 %>% as.character()
 }
 
 
