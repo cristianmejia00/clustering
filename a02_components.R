@@ -3,16 +3,20 @@ source("000_entry_analysis.R")
 
 ###############################################################################
 # Load input files
-dataset <- readr::read_csv(file.path(root_path_to,
-                                       settings$metadata$dataset_folder,
-                                       settings$metadata$fitered_folder,
-                                       'dataset.csv'))
+dataset <- readr::read_csv(file.path(
+  bibliometrics_folder_path,
+  settings$metadata$dataset_folder,
+  settings$metadata$fitered_folder,
+  "dataset.csv"
+))
 
-network <- readr::read_csv(file.path(root_path_to,
-                                     settings$metadata$dataset_folder,
-                                     settings$metadata$fitered_folder,
-                                     settings$cno$network_type,
-                                     'network.csv'))
+network <- readr::read_csv(file.path(
+  bibliometrics_folder_path,
+  settings$metadata$dataset_folder,
+  settings$metadata$fitered_folder,
+  settings$cno$network_type,
+  "network.csv"
+))
 
 ###############################################################################
 ###############################################################################
@@ -21,22 +25,22 @@ network <- readr::read_csv(file.path(root_path_to,
 reorder_memberships <- function(membership) {
   # Create a table of group sizes
   group_sizes <- table(membership)
-  
+
   # Create a named vector for the mapping
   # Sort group sizes in descending order and get original group numbers
   size_order <- order(group_sizes, decreasing = TRUE)
-  
+
   # Create mapping from old to new membership numbers
   mapping <- seq_along(group_sizes)
   names(mapping) <- names(group_sizes)[size_order]
-  
+
   # Apply the mapping to the original membership vector
   new_membership <- mapping[as.character(membership)]
-  
+
   return(new_membership)
 }
 
-# Component selection 
+# Component selection
 # Create the network object and retain the largest component
 g1 <- graph_from_data_frame(network, directed = TRUE)
 
@@ -47,29 +51,33 @@ components_sizes <- table(components_membership$new_membership)
 components_available <- length(components_sizes)
 
 # Get components df
-components_df <- data.frame("node_ids" = c(1:length(components_membership$new_membership)),
-                            "X_N" = V(g1) %>% names() %>% as.numeric(),
-                            "component" = components_membership$new_membership)
+components_df <- data.frame(
+  "node_ids" = c(1:length(components_membership$new_membership)),
+  "X_N" = V(g1) %>% names() %>% as.numeric(),
+  "component" = components_membership$new_membership
+)
 
 # Get the network based on strategy
-if (settings$cno$component$strategy == 'top') {
+if (settings$cno$component$strategy == "top") {
   valid_nodes <- which(components_df$component <= settings$cno$component$value)
   g_valid <- subgraph(g1, valid_nodes)
 }
 
-if (settings$cno$component$strategy == 'component') {
+if (settings$cno$component$strategy == "component") {
   valid_nodes <- which(components_df$component == settings$cno$component$value)
   g_valid <- subgraph(g1, valid_nodes)
 }
 
 
-if (settings$cno$component$strategy == 'min_vertices') {
-  valid_components <- components_sizes[components_sizes > settings$cno$component$value] %>% names() %>% as.integer()
+if (settings$cno$component$strategy == "min_vertices") {
+  valid_components <- components_sizes[components_sizes > settings$cno$component$value] %>%
+    names() %>%
+    as.integer()
   valid_nodes <- which(components_df$component == valid_components)
   g_valid <- subgraph(g1, valid_nodes)
 }
 
-if (settings$cno$component$strategy == 'all') {
+if (settings$cno$component$strategy == "all") {
   g_valid <- g1
 }
 
@@ -81,7 +89,7 @@ valid_vertices <- V(g_valid) %>%
   as.numeric()
 
 # Backups
-dataset_backup <- dataset #backup
+dataset_backup <- dataset # backup
 network_backup <- network
 
 # Save orphans
@@ -89,43 +97,49 @@ orphans <- dataset %>% filter(!(X_N %in% valid_vertices))
 
 # Order dataset to the order of nodes in the network
 dataset <- dataset %>% filter(X_N %in% valid_vertices)
-dataset <- dataset[match(valid_vertices, dataset$X_N),]
+dataset <- dataset[match(valid_vertices, dataset$X_N), ]
 
 # Filter the network to have only nodes in the selected network
-network <- network[network$V1 %in% valid_vertices,]
-network <- network[network$V2 %in% valid_vertices,]
+network <- network[network$V1 %in% valid_vertices, ]
+network <- network[network$V2 %in% valid_vertices, ]
 
 
-#ttt1 <- graph_from_data_frame(network, directed = FALSE)
-#ttt2 <- graph_from_data_frame(network, directed = FALSE)
+# ttt1 <- graph_from_data_frame(network, directed = FALSE)
+# ttt2 <- graph_from_data_frame(network, directed = FALSE)
 
 ###############################################################################
 ###############################################################################
 ###############################################################################
 # Save the file
 # From the pov of this very code, this is actually the output folder. Where the files generated by this code will be placed.
-results_folder_path <- file.path(settings$metadata$bibliometrics_folder,
-                                 settings$metadata$analysis_id)
+results_folder_path <- file.path(
+  settings$metadata$bibliometrics_folder,
+  settings$metadata$analysis_id
+)
 
 # Write the dataset
-write.csv(dataset, 
-          file = file.path(results_folder_path, "dataset.csv"), 
-          row.names = FALSE)
+write.csv(dataset,
+  file = file.path(results_folder_path, "dataset.csv"),
+  row.names = FALSE
+)
 
 # Write orphans
-write.csv(orphans, 
-          file = file.path(results_folder_path, "orphans.csv"), 
-          row.names = FALSE)
+write.csv(orphans,
+  file = file.path(results_folder_path, "orphans.csv"),
+  row.names = FALSE
+)
 
 # Write Network
-write.csv(network, 
-          file = file.path(results_folder_path, "network.csv"), 
-          row.names = FALSE)
+write.csv(network,
+  file = file.path(results_folder_path, "network.csv"),
+  row.names = FALSE
+)
 
 # Write Components
-write.csv(components_df, 
-          file = file.path(results_folder_path, "components.csv"), 
-          row.names = FALSE)
+write.csv(components_df,
+  file = file.path(results_folder_path, "components.csv"),
+  row.names = FALSE
+)
 
 # The components settings and info
 settings_save <- list(
@@ -133,10 +147,13 @@ settings_save <- list(
   components_found = components_available,
   components_sizes = components_sizes
 )
-writeLines(RJSONIO::toJSON(settings_save, 
-                           pretty = TRUE,
-                           auto_unbox = TRUE),
-           file.path(results_folder_path, "component_settings.json"))
+writeLines(
+  RJSONIO::toJSON(settings_save,
+    pretty = TRUE,
+    auto_unbox = TRUE
+  ),
+  file.path(results_folder_path, "component_settings.json")
+)
 
 
 rm(list = ls())

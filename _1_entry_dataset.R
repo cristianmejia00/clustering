@@ -1,4 +1,4 @@
-#==============================================================================
+# ==============================================================================
 # The folder and settings_directive file
 dataset_folder_name <- "Q311_innovativeness"
 settings_directive <- "settings_directive_2024-10-27-22-16.json"
@@ -10,7 +10,11 @@ source("04_utils/00_system_paths.R")
 
 ###############################################################################
 # Load the directive file
-settings <- RJSONIO::fromJSON(file.path(root_path_to, 
-                                        dataset_folder_name,
-                                        settings_directive), 
-                              simplify = FALSE)
+settings <- RJSONIO::fromJSON(
+    file.path(
+        bibliometrics_folder_path,
+        dataset_folder_name,
+        settings_directive
+    ),
+    simplify = FALSE
+)
