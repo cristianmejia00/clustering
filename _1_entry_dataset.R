@@ -1,7 +1,7 @@
 # ==============================================================================
 # The folder and settings_directive file
-dataset_folder_name <- "Q311_innovativeness"
-settings_directive <- "settings_directive_2024-10-27-22-16.json"
+project_folder_name <- "Q310_innovation"
+settings_directive <- "settings_dataset_directive_2024-10-31-16-56.json"
 
 ###############################################################################
 # Call necessary libraries
@@ -13,7 +13,7 @@ source("04_utils/00_system_paths.R")
 settings <- RJSONIO::fromJSON(
     file.path(
         bibliometrics_folder_path,
-        dataset_folder_name,
+        project_folder_name,
         settings_directive
     ),
     simplify = FALSE

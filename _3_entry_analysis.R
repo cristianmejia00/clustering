@@ -1,7 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-analysis_folder_name <- "Q311_a01_f001_cn_dc_c0_lv"
-settings_directive <- "settings_analysis_directive_2024-10-28-21-47.json"
+project_folder_name = "Q282b_riken_com"
+analysis_folder_name <- "a01_tm__f01_e01__km01"
+settings_directive <- "settings_analysis_directive_2024-11-01-16-49.json"
 
 ###############################################################################
 # Call necessary libraries
@@ -13,6 +14,7 @@ source("04_utils/00_system_paths.R")
 settings <- RJSONIO::fromJSON(
     file.path(
         bibliometrics_folder_path,
+        project_folder_name,
         analysis_folder_name,
         settings_directive
     ),

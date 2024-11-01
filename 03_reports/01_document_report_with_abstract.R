@@ -29,7 +29,7 @@ convert_doi_to_url <- function(a_list_of_DOI) {
 potential_columns <- c(
   "X_C", "cluster_code",
   "topic", "related_topics", "TD",
-  "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "sentiment", "sentiment_factor", "UT",
+  "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "sentiment", "sentiment_factor", "UT", "uuid",
   "global_degree", "global_in_degree", "global_page_rank"
 )
 

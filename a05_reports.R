@@ -6,16 +6,39 @@
 source("_3_entry_analysis.R")
 
 ###############################################################################
-# Load data
-dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
-                                             settings$metadata$analysis_id, 
-                                             "dataset.csv"))
+# Load raw dataset
 
-dataset_minimal <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
-                                             settings$metadata$analysis_id, 
-                                             settings$cno$clustering$algorithm,
-                                             settings$cno$thresholding$threshold %>% as.character(),
-                                             "dataset_minimal.csv"))
+# Citation network assets
+if (settings$params$type_of_analysis %in% c("citation_network")) {
+  dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
+                                       settings$metadata$project_folder,
+                                       settings$metadata$analysis_id, 
+                                       "dataset_comp.csv"))
+  
+  # Load the clustering solution once thresholded
+  dataset_minimal <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
+                                               settings$metadata$project_folder,
+                                               settings$metadata$analysis_id, 
+                                               settings$cno$clustering$algorithm,
+                                               settings$cno$thresholding$threshold %>% as.character(),
+                                               "dataset_minimal.csv"))
+}
+
+# Topic Model
+if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
+  dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
+                                       settings$metadata$project_folder,
+                                       settings$metadata$filtered_folder, 
+                                       #dataset_filtered.csv
+                                       "dataset.csv"))
+  
+  # Load the clustering solution once thresholded
+  dataset_minimal <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
+                                               settings$metadata$project_folder,
+                                               settings$metadata$analysis_id,
+                                               "dataset_minimal.csv"))
+}
+
 
 # Ensure we have all the papers in the network
 stopifnot(all(dataset_minimal$uuid %in% dataset$uuid))

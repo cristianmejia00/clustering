@@ -6,23 +6,23 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q311_innovativeness/innovativeness framework",
+  raw_input_folder_name = "Q310_innovation/innovation_framework",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  dataset_folder = "Q311_innovativeness",
+  project_folder = "Q310_innovation",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2024-10-24",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2024-10-31",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Yousif - innovativeness framework',
+  query = 'Yousif - innovation framework',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "Innovativeness Framework",
-  dataset_file_name_suffix = "innovs", #suffix is used for file names
+  dataset_name = "Innovation Framework",
+  dataset_file_name_suffix = "innovn", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
   notes = "Yousif project"
@@ -30,7 +30,7 @@ settings$metadata <- list(
 
 ## Dataset General Parameters
 settings$filtering = list(
-  "f001" = list(
+  "f01" = list(
     rows_filter = list(
       removed_duplicated_UT = TRUE,
       most_recent_year = format(Sys.Date(), "%Y")
@@ -49,10 +49,10 @@ settings$embeds <- list(
   get_embeds = TRUE,
   
   # The filtered label
-  from_filtered_dataset = "f001",
+  from_filtered_dataset = "f01",
   
   # Embeds parameters
-  "e001" = list(
+  "e01" = list(
     # The text columns to combine to form the corpus
     text_columns = c("TI", "AB"),
     
@@ -81,7 +81,7 @@ settings$network <- list(
   get_network = TRUE,
   
   # The filtered label
-  from_filtered_dataset = "f001",
+  from_filtered_dataset = "f01",
   
   # Type of network
   network_type = "direct_citation", # "direct_citation", "bibliographic_coupling", "co-citation"
@@ -94,7 +94,7 @@ settings$network <- list(
 
 ###############################################################################
 settings_file_path = file.path(settings$metadata$bibliometrics_directory, 
-                               settings$metadata$dataset_folder,
+                               settings$metadata$project_folder,
                                paste("settings_dataset_directive_",
                                      format(Sys.time(), "%Y-%m-%d-%H-%M"),
                                      ".json",

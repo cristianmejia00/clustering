@@ -8,18 +8,18 @@ settings <- list()
 ## Metadata
 settings$metadata <- list(
   # Directory path
-  bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  dataset_folder = "Q311_innovativeness",
-  fitered_folder = "f001",
-  analysis_id = "Q311_a01_f001_cn_dc_c0_lv"
+  bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
+  project_folder = "Q282b_riken_com",
+  filtered_folder = "f01",
+  analysis_id = "a01_tm__f01_e01__km01"
 )
 
 
 ## General Parameters
 settings$params <- list(
-  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+  recursive_level = 0, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
-  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
+  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
   type_of_analysis = "both", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
@@ -32,32 +32,32 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
     # Shall we use the network file from Fukan System (i.e. mission.pairs.tsv is available)
     # if False, we create our own network file from scratch.
     using_mission_pairs_from_fukan = FALSE,
-    
+
     # Shall we use the initial clustering solution from Fukan System?
     # If TRUE, we use the column "_C" in mission.facet.all, and hence we can use the figure from Fukan System
     # If FALSE, we compute a new "_C" column based on the algorithm of choice.
     using_initial_column_C_from_fukan = FALSE,
-    
+
     # Type of network
     network_type = "direct_citation",
-    
+
     # The component subsetting
     # By default we take the largets comp
-    # 'all' = everything 
+    # 'all' = everything
     # 'top' = The top n components by size
     # 'component' = Only the selected component
     # 'min_vertices' = The min size of vertex in comp to be considered. For example value = 2, will remove all floating isolated nodes.
     component = list(
-      strategy = 'top',
+      strategy = "top",
       value = 1
     ),
-    
+
     # Clustering
     clustering = list(
       algorithm = "louvain" # "louvain", OR "newman" OR "infomap"
     ),
 
-    # Thresholding. 
+    # Thresholding.
     # i.e. Creation of the `dataset_minimal`. Recursive clustering and aggregation of small clusters
 
     thresholding = list(
@@ -65,26 +65,26 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
       # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
       # - Number of cluster to consider from the Fukan System solution (1+)
       threshold = 0.95,
-      
+
       # Top max clusters to analyze per iteration
-      max_clusters = 1000, #When clustering level 0 has more than 100 clusters pick a large number
-      
+      max_clusters = 1000, # When clustering level 0 has more than 100 clusters pick a large number
+
       # Cluster scope
       scope = "all", # "all" OR "cl99" OR "cl_99"
-      
+
       ### Options for clustering or recursive clustering.
       ### The following options are useful for any of these conditions
       ### - We want recursive clustering
       ### - we want clustering at level0, either because:
       ###   - we don't want to use Fukan System X_C
       ###   - We have a WOS dataset without X_C
-      
+
       # Subcluster only if having this or more
       size_limit = 350,
-      
+
       # Include cluster having collecting a minimum of __ articles
       size_lower_limit = 30,
-      
+
       # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
       remove_zero = FALSE
     )
@@ -95,12 +95,15 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
 ## Topic Model options
 if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
   settings$tmo <- list(
+    # embeds to use within filtered folder
+    embeds_folder = 'e01',
+    
     # The integer column with the Year of publication
     year_column = "PY",
-    
+
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 0,
-    
+    n_topics = 33,
+
     # The minimum size for a topic
     min_topic_size = 30
   )
@@ -117,10 +120,10 @@ settings$addons <- list(
   "sentiment_analysis" = FALSE
 )
 
-########################################################### 
+###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" =  "patent analysis of agriculture machinery",
+  "theme" = "patent analysis of agriculture machinery",
   "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
@@ -132,23 +135,24 @@ settings$rp <- list(
   top_documents = 0, # 0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze
-  article_report_columns = list('X_C','cluster_code','AU','PY','DI','TI','AB','Z9','X_E','DE','SO','WC','Countries','UT', 'sentiment', 'sentiment_factor'),
+  article_report_columns = list("X_C", "cluster_code", "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "UT", "sentiment", "sentiment_factor"),
   categorical_long_reports = list("AU", "WC", "SO", "Countries", "Institutions", "DE", "sentiment_factor", "ID", "issues"), # Columns in the dataset for long-form summary. These are also used for RCS.
   categorical_simple_wide_reports = list("PY", "sentiment_factor"), # Columns in the dataset without ';' for matrix type summary
   categorical_multi_wide_reports = list("WC", "Countries", "Institutions", "issues"), # Columns in the dataset with ';' for matrix type summary
   numerical_reports = list("PY", "Z9", "sentiment", "score") # Numeric columns in the dataset for summary (min, max, mean, median, sd)
-  #methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
+  # methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
 )
 
 # Column labels are used to format RCS columns and charts' labels
-if (settings$params$dataset_source == 'wos') {
+if (settings$params$dataset_source == "wos") {
   settings$rp$column_labels <- list(
-    "X_C" = "Cluster",
+    "X_C" = "Cluster Index",
+    "cluster_code" = "Cluster Code",
     "TI" = "Title",
     "AB" = "Abstract",
     "AU" = "Authors",
     "PY" = "Publication Years",
-    "X_E" = "Degree", 
+    "X_E" = "Degree",
     "SO" = "Journals",
     "Countries" = "Countries",
     "Institutions" = "Institutions",
@@ -164,14 +168,14 @@ if (settings$params$dataset_source == 'wos') {
   )
 }
 
-if (settings$params$dataset_source == 'derwent') {
-  settings$rp$column_labels <-list(
+if (settings$params$dataset_source == "derwent") {
+  settings$rp$column_labels <- list(
     "X_C" = "Cluster",
     "TI" = "Title",
     "AB" = "Abstract",
     "AU" = "Inventors",
     "PY" = "Publication Years",
-    "X_E" = "Degree", 
+    "X_E" = "Degree",
     "SO" = "Firms",
     "Countries" = "Countries",
     "Institutions" = "Asignees",
@@ -180,24 +184,24 @@ if (settings$params$dataset_source == 'derwent') {
     "DE" = "Author Keywords",
     "Z9" = "Citations",
     "score" = "Score",
-    #"sentiment" = "Sentiment score",
-    #"sentiment_factor" = "Sentiment",
+    # "sentiment" = "Sentiment score",
+    # "sentiment_factor" = "Sentiment",
     "UT" = "Patent Number"
   )
 }
 
-if (settings$params$dataset_source == 'factiva') {
+if (settings$params$dataset_source == "factiva") {
   settings$rp$column_labels <- list(
     "X_C" = "Cluster",
     "TI" = "Headline",
     "AB" = "Main paragraph",
-    "X_E" = "Score", 
+    "X_E" = "Score",
     "PY" = "Publication Years",
     "SO" = "Newspapers",
     "AU" = "Factiva Types",
     "Countries" = "Regions",
     "Institutions" = "Entities",
-    #"WC" = "Categories",
+    # "WC" = "Categories",
     "DE" = "Categories",
     "ID" = "Entities",
     "score" = "Score",
@@ -246,21 +250,28 @@ settings$stopwords$myStopWords <- list(
 
 ###############################################################################
 # In the case of the analysis settings we must create the directory first.
-ana_lysis_results_folder_path <- file.path(settings$metadata$bibliometrics_folder,
-                                           settings$metadata$analysis_id)
+ana_lysis_results_folder_path <- file.path(
+  settings$metadata$bibliometrics_folder,
+  settings$metadata$project_folder,
+  settings$metadata$analysis_id
+)
 dir.create(ana_lysis_results_folder_path, showWarnings = FALSE)
 
 # Save the analysis directive
-settings_file_path = file.path(ana_lysis_results_folder_path,
-                               paste("settings_analysis_directive_",
-                                     format(Sys.time(), "%Y-%m-%d-%H-%M"),
-                                     ".json",
-                                     sep = ""))
+settings_file_path <- file.path(
+  ana_lysis_results_folder_path,
+  paste("settings_analysis_directive_",
+    format(Sys.time(), "%Y-%m-%d-%H-%M"),
+    ".json",
+    sep = ""
+  )
+)
 
 # Save readable settings
-writeLines(RJSONIO::toJSON(settings, pretty=TRUE, auto_unbox=TRUE), 
-           settings_file_path)
+writeLines(
+  RJSONIO::toJSON(settings, pretty = TRUE, auto_unbox = TRUE),
+  settings_file_path
+)
 
 # Print to console
 settings_file_path
-

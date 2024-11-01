@@ -3,12 +3,24 @@
 ####################################################
 # CITATION NETWORK
 ####################################################
-output_folder_reports <- file.path(
-  settings$metadata$bibliometrics_folder,
-  settings$metadata$analysis_id,
-  settings$cno$clustering$algorithm,
-  settings$cno$thresholding$threshold %>% as.character()
-)
+if (settings$params$type_of_analysis == 'citation_network') {
+  output_folder_reports <- file.path(
+    settings$metadata$bibliometrics_folder,
+    settings$metadata$project_folder,
+    settings$metadata$analysis_id,
+    settings$cno$clustering$algorithm,
+    settings$cno$thresholding$threshold %>% as.character()
+  )
+}
+
+settings$params$type_of_analysis <- 'topic_model'
+if (settings$params$type_of_analysis == 'topic_model') {
+  output_folder_reports <- file.path(
+    settings$metadata$bibliometrics_folder,
+    settings$metadata$project_folder,
+    settings$metadata$analysis_id
+  )
+}
 
 ####################################################
 # Reports
