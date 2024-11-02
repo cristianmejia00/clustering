@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q282b_riken_com"
+project_folder_name = "Q312_utokyo"
 analysis_folder_name <- "a01_tm__f01_e01__km01"
-settings_directive <- "settings_analysis_directive_2024-11-01-16-49.json"
+settings_directive <- "settings_analysis_directive_2024-11-02-15-36.json"
 
 ###############################################################################
 # Call necessary libraries

@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q282b_riken_com",
+  project_folder = "Q312_utokyo",
   filtered_folder = "f01",
   analysis_id = "a01_tm__f01_e01__km01"
 )
@@ -20,7 +20,7 @@ settings$params <- list(
   recursive_level = 0, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
   unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "both", # "topic_model", "citation_network", or "both"
+  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -102,7 +102,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 33,
+    n_topics = 112,
 
     # The minimum size for a topic
     min_topic_size = 30
@@ -123,8 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "patent analysis of agriculture machinery",
-  "description" = "the mechanical structures and devices used in farming or other agriculture. There are many types of such equipment, from hand tools and power tools to tractors and the countless kinds of farm implements that they tow or operate.",
+  "theme" = "the university of tokyo",
+  "description" = "the public and largest university in Tokyo, Japan",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

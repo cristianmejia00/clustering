@@ -1,7 +1,7 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name <- "Q310_innovation"
-settings_directive <- "settings_dataset_directive_2024-10-31-16-56.json"
+project_folder_name <- "Q312_utokyo"
+settings_directive <- "settings_dataset_directive_2024-11-02-14-59.json"
 
 ###############################################################################
 # Call necessary libraries

@@ -6,26 +6,26 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q310_innovation/innovation_framework",
+  raw_input_folder_name = "Q312_utokyo",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q310_innovation",
+  project_folder = "Q312_utokyo",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2024-10-31",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2024-11-02",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Yousif - innovation framework',
+  query = 'the university of tokyo papers',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "Innovation Framework",
-  dataset_file_name_suffix = "innovn", #suffix is used for file names
+  dataset_name = "UTokyo",
+  dataset_file_name_suffix = "utokyo", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Yousif project"
+  notes = "PIK RIKEN project. As bridge topic"
 )
 
 ## Dataset General Parameters
@@ -93,6 +93,10 @@ settings$network <- list(
 
 
 ###############################################################################
+project_folder_path <- file.path(settings$metadata$bibliometrics_directory, 
+                                  settings$metadata$project_folder)
+dir.create(project_folder_path, showWarnings = FALSE)
+
 settings_file_path = file.path(settings$metadata$bibliometrics_directory, 
                                settings$metadata$project_folder,
                                paste("settings_dataset_directive_",

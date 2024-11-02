@@ -123,7 +123,12 @@ growth_finder <- function(a_prop_matrix, a_range) {
 # By best speed use proportions, by best amount of publication use frequencies
 # By comparing the growing rate of the last 4 years "growth_rate" = growth_rate
 cluster_year_proportions <- read.csv(file.path(output_folder_level, "report_PY_proportions.csv"))
-rcs$growth_rate <- growth_finder(cluster_year_proportions, 4)
+if ((max(myDataCorrect$PY, na.rm = TRUE) - min(myDataCorrect$PY, na.rm = TRUE)) > 4) {
+  rcs$growth_rate <- growth_finder(cluster_year_proportions, 4)
+} else {
+  rcs$growth_rate <- 0
+}
+
 
 # Write RCS
 write.csv(rcs, file = rn$PROJECTrcs, row.names = FALSE)

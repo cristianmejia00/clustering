@@ -97,7 +97,7 @@ rm('columns_in_myDataCorrect')
 # Filter to the top_documents of each cluster
 if (settings$rp$top_documents == 0) {
   article_report_20 <- article_report %>%
-    group_by(Cluster) %>%
+    group_by(`Cluster Code`) %>%
     top_n(20, Degree)
 }
 

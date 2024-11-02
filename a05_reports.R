@@ -29,8 +29,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
   dataset <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
                                        settings$metadata$project_folder,
                                        settings$metadata$filtered_folder, 
-                                       #dataset_filtered.csv
-                                       "dataset.csv"))
+                                       "dataset_raw_cleaned.csv"))
   
   # Load the clustering solution once thresholded
   dataset_minimal <- readr::read_csv(file.path(settings$metadata$bibliometrics_folder,
@@ -41,6 +40,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
 
 
 # Ensure we have all the papers in the network
+dataset_minimal$uuid <- dataset$uuid[match(dataset_minimal$UT, dataset$UT)]
 stopifnot(all(dataset_minimal$uuid %in% dataset$uuid))
 
 # Merge them
