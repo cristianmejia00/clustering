@@ -1,6 +1,9 @@
 # 20181206 Cluster summaries
 print("###################### reports/04_cluster_reports.R")
 
+# Load utils
+source("04_utils/zz_auxiliary_functions.R")
+
 # INPUT
 list_of_clusters <- myDataCorrect$X_C %>%
                     unique() %>%
@@ -8,10 +11,10 @@ list_of_clusters <- myDataCorrect$X_C %>%
 available_columns <- colnames(myDataCorrect)
 
 ## Check the columns that are actually available
-categorical_long_reports <- settings$rp$categorical_long_reports %>% .[. %in% available_columns]
-categorical_simple_wide_reports <- settings$rp$categorical_simple_wide_reports %>% .[. %in% available_columns]
-categorical_multi_wide_reports <- settings$rp$categorical_multi_wide_reports %>% .[. %in% available_columns]
-numerical_reports <- settings$rp$numerical_reports %>% .[. %in% available_columns]
+categorical_long_reports <- settings$rp$categorical_long_reports %>% unlist() %>% .[. %in% available_columns]
+categorical_simple_wide_reports <- settings$rp$categorical_simple_wide_reports %>% unlist() %>% .[. %in% available_columns]
+categorical_multi_wide_reports <- settings$rp$categorical_multi_wide_reports %>% unlist() %>% .[. %in% available_columns]
+numerical_reports <- settings$rp$numerical_reports %>% unlist() %>% .[. %in% available_columns]
 
 
 ## DEFINITIONS

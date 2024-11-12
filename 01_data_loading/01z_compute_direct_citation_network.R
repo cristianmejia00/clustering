@@ -1,11 +1,5 @@
-# Create a direct citation network using WOS datasets
-library(plyr)
-library(dplyr)
-library(stringr)
-library(igraph)
+# Create a direct citation network `ncol` file from WOS datasets
 
-# Track time
-st <- Sys.time()
 
 # Add a custom identifier to those articles without UT
 blank_ut_index <- which(dataset$UT == "")
@@ -13,9 +7,6 @@ if (length(blank_ut_index) > 0 ){
   custom_id <- paste("wos:ccc", c(1:length(blank_ut_index)), sep = "")
   dataset$UT[blank_ut_index] <- custom_id
 }
-
-# Add index column like in the Fukan System
-dataset$"X_N" <- c(1:nrow(dataset))
 
 # Transform each article in the dataset to the "record" format:
 # Author, Year, Publication name, vol, page, DOI
@@ -112,35 +103,5 @@ ncol_file <- cbind(as.character(references_df$article_index),
 # As data frame
 network <- ncol_file %>% as.data.frame()
 
-# Create the network object and retain the largest component
-g1 <- graph_from_data_frame(network, directed = FALSE)
-ggt <- decompose(g1, min.vertices = 100)
-ttt <- sapply(ggt, vcount) %>% which.max()
-g1 <- ggt[[ttt]]
 
-# Valid ids are those in the largest component, else are orphans
-valid_vertices <- V(g1) %>%
-  names() %>%
-  as.numeric()
 
-dataset_original <- dataset #backup
-orphans <- dataset[which(!dataset$X_N %in% valid_vertices), ]
-dataset <- dataset[which(dataset$X_N %in% valid_vertices), ]
-
-ttt1 <- graph_from_data_frame(network, directed = FALSE)
-network_backup <- network
-
-network <- network[network$V1 %in% valid_vertices,]
-network <- network[network$V2 %in% valid_vertices,]
-ttt2 <- graph_from_data_frame(network, directed = FALSE)
-
-# Order dataset to the order of nodes in the network
-dataset <- dataset[match(valid_vertices, dataset$X_N), ]
-
-# add missing columns from Fukan
-dataset$X_D <- degree(g1, mode = "in")
-dataset$X_E <- degree(g1, mode = "all")
-dataset$X_C <- 9999
-
-# Check time
-Sys.time() - st

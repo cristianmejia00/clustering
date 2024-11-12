@@ -24,20 +24,31 @@ convert_doi_to_url <- function(a_list_of_DOI) {
   })
 }
 
-
 # Find which colnames exist.
 # This define which columns and in which order they will appear in the article report
+potential_columns <- c(
+  "X_C", "cluster_code",
+  "topic", "related_topics", "TD",
+  "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "sentiment", "sentiment_factor", "UT", "uuid",
+  "global_degree", "global_in_degree", "global_page_rank"
+)
+
+if (level_report == 0) {
+  potential_columns <- c(potential_columns, "level0_page_rank",  "level0_degree", "level0_in_degree" )
+}
+
+if (level_report == 1) {
+  potential_columns <- c(potential_columns, "level1_page_rank",  "level1_degree", "level1_in_degree" )
+}
+
+# Retain what's available
 columns_in_myDataCorrect <- intersect(
-  c(
-    "X_C", "cluster_code",
-    "topic", "related_topics", "TD",
-    "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "sentiment", "sentiment_factor", "Page_Rank", "Eigen", "Closeness", "Betweenness", "UT"
-  ),
+  potential_columns,
   colnames(myDataCorrect)
 )
 
 # Create the file
-article_report <- myDataCorrect[, columns_in_myDataCorrect]
+article_report <- myDataCorrect %>% select(all_of(columns_in_myDataCorrect))
 
 ## Format columns
 # Format DOI
@@ -71,9 +82,8 @@ article_report <- article_report[order(article_report$X_C,
 # Change colnames to natural names
 setnames(article_report, 
          names(settings$rp$column_labels), 
-         unname(settings$rp$column_labels), 
+         unname(settings$rp$column_labels) %>% unlist(), 
          skip_absent = TRUE)
-
 
 
 # Write the article report
@@ -87,7 +97,7 @@ rm('columns_in_myDataCorrect')
 # Filter to the top_documents of each cluster
 if (settings$rp$top_documents == 0) {
   article_report_20 <- article_report %>%
-    group_by(Cluster) %>%
+    group_by(`Cluster Code`) %>%
     top_n(20, Degree)
 }
 
