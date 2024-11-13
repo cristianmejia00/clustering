@@ -148,9 +148,9 @@ get_cluster_data <- function(dataset_, cluster_, top = 5) {
       # Most connected
       cluster_data$UT[order(cluster_data$X_E, decreasing = TRUE)][1:top],
       # Most cited
-      cluster_data$UT[order(cluster_data$Z9, decreasing = TRUE)][1:top],
+      cluster_data$UT[order(cluster_data$Z9, decreasing = TRUE)][1:top]#,
       # Newest most connected (X_E is preferred over Z9 because most of paper wont have citations)
-      cluster_data$UT[order(cluster_data$PY, cluster_data$X_E, decreasing = TRUE)][1:top]
+      #cluster_data$UT[order(cluster_data$PY, cluster_data$X_E, decreasing = TRUE)][1:top]
     ) %>% unique()
     # Only retain selected papers
     cluster_data <- cluster_data[cluster_data$UT %in% selected_papers,]

@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q315_TI_sustainability_10years",
+  project_folder = "Q316_TI_quality_of_life_10years",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
@@ -64,7 +64,7 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
       # Either...
       # - Proportion of articles that determines the number of level0 clusters (<1)(e.g. #largest clusters contain 90%, 0.9, of articles )
       # - Number of cluster to consider from the Fukan System solution (1+)
-      threshold = 0.95,
+      threshold = 0.90,
 
       # Top max clusters to analyze per iteration
       max_clusters = 1000, # When clustering level 0 has more than 100 clusters pick a large number
@@ -83,7 +83,7 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
       size_limit = 350,
 
       # Include cluster having collecting a minimum of __ articles
-      size_lower_limit = 30,
+      size_lower_limit = 50,
 
       # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
       remove_zero = FALSE
@@ -123,8 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Sustainability",
-  "description" = "is the balance between the environment, equity, and economy. It's about supporting ecological, human, and economic health and vitality.",
+  "theme" = "Quality of Life",
+  "description" = "a person's subjective evaluation of their life in relation to their goals, expectations, and concerns. It's influenced by their culture, value system, and perceptions of important aspects of life",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

@@ -9,11 +9,11 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q315_TI_sustainability_10years",
+  raw_input_folder_name = "Q316_TI_quality_of_life_10years",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q315_TI_sustainability_10years",
+  project_folder = "Q316_TI_quality_of_life_10years",
   
   # Analysis ID (the date + number is the label of this analysis)
   date_id = "2024-11-13",#format(Sys.Date(), "%Y-%m-%d"),

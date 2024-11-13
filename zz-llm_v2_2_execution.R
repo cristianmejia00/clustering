@@ -16,6 +16,7 @@ rcs_merged$description <- ''
 rcs_merged$name <- ''
 
 dataset$summary <- ''
+dataset$X_E <- dataset$level0_in_degree
 dataset$X_C_backup <- dataset$X_C
 dataset$X_C <- dataset$subcluster_label1 %>% as.character()
 
@@ -61,10 +62,7 @@ for (i in c(1:nrow(oldest_data))) {
 ###################################
 # Cluster description and name
 ###################################
-
-
-
-for (cluster_code in list_of_cluster_codes[4:257]) {
+for (cluster_code in list_of_cluster_codes) {
   # Get this cluster tops
   print('=================================================================')
   print(glue('cluster: {cluster_code}'))
@@ -106,7 +104,7 @@ for (cluster_code in list_of_cluster_codes[4:257]) {
                                         user_prompt = prompt_desc$user,
                                         temperature = 0.2)
       cluster_completed <- TRUE
-      print(cluster_description)
+      #print(cluster_description)
     }, 
     error = function(err){
       message(glue('Error getting topic description of cluster {cluster}. Trying again'))
@@ -192,5 +190,5 @@ write.csv(rcs_merged,
             "rcs_merged_llm.csv"),
           row.names = FALSE)
 
-save.image(file = "env20240930_core_llm_completed")
+#save.image(file = "env20241113_Q317_l1_llm_completed.Rdata")
 

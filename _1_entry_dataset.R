@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q315_TI_sustainability_10years"
-settings_directive <- "settings_dataset_directive_2024-11-13-10-04.json"
+project_folder_name <- "Q316_TI_quality_of_life_10years"
+settings_directive <- "settings_dataset_directive_2024-11-13-18-21.json"
 
 ###############################################################################
 # Call necessary libraries

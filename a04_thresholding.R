@@ -58,4 +58,12 @@ writeLines(RJSONIO::toJSON(settings$cno$thresholding,
                            auto_unbox = TRUE),
            file.path(results_folder_path, "threshold_settings.json"))
 
+# Print info to the console:
+print(dataset_minimal$level0 %>% unique() %>% sort())
+print(glue("Clusters: {dataset_minimal$level0 %>% unique() %>% length()}"))
+
+print(dataset_minimal$subcluster_label1 %>% unique() %>% sort())
+print(glue("Clusters: {dataset_minimal$subcluster_label1 %>% unique() %>% length()}"))
+
+# Clean
 rm(list = ls())
