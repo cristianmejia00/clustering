@@ -9,18 +9,18 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q312_utokyo",
+  project_folder = "Q315_TI_sustainability_10years",
   filtered_folder = "f01",
-  analysis_id = "a01_tm__f01_e01__km01"
+  analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
 
 
 ## General Parameters
 settings$params <- list(
-  recursive_level = 0, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
-  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
+  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -123,8 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "the university of tokyo",
-  "description" = "the public and largest university in Tokyo, Japan",
+  "theme" = "Sustainability",
+  "description" = "is the balance between the environment, equity, and economy. It's about supporting ecological, human, and economic health and vitality.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

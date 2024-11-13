@@ -1,4 +1,7 @@
 # Settings file
+# Update the settings and run the file. 
+# This creates directory in the GDrive bibliometrics folder and JSON file inside it
+# With the directive for creating the dataset.
 
 settings <- list()
 
@@ -6,14 +9,14 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q312_utokyo",
+  raw_input_folder_name = "Q315_TI_sustainability_10years",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q312_utokyo",
+  project_folder = "Q315_TI_sustainability_10years",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2024-11-02",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2024-11-13",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
   query = 'the university of tokyo papers',
@@ -25,7 +28,7 @@ settings$metadata <- list(
   dataset_file_name_suffix = "utokyo", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "PIK RIKEN project. As bridge topic"
+  notes = "Mitsubishi Project"
 )
 
 ## Dataset General Parameters
@@ -57,8 +60,8 @@ settings$embeds <- list(
     text_columns = c("TI", "AB"),
     
     # Text preparation
-    to_lowercase = TRUE,
-    remove_stopwords = TRUE,
+    to_lowercase = FALSE,
+    remove_stopwords = FALSE,
     remove_numbers = FALSE,
     remove_symbols = FALSE,
     stemming = FALSE,

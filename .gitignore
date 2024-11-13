@@ -8,3 +8,4 @@
 *.RData
 .RdataTmp
 .Ruserdata
+env-tm*

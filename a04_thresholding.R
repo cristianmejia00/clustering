@@ -10,7 +10,7 @@ analysis_folder_path <- file.path(settings$metadata$bibliometrics_folder,
                                   settings$metadata$project_folder,
                                   settings$metadata$analysis_id)
 
-network <- readr::read_csv(file.path(analysis_folder_path, "network.csv"))
+network <- readr::read_csv(file.path(analysis_folder_path, "network_comp.csv"))
 dataset_minimal <- readr::read_csv(file.path(analysis_folder_path, 
                                              settings$cno$clustering$algorithm,
                                              "dataset_clustered.csv"))

@@ -8,10 +8,10 @@ library(glue)
 ###################################
 
 # The topic used to infer the query
-MAIN_TOPIC <- 'Human Augmentation and human enhancement'
+MAIN_TOPIC <- settings$llm$theme
 
 # It means that you know about ...
-MAIN_TOPIC_DESCRIPTION <- "Human augmentation, or human enhancement, refers to the use of technology or scientific methods to improve human abilities beyond natural limits. This includes physical enhancements like exoskeletons or gene therapy, cognitive boosts through brain-computer interfaces or nootropics, and sensory improvements via devices like augmented reality glasses or cochlear implants. It also covers efforts to extend healthspan and longevity through medical interventions. While promising for improving life and performance, it raises ethical concerns around fairness, accessibility, and societal impacts."
+MAIN_TOPIC_DESCRIPTION <- settings$llm$description
 
 
 

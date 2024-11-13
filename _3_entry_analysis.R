@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q312_utokyo"
-analysis_folder_name <- "a01_tm__f01_e01__km01"
-settings_directive <- "settings_analysis_directive_2024-11-02-15-36.json"
+project_folder_name = "Q315_TI_sustainability_10years"
+analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
+settings_directive <- "settings_analysis_directive_2024-11-13-13-37.json"
 
 ###############################################################################
 # Call necessary libraries

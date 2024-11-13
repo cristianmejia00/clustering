@@ -1,7 +1,11 @@
 # ==============================================================================
+# This code does not need to be run by yourself!
+# Just replace the two following variables with the current analysis
+# And click save.
+
 # The folder and settings_directive file
-project_folder_name <- "Q312_utokyo"
-settings_directive <- "settings_dataset_directive_2024-11-02-14-59.json"
+project_folder_name <- "Q315_TI_sustainability_10years"
+settings_directive <- "settings_dataset_directive_2024-11-13-10-04.json"
 
 ###############################################################################
 # Call necessary libraries

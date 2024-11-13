@@ -12,7 +12,7 @@ library(glue)
 
 # INPUT
 dataset <- dataset
-document_label <- toTitleCase(settings$params$type_of_dataset)
+document_label <- toTitleCase(settings$params$dataset_source)
 output_folder_level <- output_folder_level
 subfolder_dataset <- subfolder_dataset #"charts_dataset"
 extension <- extension

@@ -1,7 +1,7 @@
 # Potentially garbage code.
-# This code was created the day I fixed the issue of adding colors to 
+# This code was created the day I fixed the issue of adding colors to
 # subcluster boxplots based on their main cluster.
-# The function was fixed and worked fine as run by this code. 
+# The function was fixed and worked fine as run by this code.
 # This was tested with the Nature Capital dataset
 
 
@@ -20,12 +20,12 @@ output_folder_level <- output_folder_level
 subfolder_clusters <- subfolder_clusters
 extension <- extension
 
-# Passed to the function 
+# Passed to the function
 default_palette <- default_palette
 rcs_merged <- rcs_merged
 
 ## From settings
-document_label <- toTitleCase(settings$params$type_of_dataset)
+document_label <- toTitleCase(settings$params$document_source)
 column_labels <- settings$rp$column_labels
 numerical_reports <- intersect(settings$rp$numerical_reports, colnames(dataset))
 
@@ -43,12 +43,15 @@ stats_size <- dataset$X_C %>%
   table() %>%
   data.frame() %>%
   setNames(c("Cluster", "Documents"))
-if (extension != 'svg') {
-  write.csv(stats_size, 
-            row.names = FALSE, 
-            file = file.path(output_folder_level, 
-                             subfolder_clusters, 
-                             "data_cluster_size.csv"))
+if (extension != "svg") {
+  write.csv(stats_size,
+    row.names = FALSE,
+    file = file.path(
+      output_folder_level,
+      subfolder_clusters,
+      "data_cluster_size.csv"
+    )
+  )
 }
 
 
@@ -84,24 +87,26 @@ plot_boxplots <- function(dataset,
                           category_column,
                           value_label = value_column,
                           category_label = category_column) {
-  
   # Get mean and median for sorting
   compound_mean <- tapply(dataset[[value_column]], dataset[[category_column]], mean, na.rm = TRUE)
   compound_median <- tapply(dataset[[value_column]], dataset[[category_column]], median, na.rm = TRUE)
-  
+
   # Prepare df
   long <- dataset[, c(category_column, value_column)]
   setnames(long, c(category_column, value_column), c("category", "values"))
-  long$category <-  gsub("---|-0", "", as.character(long$category))
+  long$category <- gsub("---|-0", "", as.character(long$category))
   lvl <- rcs_merged$cluster_code[order(compound_median, compound_mean)]
   lvl <- gsub("---|-0", "", lvl)
   print(lvl)
-  long$category <- factor(long$category, 
-                          levels = lvl)
-  
+  long$category <- factor(long$category,
+    levels = lvl
+  )
+
   long$main_cluster <- strsplit(as.character(long$category), "-")
-  long$main_cluster <- sapply(long$main_cluster, function(x) {x[[1]]})
-  
+  long$main_cluster <- sapply(long$main_cluster, function(x) {
+    x[[1]]
+  })
+
   bp <- ggplot(long, aes(x = category, y = values, fill = main_cluster)) +
     geom_boxplot(
       width = 0.7
@@ -120,17 +125,18 @@ plot_boxplots <- function(dataset,
 
 # Plot
 for (i in numerical_reports) {
-  plot_boxplots(dataset, 
-                value_column = i, 
-                category_column = "X_C", 
-                value_label = column_labels[i], 
-                category_label = "Clusters")
+  plot_boxplots(dataset,
+    value_column = i,
+    category_column = "X_C",
+    value_label = column_labels[i],
+    category_label = "Clusters"
+  )
   ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.{extension}")))
 }
 
-plot_boxplots(dataset, 
-              value_column = 'PY', 
-              category_column = "X_C", 
-              value_label = column_labels['PY'], 
-              category_label = "Clusters")
-
+plot_boxplots(dataset,
+  value_column = "PY",
+  category_column = "X_C",
+  value_label = column_labels["PY"],
+  category_label = "Clusters"
+)

@@ -10,7 +10,7 @@ output_folder_level <- output_folder_level
 
 # Load rcs files
 rcs_core <- read.csv(file.path(output_folder_level, "rcs.csv"))
-rcs_keywords <- read.csv(file.path(output_folder_level, "rcs_keywords.csv"))
+#rcs_keywords <- read.csv(file.path(output_folder_level, "rcs_keywords.csv"))
 
 # Load numeric reports
 rcs_numeric_reports <- list()
@@ -42,8 +42,8 @@ for (i in c(1:length(rcs_numeric_reports))) {
 # Other numeric info
 rcs_merged$participation <- rcs_core$participation[match(rcs_merged$cluster, rcs_core$cluster)]
 rcs_merged$growth_rate <- rcs_core$growth_rate[match(rcs_merged$cluster, rcs_core$cluster)]
-rcs_merged$edges <- rcs_keywords$Edges[match(rcs_merged$cluster, rcs_keywords$Cluster)]
-rcs_merged$edges_nodes <- rcs_keywords$E.N[match(rcs_merged$cluster, rcs_keywords$Cluster)]
+#rcs_merged$edges <- rcs_keywords$Edges[match(rcs_merged$cluster, rcs_keywords$Cluster)]
+#rcs_merged$edges_nodes <- rcs_keywords$E.N[match(rcs_merged$cluster, rcs_keywords$Cluster)]
 
 # RCS labels
 rcs_merged$rcs_label <- rcs_core$label[match(rcs_merged$cluster, rcs_core$cluster)]
@@ -57,8 +57,8 @@ rcs_merged$hub_type1 <- rcs_core$hub_type1[match(rcs_merged$cluster, rcs_core$cl
 rcs_merged$hub_type2 <- rcs_core$hub_type2[match(rcs_merged$cluster, rcs_core$cluster)]
 
 # Keywords
-rcs_merged$unique_keywords <- rcs_keywords$Unique.Keywords[match(rcs_merged$cluster, rcs_keywords$Cluster)]
-rcs_merged$frequent_keywords <- rcs_keywords$Frequent.Keywords[match(rcs_merged$cluster, rcs_keywords$Cluster)]
+#rcs_merged$unique_keywords <- rcs_keywords$Unique.Keywords[match(rcs_merged$cluster, rcs_keywords$Cluster)]
+#rcs_merged$frequent_keywords <- rcs_keywords$Frequent.Keywords[match(rcs_merged$cluster, rcs_keywords$Cluster)]
 
 # Rest of columns
 for (i in settings$rp$categorical_long_reports) {

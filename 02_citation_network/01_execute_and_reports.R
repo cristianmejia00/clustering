@@ -93,36 +93,36 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   source("03_reports/02_rcs.R")
   zz_env$x04 <- ls()
 
-  # Keywords for heatmap # Now, do it for all.
-  print("Heatmap keywords")
-  if (file.exists(file.path(output_folder_reports, "papersText.rdata"))) {
-    load(file.path(output_folder_reports, "papersText.rdata"))
-  }
-  source("03_reports/05_heatmap_keywords_part_1.R")
-  if (!exists("papersText")) {
-    source("03_reports/05_heatmap_keywords_part_2.R")
-  }
-  source("03_reports/05_heatmap_keywords_part_3.R")
+  # # Keywords for heatmap # Now, do it for all.
+  # print("Heatmap keywords")
+  # if (file.exists(file.path(output_folder_reports, "papersText.rdata"))) {
+  #   load(file.path(output_folder_reports, "papersText.rdata"))
+  # }
+  # source("03_reports/05_heatmap_keywords_part_1.R")
+  # if (!exists("papersText")) {
+  #   source("03_reports/05_heatmap_keywords_part_2.R")
+  # }
+  # source("03_reports/05_heatmap_keywords_part_3.R")
 
-  # Keywords explorer
-  # This takes a lot of time when there are too many clusters like in level 2 and 3.
-  if (level_report <= 4) {
-    print("Citations to topic model visual")
-    use_tfidf <- TRUE
-    source("04_utils/zz_createJSON_cnet.R")
-    source("03_reports/06_citation_to_topic_model_converter.R")
-    source("03_reports/07_prob_exclu_keywords.R")
-  }
-
-  # Create the Keywords report
-  if (level_report <= 4) {
-    print("Keywords report")
-    source("03_reports/08_all_keywords_report.R")
-    # Optional views
-    # source("03_reports/09_keywords_per_clusters.R")
-    source("03_reports/10_rcs_keywords.R")
-  }
-  zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
+  # # Keywords explorer
+  # # This takes a lot of time when there are too many clusters like in level 2 and 3.
+  # if (level_report <= 4) {
+  #   print("Citations to topic model visual")
+  #   use_tfidf <- TRUE
+  #   source("04_utils/zz_createJSON_cnet.R")
+  #   source("03_reports/06_citation_to_topic_model_converter.R")
+  #   source("03_reports/07_prob_exclu_keywords.R")
+  # }
+  # 
+  # # Create the Keywords report
+  # if (level_report <= 4) {
+  #   print("Keywords report")
+  #   source("03_reports/08_all_keywords_report.R")
+  #   # Optional views
+  #   # source("03_reports/09_keywords_per_clusters.R")
+  #   source("03_reports/10_rcs_keywords.R")
+  # }
+  # zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
 
   # Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos") {
@@ -145,7 +145,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   source(file.path(getwd(), "zz-charts_clusters_stats1_bp.R"))
   source(file.path(getwd(), "zz-charts_clusters_stats2_bars.R"))
   source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
+  #source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
   source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
 
@@ -159,7 +159,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   source(file.path(getwd(), "zz-charts_clusters_stats1_bp.R"))
   source(file.path(getwd(), "zz-charts_clusters_stats2_bars.R"))
   source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
+  #source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
   source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
 
   ############################################################################

@@ -6,14 +6,14 @@ source("_3_entry_analysis.R")
 dataset <- readr::read_csv(file.path(
   bibliometrics_folder_path,
   settings$metadata$project_folder,
-  settings$metadata$fitered_folder,
+  settings$metadata$filtered_folder,
   "dataset_raw_cleaned.csv"
 ))
 
 network <- readr::read_csv(file.path(
   bibliometrics_folder_path,
   settings$metadata$project_folder,
-  settings$metadata$fitered_folder,
+  settings$metadata$filtered_folder,
   settings$cno$network_type,
   "network.csv"
 ))

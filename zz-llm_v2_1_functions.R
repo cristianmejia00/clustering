@@ -3,7 +3,7 @@
 source("04_utils/02_libraries.R")
 
 # Load settings from the project we are interested in
-source("settings.R")
+#source("settings.R")
 
 
 ##########################################################
@@ -25,7 +25,7 @@ claude_api_key = readr::read_file(file.path('05_assets', 'credentials', 'claude.
 ask_claude <- function(system_prompt, 
                        user_prompt,
                        api_key = claude_api_key,
-                       model = 'claude-3-sonnet-20240229',#'claude-3-opus-20240229', 
+                       model = 'claude-3-5-sonnet-latest',#'claude-3-opus-20240229', 
                        temperature = 0.1, 
                        max_tokens = 500) {
   
@@ -84,15 +84,15 @@ library(glue)
 #reticulate::conda_create(envname = 'openai_env', packages = 'openai', python_version = '3.9')
 
 # Activate enviroment
-reticulate::use_condaenv('openai_env')
+#reticulate::use_condaenv('openai_env')
 
 # Attach key.
 # In VSCode create a file `openai.key`
 # Is only one line with the OpenAi key.
 # `credentials/openai.key` was added to .gitignore so is not committed to the repo.
 # import Openai Python library
-openai <- reticulate::import('openai')
-client = openai$OpenAI(api_key = readr::read_file('05_assets/credentials/openai.key'))
+#openai <- reticulate::import('openai')
+#client = openai$OpenAI(api_key = readr::read_file('05_assets/credentials/openai.key'))
 
 
 # utils
@@ -140,8 +140,9 @@ ask_gpt <- function(system_prompt,
 #' @param cluster INTEGER. the cluster number to subset. Compatible with X_C, meaning sypport for cluster 99.
 #' @returns DATAFRAME. The largest possible is of `top * 3` when all 3 conditions are different
 get_cluster_data <- function(dataset_, cluster_, top = 5) {
-  cluster_data <- dataset_ %>% filter(X_C == cluster_) %>% select(all_of(c('X_C','TI','AB','AU','PY','UT','Z9','X_E', 'summary')))
-  print(cluster_data$X_C)
+  cluster_data <- dataset_ %>% 
+    filter(X_C == cluster_) %>% 
+    select(all_of(c('X_C','TI','AB','AU','PY','UT','Z9','X_E', 'summary')))
   if (nrow(cluster_data) > top) {
     selected_papers <- c(
       # Most connected
