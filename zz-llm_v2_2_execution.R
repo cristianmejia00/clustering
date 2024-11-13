@@ -64,7 +64,7 @@ for (i in c(1:nrow(oldest_data))) {
 
 
 
-for (cluster_code in list_of_cluster_codes[1:3]) {
+for (cluster_code in list_of_cluster_codes[4:257]) {
   # Get this cluster tops
   print('=================================================================')
   print(glue('cluster: {cluster_code}'))
@@ -143,7 +143,7 @@ rcs_merged$name2 <- gsub('^.*?"','',rcs_merged$name) %>% gsub('".$','', .) %>% g
 rcs_merged$cluster_name <- rcs_merged$name2
 rcs_merged$detailed_description <- rcs_merged$description 
 
-for (cluster_code in list_of_cluster_code) {
+for (cluster_code in list_of_cluster_codes) {
   print('=================================================================')
   print(glue('cluster: {cluster_code}'))
   
@@ -172,8 +172,24 @@ for (cluster_code in list_of_cluster_code) {
 
 
 # Save
-write.csv(rcs_merged, 
-          file.path(file="rcs_merged_core_llm__.csv"), 
+write.csv(rcs_merged %>%
+            select(cluster_code, cluster_name, 
+                   documents, PY_Mean, Z9_Mean, description),
+          file.path(
+            bibliometrics_folder_path,
+            settings$metadata$project_folder,
+            settings$metadata$analysis_id,
+            glue("level{settings$params$recursive_level}"),
+            "cluster_summary.csv"),
+          row.names = FALSE)
+
+write.csv(rcs_merged,
+          file.path(
+            bibliometrics_folder_path,
+            settings$metadata$project_folder,
+            settings$metadata$analysis_id,
+            glue("level{settings$params$recursive_level}"),
+            "rcs_merged_llm.csv"),
           row.names = FALSE)
 
 save.image(file = "env20240930_core_llm_completed")
