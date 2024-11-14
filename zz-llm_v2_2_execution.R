@@ -57,7 +57,6 @@ for (i in c(1:nrow(oldest_data))) {
 # The most cited article in the dataset
 # The top 3 most connected per cluster 
 # The top 3 most cited per cluster
-
 ###################################
 ###################################
 # Cluster description and name

@@ -9,23 +9,23 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q316_TI_quality_of_life_10years",
+  raw_input_folder_name = "Q317_TI_wellbeing_10years",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q316_TI_quality_of_life_10years",
+  project_folder = "Q317_TI_wellbeing_10years",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2024-11-13",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2024-11-14",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'the university of tokyo papers',
+  query = '(TI = ("wellbeing" OR "well-being" OR "well being")) AND (PY=(2014-2025)) AND (DT="article") ',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "UTokyo",
-  dataset_file_name_suffix = "utokyo", #suffix is used for file names
+  dataset_name = "wellbeing",
+  dataset_file_name_suffix = "wellbeing", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
   notes = "Mitsubishi Project"

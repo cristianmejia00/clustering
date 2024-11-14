@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q316_TI_quality_of_life_10years",
+  project_folder = "Q317_TI_wellbeing_10years",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
@@ -123,8 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Quality of Life",
-  "description" = "a person's subjective evaluation of their life in relation to their goals, expectations, and concerns. It's influenced by their culture, value system, and perceptions of important aspects of life",
+  "theme" = "Wellbeing",
+  "description" = "the presence of positive emotions and moods, the absence of negative emotions, satisfaction with life, fulfillment, and positive functioning",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
