@@ -2,6 +2,9 @@
 #####################################################
 print("###################### reports/02_rcs.R")
 
+# Load utils
+source("04_utils/zz_auxiliary_functions.R")
+
 # INPUTS
 #myDataCorrect
 

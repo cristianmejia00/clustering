@@ -24,6 +24,11 @@ for (i in settings$rp$numerical_reports) {
 
 # Initialize the merged RCS
 rcs_merged <- rcs_core[, c("cluster", "cluster_code")]
+rcs_merged$main_cluster <- sapply(rcs_merged$cluster_code, function(x) {
+  x <- strsplit(as.character(x), "-") %>% unlist()
+  x <- x[[1]] %>% as.numeric()
+  return(x)
+})
 rcs_merged$cluster_name <- ""
 rcs_merged$documents <- rcs_core$cluster_size[match(rcs_merged$cluster, rcs_core$cluster)]
 rcs_merged$documents_percent <- round(rcs_merged$documents * 100 / sum(rcs_merged$documents, na.rm = TRUE), 2)

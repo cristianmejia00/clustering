@@ -10,7 +10,7 @@ library(ggplot2)
 library(glue)
 
 # INPUT
-dataset <- dataset
+dataset <- myDataCorrect
 output_folder_level <- output_folder_level
 subfolder_clusters <- subfolder_clusters
 extension <- extension
@@ -19,10 +19,9 @@ extension <- extension
 rcs_merged <- rcs_merged
 default_palette <- c("#E69F00", "#56B4E9", "#009E73", "#8B0000", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#9b5de5", "#2270e7", "#e5e510", "#f00f15", "#3524ae", "#26cc3a", "#ec058e", "#9cb8c2", "#fffdd0", "#b40e68", "#AFA100", "#F67963")
 default_palette[length(unique(rcs_merged$main_cluster))] <- "#d3d3d3"
-
+rcs_merged$main_cluster
 
 ## From settings
-document_label <- toTitleCase(settings$params$dataset_source)
 column_labels <- settings$rp$column_labels
 numerical_reports <- intersect(settings$rp$numerical_reports, colnames(dataset))
 
@@ -35,6 +34,7 @@ dir.create(file.path(output_folder_level, subfolder_clusters), recursive = TRUE)
 ################################################################################
 # CLUSTER SIZE
 ################################################################################
+# CSV report with the cluster sizes.
 stats_size <- dataset$X_C %>%
   as.numeric() %>%
   table() %>%
@@ -87,38 +87,23 @@ plot_boxplots <- function(dataset,
   # Get mean and median for sorting
   compound_mean <- tapply(dataset[[value_column]], dataset[[category_column]], mean, na.rm = TRUE)
   compound_median <- tapply(dataset[[value_column]], dataset[[category_column]], median, na.rm = TRUE)
-
-  # Match to the sort in RCS_merged
-  compound_mean <- compound_mean[rcs_merged$cluster_code]
-  compound_median <- compound_median[rcs_merged$cluster_code]
-
-
+  
   # Prepare df
   long <- dataset[, c(category_column, value_column)]
   setnames(long, c(category_column, value_column), c("category", "values"))
   long$category <- gsub("---|-0", "", as.character(long$category))
-  lvl <- rcs_merged$cluster_code[order(compound_median, compound_mean)]
+  lvl <- names(compound_mean)[order(compound_median, compound_mean)]
   lvl <- gsub("---|-0", "", lvl)
   long$category <- factor(long$category,
-    levels = lvl
+                          levels = lvl
   )
-
   long$main_cluster <- strsplit(as.character(long$category), "-")
   long$main_cluster <- sapply(long$main_cluster, function(x) {
-    x[[1]]
-  })
-  long$main_cluster <- factor(long$main_cluster,
-    levels = long$main_cluster %>%
-      unique() %>%
-      as.numeric() %>%
-      sort()
-  )
-
-  bp <- ggplot(long, aes(
-    x = category,
-    y = values,
-    fill = main_cluster
-  )) +
+    x[[1]] %>% as.numeric()
+  }) %>% as.factor()
+  
+  # ggboxplot
+  bp <- ggplot(long, aes(x = category, y = values, fill = main_cluster)) +
     geom_boxplot(
       width = 0.7
     ) +
@@ -126,23 +111,23 @@ plot_boxplots <- function(dataset,
     ylab(value_label) +
     scale_fill_manual(values = default_palette) +
     theme_bw()
-
+  # bp + coord_flip()
   K <- length(unique(dataset[[category_column]]))
   if (K > 20) {
     bp <- bp + theme(axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust = 1))
   }
   return(bp)
 }
-
-
-
+?geom_bar
 # Plot
 for (i in numerical_reports) {
   plot_boxplots(dataset,
-    value_column = i,
-    category_column = "X_C",
-    value_label = column_labels[i],
-    category_label = "Clusters"
+                value_column = i,
+                category_column = "cluster_code",
+                value_label = column_labels[i],
+                category_label = "Clusters"
   )
-  ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_clusters_{i}_boxplot.{extension}")))
+  ggsave(file.path(output_folder_level, 
+                   subfolder_clusters, 
+                   glue("fig_clusters_{i}_boxplot.{extension}")))
 }

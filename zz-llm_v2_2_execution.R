@@ -186,7 +186,7 @@ write.csv(rcs_merged,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
             glue("level{settings$params$recursive_level}"),
-            "rcs_merged_llm.csv"),
+            "cluster_summary_extended.csv"),
           row.names = FALSE)
 
 #save.image(file = "env20241113_Q317_l1_llm_completed.Rdata")
