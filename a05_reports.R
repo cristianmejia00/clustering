@@ -70,8 +70,8 @@ source(file.path(getwd(),
 ###############################################################################
 ###############################################################################
 # Save code snapshot
-files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE)
-files_to_omit <- list.files(file.path(getwd(),'renv','library'), full.names = TRUE, recursive = TRUE)
+files_to_save <- list.files(getwd(), full.names = TRUE, recursive = TRUE, pattern = "*\\.R$|*\\.r$")
+files_to_omit <- list.files(file.path(getwd(),'renv','library'), full.names = TRUE, recursive = TRUE, pattern = "*\\.R$|*\\.r$")
 files_to_save <- setdiff(files_to_save, files_to_omit)
 
 # Not to zip Rdata environments as they are heavy and saved separately
@@ -86,17 +86,17 @@ session_info <- sessionInfo()
 save(session_info, file = file.path(output_folder_level, "sessionInfo.rdata")) 
 writeLines(capture.output(sessionInfo()), file.path(output_folder_level, "sessionInfo.txt"))
 
-# Save Global environment
-save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))
-
-# Save cluster IDS
-if ('fukan_original_cluster_id' %in% colnames(dataset)) {
-  print('Saving cluster id comparison for subclusters')
-  cluster_comparison <- dataset[c('X_C', 'fukan_X_C', 'fukan_original_cluster_id', 'fukan_subcluster_label')]
-  cluster_comparison <- cluster_comparison[!duplicated(cluster_comparison$fukan_subcluster_label),]
-  cluster_comparison <- cluster_comparison[order(cluster_comparison$fukan_X_C),]
-  write.csv(cluster_comparison, file = file.path(output_folder_level, "cluster_id_comparison.csv"), row.names = FALSE)
-}
+# # Save Global environment
+# save.image(file.path(output_folder_level, "environ_zz_reports.rdata"))
+# 
+# # Save cluster IDS
+# if ('fukan_original_cluster_id' %in% colnames(dataset)) {
+#   print('Saving cluster id comparison for subclusters')
+#   cluster_comparison <- dataset[c('X_C', 'fukan_X_C', 'fukan_original_cluster_id', 'fukan_subcluster_label')]
+#   cluster_comparison <- cluster_comparison[!duplicated(cluster_comparison$fukan_subcluster_label),]
+#   cluster_comparison <- cluster_comparison[order(cluster_comparison$fukan_X_C),]
+#   write.csv(cluster_comparison, file = file.path(output_folder_level, "cluster_id_comparison.csv"), row.names = FALSE)
+# }
 
 ###############################################
 # LLM

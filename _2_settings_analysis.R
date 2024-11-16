@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q317_TI_wellbeing_10years",
+  project_folder = "Q318_human_augmentation",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
@@ -83,7 +83,7 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
       size_limit = 350,
 
       # Include cluster having collecting a minimum of __ articles
-      size_lower_limit = 50,
+      size_lower_limit = 45,
 
       # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
       remove_zero = FALSE
@@ -123,8 +123,15 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Wellbeing",
-  "description" = "the presence of positive emotions and moods, the absence of negative emotions, satisfaction with life, fulfillment, and positive functioning",
+  "theme" = "Human Augmentation Technologies",
+  "description" = "technologies that improve human capabilities, such as health, performance, and quality of life. They can include: 
+Devices and implants: Such as cochlear implants, robotic limbs, pacemakers, and bionic lenses;
+Wearable devices: Such as augmented reality glasses, smart watches, and smart textiles;
+Brain-computer interfaces;
+Augmented senses: Such as glasses for viewing augmented visual content;
+Augmented cognition: Such as technologies that improve memory, decision-making, and attention; 
+Augmented action: Such as technologies that help humans perform more precise functions; 
+Physical avatars: which provides an in-office physical representation for remote workers",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

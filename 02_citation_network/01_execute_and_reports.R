@@ -78,16 +78,16 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   # Number of clusters
   K <- length(unique(myDataCorrect$X_C))
 
-  # # Document report
-  # print("Article report")
-  # source("03_reports/01_document_report_with_abstract.R")
-  # zz_env$x02 <- ls()
-  # 
-  # # Get detail reports reports by feature by cluster
-  # print("Clusters reports")
-  # source("03_reports/04_cluster_reports.R")
-  # zz_env$x03 <- ls()
-  # 
+  # Document report
+  print("Article report")
+  source("03_reports/01_document_report_with_abstract.R")
+  zz_env$x02 <- ls()
+
+  # Get detail reports reports by feature by cluster
+  print("Clusters reports")
+  source("03_reports/04_cluster_reports.R")
+  zz_env$x03 <- ls()
+
   # RCS
   print("Computing RCS")
   source("03_reports/02_rcs.R")

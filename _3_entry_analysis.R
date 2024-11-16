@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q317_TI_wellbeing_10years"
+project_folder_name = "Q318_human_augmentation"
 analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2024-11-14-15-09.json"
+settings_directive <- "settings_analysis_directive_2024-11-14-21-26.json"
 
 ###############################################################################
 # Call necessary libraries

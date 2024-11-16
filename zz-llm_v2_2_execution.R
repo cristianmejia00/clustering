@@ -10,17 +10,32 @@ source("zz-llm_v2_1_functions.R")
 ###################################
 # Important! rcs_merged$cluster_code, rcs_merged$cluster, and dataset$X_C should all be the same type.
 
+level_report_iteration <- level_report_iteration
+level_report_iteration
+this_tops = 5 # 5 for cluster, 3 for subclusters
+
 rcs_merged$cluster_id_backup <- rcs_merged$cluster
-rcs_merged$cluster <- rcs_merged$cluster_code
+rcs_merged$cluster <- rcs_merged$cluster_code %>% as.character()
+rcs_merged$cluster_code <- rcs_merged$cluster_code %>% as.character()
 rcs_merged$description <- ''
 rcs_merged$name <- ''
 
 dataset$summary <- ''
-dataset$X_E <- dataset$level0_in_degree
+
 dataset$X_C_backup <- dataset$X_C
-dataset$X_C <- dataset$subcluster_label1 %>% as.character()
+if (level_report_iteration == 0) {
+  print("Compute level0 Clusters")
+  dataset$X_C <- dataset$level0 %>% as.character()
+  dataset$X_E <- dataset$level0_in_degree
+} 
+if (level_report_iteration == 1) {
+  print("Compute level1 Subclusters")
+  dataset$X_C <- dataset$subcluster_label1 %>% as.character()
+  dataset$X_E <- dataset$level0_in_degree
+} 
 
 list_of_cluster_codes <- dataset$X_C %>% unique() %>% sort()
+length(list_of_cluster_codes)
 
 # Compute summaries
 COMPUTE_SUMMARIES = FALSE
@@ -65,7 +80,7 @@ for (cluster_code in list_of_cluster_codes) {
   # Get this cluster tops
   print('=================================================================')
   print(glue('cluster: {cluster_code}'))
-  cluster_data <- get_cluster_data(dataset, cluster_ = cluster_code, top = 3)
+  cluster_data <- get_cluster_data(dataset, cluster_ = cluster_code, top = this_tops)
   print(cluster_data$X_C)
   
   if (COMPUTE_SUMMARIES) {
@@ -106,7 +121,7 @@ for (cluster_code in list_of_cluster_codes) {
       #print(cluster_description)
     }, 
     error = function(err){
-      message(glue('Error getting topic description of cluster {cluster}. Trying again'))
+      message(glue('Error getting topic description of cluster {cluster_code}. Trying again'))
       message(err)
     })
   }
@@ -176,8 +191,8 @@ write.csv(rcs_merged %>%
             bibliometrics_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            glue("level{settings$params$recursive_level}"),
-            "cluster_summary.csv"),
+            glue("level{level_report_iteration}"),
+            "cluster_summary_.csv"),
           row.names = FALSE)
 
 write.csv(rcs_merged,
@@ -185,8 +200,8 @@ write.csv(rcs_merged,
             bibliometrics_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            glue("level{settings$params$recursive_level}"),
-            "cluster_summary_extended.csv"),
+            glue("level{level_report_iteration}"),
+            "cluster_summary_extended_.csv"),
           row.names = FALSE)
 
 #save.image(file = "env20241113_Q317_l1_llm_completed.Rdata")

@@ -9,23 +9,23 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q317_TI_wellbeing_10years",
+  raw_input_folder_name = "Q302_Q303_human_augmentation",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q317_TI_wellbeing_10years",
+  project_folder = "Q318_human_augmentation",
   
   # Analysis ID (the date + number is the label of this analysis)
   date_id = "2024-11-14",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = '(TI = ("wellbeing" OR "well-being" OR "well being")) AND (PY=(2014-2025)) AND (DT="article") ',
+  query = 'Q302 + Q303 = core + citing papers on human augmentation. "human* augmentation" OR "human* enhancement" OR "augmenting human*" OR "enhancing human*"',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "wellbeing",
-  dataset_file_name_suffix = "wellbeing", #suffix is used for file names
+  dataset_name = "human_augmentation",
+  dataset_file_name_suffix = "human_aug", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
   notes = "Mitsubishi Project"
