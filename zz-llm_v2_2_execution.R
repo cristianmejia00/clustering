@@ -192,7 +192,7 @@ write.csv(rcs_merged %>%
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
             glue("level{level_report_iteration}"),
-            "cluster_summary_.csv"),
+            "cluster_summary.csv"),
           row.names = FALSE)
 
 write.csv(rcs_merged,
@@ -201,7 +201,7 @@ write.csv(rcs_merged,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
             glue("level{level_report_iteration}"),
-            "cluster_summary_extended_.csv"),
+            "cluster_summary_extended.csv"),
           row.names = FALSE)
 
 #save.image(file = "env20241113_Q317_l1_llm_completed.Rdata")

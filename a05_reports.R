@@ -98,21 +98,21 @@ writeLines(capture.output(sessionInfo()), file.path(output_folder_level, "sessio
 #   write.csv(cluster_comparison, file = file.path(output_folder_level, "cluster_id_comparison.csv"), row.names = FALSE)
 # }
 
-###############################################
-# LLM
-# Using OpenAI and Claude in R.
-source("zz-llm_v2_0_prompts.R")
-source("zz-llm_v2_1_functions.R")
-source("zz-llm_v2_2_execution.R")
-
-source("zz-create_bib_file.R")
-
-source("zz-generate_quarto_document.R")
-#source("zz-generate_quarto_word.R")
-
-###############################################
-# Send to display
-source("zzz-send_to_display_repo.R")
-
-# Save Global environment
-save.image(file.path(output_folder_level, "environ_zzz_llm.rdata"))
+# ###############################################
+# # LLM
+# # Using OpenAI and Claude in R.
+# source("zz-llm_v2_0_prompts.R")
+# source("zz-llm_v2_1_functions.R")
+# source("zz-llm_v2_2_execution.R")
+# 
+# source("zz-create_bib_file.R")
+# 
+# source("zz-generate_quarto_document.R")
+# #source("zz-generate_quarto_word.R")
+# 
+# ###############################################
+# # Send to display
+# source("zzz-send_to_display_repo.R")
+# 
+# # Save Global environment
+# save.image(file.path(output_folder_level, "environ_zzz_llm.rdata"))

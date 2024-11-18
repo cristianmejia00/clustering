@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q318_human_augmentation"
-settings_directive <- "settings_dataset_directive_2024-11-14-20-54.json"
+project_folder_name <- "Q310_innovation_CORRECT"
+settings_directive <- "settings_dataset_directive_2024-11-18-16-51.json"
 
 ###############################################################################
 # Call necessary libraries

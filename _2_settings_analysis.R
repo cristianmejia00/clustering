@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q318_human_augmentation",
+  project_folder = "Q310_innovation_CORRECT",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
@@ -123,15 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Human Augmentation Technologies",
-  "description" = "technologies that improve human capabilities, such as health, performance, and quality of life. They can include: 
-Devices and implants: Such as cochlear implants, robotic limbs, pacemakers, and bionic lenses;
-Wearable devices: Such as augmented reality glasses, smart watches, and smart textiles;
-Brain-computer interfaces;
-Augmented senses: Such as glasses for viewing augmented visual content;
-Augmented cognition: Such as technologies that improve memory, decision-making, and attention; 
-Augmented action: Such as technologies that help humans perform more precise functions; 
-Physical avatars: which provides an in-office physical representation for remote workers",
+  "theme" = "Innovation",
+  "description" = "encompasses the strategic and systematic process of creating, developing, and implementing novel or significantly enhanced products, services, processes, and business models within organizations. This includes not only the development of entirely new technologies and substantial improvements to existing products, but also the creation of innovative production techniques, organizational workflows, and management approaches that drive value creation. At its core, successful innovation in technology management requires careful alignment with organizational objectives and market demands, while effectively translating ideas into practical, scalable solutions through disciplined implementation and thoughtful risk management that balances potential rewards against technical and market uncertainties.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
