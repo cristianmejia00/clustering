@@ -21,8 +21,25 @@ library(RColorBrewer)
 library(readr)
 
 # Read the data
-data <- melted_sankey_topics2 #
-data <- data %>% top_n(50, wt=Similarity)
+data <- melted_sankey_topics #
+
+# Filters
+
+# Retain upto 50
+data <- data %>% top_n(100, wt=Similarity)
+
+# Remove 'others'
+data<- data %>% 
+  filter(!grepl("99---|99$", Source)) %>%
+  filter(!grepl("99---|99$", Dest))
+
+# Remove dashes
+data$Source <- gsub("---", ": ", data$Source)
+data$Dest <- gsub("---", ": ", data$Dest)
+
+# Prepare names
+data$Source <- paste(data$Source, data$source_topic)
+data$Dest <- paste(data$Dest, data$target_topic)
 
 # Create nodes dataframe
 # Get unique nodes from both source and destination

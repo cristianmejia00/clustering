@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H006'
-settings_directive = 'heatmap_settings_H006_HumanAugment_Wellb_QoL_Sust_SUBCLUSTERS.json'
+heatmap_analysis_id = 'H008'
+settings_directive = 'heatmap_settings_H008_Human_Aug-Innovation-Innovativeness.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -38,7 +38,6 @@ coords <- readr::read_csv(file.path(
   select(x, y, cluster) %>% 
   rename(cluster_code = cluster)
 
-coords$cluster_code <- gsub("Sut", "Sust", coords$cluster_code)
 
 # Read the RCS files
 # For the heatmap the RCS is expected to have already
@@ -306,9 +305,6 @@ melted <- readr::read_csv(file.path(
   "heatmap_melted.csv"
 ))
 
-melted$Source <- gsub("Sut", "Sust", melted$Source)
-melted$Target <- gsub("Sut", "Sust", melted$Target)
-
 melted <- melted %>%
   separate(Source, 
            remove = FALSE,
@@ -442,7 +438,7 @@ melted_sankey_topics <- melted_sankey_topics %>%
 
 
 # Save files
-write.csv(melted_sankey_topics2, 
+write.csv(melted_sankey_topics, 
           file=file.path(bibliometrics_folder_path, 
                          settings$metadata$heatmap_analysis_id,
                          glue('sankey_df_with_deadends_{round(sankey_threshold, 2)}_selected.csv')), 
