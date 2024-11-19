@@ -23,8 +23,6 @@ library(readr)
 # Read the data
 data <- melted_sankey_topics #
 
-# Filters
-
 # Retain upto 50
 data <- data %>% top_n(100, wt=Similarity)
 
