@@ -15,7 +15,6 @@ subfolder_clusters <- subfolder_clusters
 extension <- extension
 
 
-
 ################################################################################
 # Create output folder
 dir.create(file.path(output_folder_level, subfolder_clusters, 'by_clusters'), recursive = TRUE)
@@ -93,7 +92,7 @@ plot_cluster_data <- function(plot_data, cluster_number, column_data_position = 
   cluster_data[[1]] <- factor(cluster_data[[1]], 
                               levels = cluster_levels,
                               labels = cluster_labels)
-  p <- ggplot(cluster_data[c(1:min(20, nrow(cluster_data))),], 
+  p <- ggplot(cluster_data[c(1:min(5, nrow(cluster_data))),], 
               aes(x=.data[[names(cluster_data)[1]]], 
                   y=.data[[names(cluster_data)[column_data_position]]],
                   na.rm = TRUE)) + 
@@ -107,7 +106,7 @@ plot_cluster_data <- function(plot_data, cluster_number, column_data_position = 
 }
 
 # Plot and save
-available_charts <- names(charts_datasets)
+available_charts <- c("WC")# names(charts_datasets)
 for (i in available_charts) {
   tmp <- charts_datasets[[i]]
   clusters_n <- unique(tmp$Cluster) %>% sort()
@@ -125,20 +124,24 @@ for (i in available_charts) {
     
     # by columns
     if (extension != 'svg') {
-      ggsave(filename = file.path(output_folder_level,
-                                  subfolder_clusters,
-                                  'by_columns',
-                                  glue('fig_{i}_{str_pad(j, char_size, "left", "0")}.{extension}')), 
+      xxfile <- file.path(output_folder_level,
+                subfolder_clusters,
+                'by_columns',
+                glue('fig_{i}_{str_pad(j, char_size, "left", "0")}_.{extension}'))
+      print(xxfile)
+      ggsave(filename = xxfile, 
              width = 1000, 
              height = 1000, 
              units = 'px')
     }
 
     # by cluster
-    ggsave(filename = file.path(output_folder_level,
-                                subfolder_clusters,
-                                'by_clusters',
-                                glue('fig_{str_pad(j, char_size, "left", "0")}_{i}.{extension}')), 
+    xxfile <- file.path(output_folder_level,
+                        subfolder_clusters,
+                        'by_clusters',
+                        glue('fig_{str_pad(j, char_size, "left", "0")}_{i}_.{extension}'))
+    print(xxfile)
+    ggsave(filename = xxfile, 
            width = 1000, 
            height = 1000, 
            units = 'px')
