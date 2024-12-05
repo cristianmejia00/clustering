@@ -9,18 +9,18 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q310_innovation_CORRECT",
+  project_folder = "Q318_MKT_poverty",
   filtered_folder = "f01",
-  analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
+  analysis_id = "a01_tm__f01_e01__km01"#"a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
 
 
 ## General Parameters
 settings$params <- list(
-  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+  recursive_level = 0, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
-  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
+  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -102,10 +102,10 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 112,
+    n_topics = 6,
 
     # The minimum size for a topic
-    min_topic_size = 30
+    min_topic_size = 10
   )
 }
 
@@ -123,8 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Innovation",
-  "description" = "encompasses the strategic and systematic process of creating, developing, and implementing novel or significantly enhanced products, services, processes, and business models within organizations. This includes not only the development of entirely new technologies and substantial improvements to existing products, but also the creation of innovative production techniques, organizational workflows, and management approaches that drive value creation. At its core, successful innovation in technology management requires careful alignment with organizational objectives and market demands, while effectively translating ideas into practical, scalable solutions through disciplined implementation and thoughtful risk management that balances potential rewards against technical and market uncertainties.",
+  "theme" = "Poverty in Marketing studies",
+  "description" = "the examination of how marketing strategies and techniques can be applied to address issues related to poverty, particularly by focusing on creating accessible products and services for low-income populations, promoting social change through marketing campaigns, and understanding the unique consumer behavior of individuals living in poverty; often utilizing social marketing approaches to tackle poverty-related challenges like healthcare access, education, and sanitation.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

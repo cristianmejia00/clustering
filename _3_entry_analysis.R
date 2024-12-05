@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q310_innovation_CORRECT"
-analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2024-11-18-17-01.json"
+project_folder_name = "Q318_MKT_poverty"
+analysis_folder_name <- "a01_tm__f01_e01__km01"
+settings_directive <- "settings_analysis_directive_2024-12-05-17-33.json"
 
 ###############################################################################
 # Call necessary libraries

@@ -143,8 +143,9 @@ dataset$AB <- remove_word_counts_line(dataset$AB)
 # Filtering ----- COLUMNS
 ############################################################################
 ############################################################################
+available_columns <- intersect(colnames(dataset), c(unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected), "Countries", "IsoCountries", "Institutions"))
 dataset <- dataset %>% 
-  select(all_of(c("X_N", "uuid", unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected))))
+  select(all_of(c("X_N", "uuid", available_columns)))
 
 
 ##########################
