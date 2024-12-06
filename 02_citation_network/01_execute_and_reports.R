@@ -125,7 +125,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   # # zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
   
   # Overlays (Only for WOS data)
-  if (settings$params$dataset_source == "wos") {
+  if (settings$params$dataset_source == "wos" & "WC" %in% colnames(myDataCorrect)) {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
   }
 

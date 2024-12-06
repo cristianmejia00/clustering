@@ -11,7 +11,7 @@ settings$metadata <- list(
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
   project_folder = "Q318_MKT_poverty",
   filtered_folder = "f01",
-  analysis_id = "a01_tm__f01_e01__km01"#"a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
+  analysis_id = "a01_tm__f01_e01__km03"#"a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
 
 
@@ -102,7 +102,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 6,
+    n_topics = 0,
 
     # The minimum size for a topic
     min_topic_size = 10
