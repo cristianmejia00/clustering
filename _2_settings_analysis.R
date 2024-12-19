@@ -9,9 +9,9 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q318_MKT_poverty",
+  project_folder = "Q319_sust_rice",
   filtered_folder = "f01",
-  analysis_id = "a01_tm__f01_e01__km03"#"a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
+  analysis_id = "a01_tm__f01_e01__km02"#"a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
 
 
@@ -102,7 +102,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 0,
+    n_topics = 59,
 
     # The minimum size for a topic
     min_topic_size = 10
@@ -123,8 +123,10 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Poverty in Marketing studies",
-  "description" = "the examination of how marketing strategies and techniques can be applied to address issues related to poverty, particularly by focusing on creating accessible products and services for low-income populations, promoting social change through marketing campaigns, and understanding the unique consumer behavior of individuals living in poverty; often utilizing social marketing approaches to tackle poverty-related challenges like healthcare access, education, and sanitation.",
+  "theme" = "Sustainable rice practices",
+  "description" = "Water management through techniques like Alternate Wetting and Drying (AWD), which can reduce water usage by up to 30% while maintaining yields. This involves carefully controlled irrigation cycles rather than continuous flooding.
+Direct seeding and reduced tillage methods that minimize soil disturbance and preserve soil structure. These practices help maintain soil health and reduce greenhouse gas emissions compared to traditional puddling methods.
+Integrated pest management that relies more on biological controls and resistant varieties rather than chemical pesticides. This includes practices like encouraging natural predators and using trap crops.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

@@ -106,7 +106,7 @@ plot_cluster_data <- function(plot_data, cluster_number, column_data_position = 
 }
 
 # Plot and save
-available_charts <- c("WC")# names(charts_datasets)
+available_charts <- names(charts_datasets)
 for (i in available_charts) {
   tmp <- charts_datasets[[i]]
   clusters_n <- unique(tmp$Cluster) %>% sort()

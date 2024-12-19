@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H008'
-settings_directive = 'heatmap_settings_H008_Human_Aug-Innovation-Innovativeness.json'
+heatmap_analysis_id = 'H006_Human-Aug_Sust_Wellbeing_QoL'
+settings_directive = 'heatmap_settings_H006_HumanAugment_Wellb_QoL_Sust_SUBCLUSTERS.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -148,7 +148,7 @@ plot_scatter <- function(rcs_data,
     xlab("") +
     ylab("")
   if (show_tags) {
-    p <- p + geom_text_repel(aes(label = gsub("---", "", point_labels)), max.overlaps = 15, size = 2)
+    p <- p + geom_text_repel(aes(label = gsub("---", "", point_labels)), max.overlaps = 15, size = 5)
   }
   p <- p + theme_bw() + theme(legend.position = "none")
   p

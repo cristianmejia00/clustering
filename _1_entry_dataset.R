@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q318_MKT_poverty"
-settings_directive <- "settings_dataset_directive_2024-12-05-10-48.json"
+project_folder_name <- "Q319_sust_rice"
+settings_directive <- "settings_dataset_directive_2024-12-18-20-57.json"
 
 ###############################################################################
 # Call necessary libraries

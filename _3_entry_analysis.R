@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q318_MKT_poverty"
-analysis_folder_name <- "a01_tm__f01_e01__km03"
-settings_directive <- "settings_analysis_directive_2024-12-05-19-00.json"
+project_folder_name = "Q319_sust_rice"
+analysis_folder_name <- "a01_tm__f01_e01__km02"
+settings_directive <- "settings_analysis_directive_2024-12-18-21-48.json"
 
 ###############################################################################
 # Call necessary libraries
