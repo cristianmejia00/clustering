@@ -9,26 +9,26 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q319_sust_rice",
+  raw_input_folder_name = "Q320_antonio",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q319_sust_rice",
+  project_folder = "Q320_antonio",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2024-12-18",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2024-12-25",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Q319',
+  query = 'Q320',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "sust_rice",
-  dataset_file_name_suffix = "sust_rice", #suffix is used for file names
+  dataset_name = "antonio",
+  dataset_file_name_suffix = "antonio", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Ranjit project"
+  notes = "antonio"
 )
 
 ## Dataset General Parameters

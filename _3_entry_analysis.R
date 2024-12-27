@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q319_sust_rice"
-analysis_folder_name <- "a01_tm__f01_e01__km02"
-settings_directive <- "settings_analysis_directive_2024-12-18-21-48.json"
+project_folder_name = "Q320_antonio"
+analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
+settings_directive <- "settings_analysis_directive_2024-12-25-11-15.json"
 
 ###############################################################################
 # Call necessary libraries

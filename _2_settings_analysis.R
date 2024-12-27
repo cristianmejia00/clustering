@@ -9,18 +9,18 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q319_sust_rice",
+  project_folder = "Q320_antonio",
   filtered_folder = "f01",
-  analysis_id = "a01_tm__f01_e01__km02"#"a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
+  analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
 
 
 ## General Parameters
 settings$params <- list(
-  recursive_level = 0, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
-  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
+  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -123,10 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Sustainable rice practices",
-  "description" = "Water management through techniques like Alternate Wetting and Drying (AWD), which can reduce water usage by up to 30% while maintaining yields. This involves carefully controlled irrigation cycles rather than continuous flooding.
-Direct seeding and reduced tillage methods that minimize soil disturbance and preserve soil structure. These practices help maintain soil health and reduce greenhouse gas emissions compared to traditional puddling methods.
-Integrated pest management that relies more on biological controls and resistant varieties rather than chemical pesticides. This includes practices like encouraging natural predators and using trap crops.",
+  "theme" = "",
+  "description" = "",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
