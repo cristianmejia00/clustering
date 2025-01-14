@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q320_antonio",
+  project_folder = "Q321_TI_robot",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
 )
@@ -123,8 +123,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "",
-  "description" = "",
+  "theme" = "robotics",
+  "description" = "the study and practice of designing, constructing, operating, and using robots. Robots are machines that perform tasks that humans traditionally do. Robotics is an interdisciplinary field that involves mechanical engineering, computer science, and other areas.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

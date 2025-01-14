@@ -12,7 +12,7 @@ source("zz-llm_v2_1_functions.R")
 
 level_report_iteration <- level_report_iteration
 level_report_iteration
-this_tops = 5 # 5 for cluster, 3 for subclusters
+this_tops = 3 # 5 for cluster, 3 for subclusters
 
 rcs_merged$cluster_id_backup <- rcs_merged$cluster
 rcs_merged$cluster <- rcs_merged$cluster_code %>% as.character()

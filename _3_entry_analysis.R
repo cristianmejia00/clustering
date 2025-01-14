@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q320_antonio"
+project_folder_name = "Q321_TI_robot"
 analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2024-12-25-11-15.json"
+settings_directive <- "settings_analysis_directive_2025-01-11-23-00.json"
 
 ###############################################################################
 # Call necessary libraries

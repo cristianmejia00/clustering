@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H006_Human-Aug_Sust_Wellbeing_QoL'
-settings_directive = 'heatmap_settings_H006_HumanAugment_Wellb_QoL_Sust_SUBCLUSTERS.json'
+heatmap_analysis_id = 'H010'
+settings_directive = 'heatmap_settings_H010_Human_Aug-Robotics.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -219,7 +219,7 @@ ggsave(
 for (inst in unique(tmp$dataset)) {
   print(inst)
   p <- plot_scatter(tmp %>% filter(dataset == inst),
-               point_labels = "scatter_labels",
+               point_labels = "scatter_labels", # "scatter_labels" for the full cluster name. # "local_cluster" for the cluster code only
                x_column = "PY_Mean",
                y_column = "Z9_Mean",
                color_hex_column = "color",

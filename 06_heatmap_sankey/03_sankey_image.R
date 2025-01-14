@@ -85,7 +85,6 @@ sankey <- sankeyNetwork(
   sinksRight = FALSE
 )
 
-
 # Display the Sankey in R
 sankey
 
