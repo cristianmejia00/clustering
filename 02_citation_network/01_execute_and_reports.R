@@ -3,7 +3,7 @@
 ####################################################
 # CITATION NETWORK
 ####################################################
-if (settings$params$type_of_analysis == 'citation_network') {
+if (settings$params$type_of_analysis == "citation_network") {
   output_folder_reports <- file.path(
     settings$metadata$bibliometrics_folder,
     settings$metadata$project_folder,
@@ -13,8 +13,8 @@ if (settings$params$type_of_analysis == 'citation_network') {
   )
 }
 
-settings$params$type_of_analysis <- 'topic_model'
-if (settings$params$type_of_analysis == 'topic_model') {
+settings$params$type_of_analysis <- "topic_model"
+if (settings$params$type_of_analysis == "topic_model") {
   output_folder_reports <- file.path(
     settings$metadata$bibliometrics_folder,
     settings$metadata$project_folder,
@@ -92,7 +92,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   print("Computing RCS")
   source("03_reports/02_rcs.R")
   zz_env$x04 <- ls()
-  # 
+  #
   # # # Keywords for heatmap # Now, do it for all.
   # # print("Heatmap keywords")
   # # if (file.exists(file.path(output_folder_reports, "papersText.rdata"))) {
@@ -103,7 +103,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   # #   source("03_reports/05_heatmap_keywords_part_2.R")
   # # }
   # # source("03_reports/05_heatmap_keywords_part_3.R")
-  # 
+  #
   # # # Keywords explorer
   # # # This takes a lot of time when there are too many clusters like in level 2 and 3.
   # # if (level_report <= 4) {
@@ -113,7 +113,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   # #   source("03_reports/06_citation_to_topic_model_converter.R")
   # #   source("03_reports/07_prob_exclu_keywords.R")
   # # }
-  # # 
+  # #
   # # # Create the Keywords report
   # # if (level_report <= 4) {
   # #   print("Keywords report")
@@ -123,7 +123,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   # #   source("03_reports/10_rcs_keywords.R")
   # # }
   # # zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
-  
+
   # Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos" & "WC" %in% colnames(myDataCorrect)) {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
@@ -140,13 +140,13 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   extension <- "png"
   subfolder_dataset <- "charts_dataset"
   subfolder_clusters <- "charts_clusters"
-  source(file.path(getwd(), "zz-charts_dataset.R"))
-  source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats1_bp.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats2_bars.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
-  #source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
-  source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_dataset.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats1_bp.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats2_bars.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats3_lda.R"))
+  # source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats4_heatmap.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_trends_and_clustered_bars.R"))
 
 
   # Save PNG figures. Needed for notebook.
@@ -154,13 +154,13 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   extension <- "svg"
   subfolder_dataset <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
-  source(file.path(getwd(), "zz-charts_dataset.R"))
-  source(file.path(getwd(), "zz-charts_clusters_scatterplots.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats1_bp.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats2_bars.R"))
-  source(file.path(getwd(), "zz-charts_clusters_stats3_lda.R"))
-  #source(file.path(getwd(), "zz-charts_clusters_stats4_heatmap.R"))
-  source(file.path(getwd(), "zz-charts_trends_and_clustered_bars.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_dataset.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats1_bp.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats2_bars.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats3_lda.R"))
+  # source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats4_heatmap.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_trends_and_clustered_bars.R"))
 
   ############################################################################
   # Save complete environment by level. First remove unnecessary variables
