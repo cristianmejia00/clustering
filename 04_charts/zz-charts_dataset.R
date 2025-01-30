@@ -60,8 +60,13 @@ create_report_and_barchart <- function(column_data,
     substr(1,45) %>%
     table() %>%
     sort(decreasing = TRUE) %>%
-    data.frame() %>%
-    setNames(c("Item", "Documents"))
+    data.frame()
+  if (ncol(stats_column == 1)) {
+    stats_column <- data.frame("Item"=row.names(stats_column),
+                               "Documents" = stats_column$.)
+  } else {
+    stats_column <- setNames(c("Item", "Documents"))
+  }
   if (extension != 'svg') {
     write.csv(stats_column,
               file = file.path(output_folder_level, 
@@ -75,7 +80,7 @@ create_report_and_barchart <- function(column_data,
     theme(axis.text=element_text(size=14)) +
     coord_flip() +
     scale_x_discrete(name = item_label, limits = rev) +
-    scale_y_continuous(name = document_label) +
+    scale_y_discrete(name = document_label) +
     theme_bw()
   ggsave(file.path(output_folder_level, 
                    subfolder_dataset, 
@@ -90,10 +95,14 @@ create_report_and_barchart <- function(column_data,
 ################################################################################
 for (i in categorical_long_reports) {
   if (i %in% available_columns) {
-    print(i)
-    create_report_and_barchart(dataset[[i]], 
+    if (!all(is.na(myDataCorrect[,i]))) {
+      print(i)
+      create_report_and_barchart(dataset[[i]], 
                                column_name = i,
                                item_label = column_labels[i])
+    } else {
+      print(glue("{i} is totally empty. Report not created"))
+    }
   }
 }
 

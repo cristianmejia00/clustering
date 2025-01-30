@@ -9,9 +9,9 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q323_ofshore_wind",
+  project_folder = "Q324_EU_Act",
   filtered_folder = "f01",
-  analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01" #
+  analysis_id = "a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
 
 
@@ -20,7 +20,7 @@ settings$params <- list(
   recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
+  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -102,7 +102,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 357,
+    n_topics = 33,
 
     # The minimum size for a topic
     min_topic_size = 10)
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "offshore wind and floating power plants",
-  "description" = "electricity generating facilities built at sea, utilizing wind turbines to harness the force of ocean winds and convert it into electricity, which is then transmitted to the mainland through underwater cables, providing a renewable energy source with minimal environmental impact; essentially, it's a wind farm located in the ocean. ",
+  "theme" = "Artificial Intelligence European Act",
+  "description" = "is a European Union regulation concerning artificial intelligence (AI). It establishes a common regulatory and legal framework for AI within the European Union (EU).",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

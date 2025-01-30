@@ -12,7 +12,7 @@ source("05_llm/zz-llm_v2_1_functions.R")
 
 level_report_iteration <- level_report_iteration
 level_report_iteration
-this_tops <- 3 # 5 for cluster, 3 for subclusters
+this_tops <- 5 # 5 for cluster, 3 for subclusters
 
 rcs_merged$cluster_id_backup <- rcs_merged$cluster
 rcs_merged$cluster <- rcs_merged$cluster_code %>% as.character()
@@ -23,15 +23,16 @@ rcs_merged$name <- ""
 dataset$summary <- ""
 
 dataset$X_C_backup <- dataset$X_C
+
 if (level_report_iteration == 0) {
   print("Compute level0 Clusters")
   dataset$X_C <- dataset$level0 %>% as.character()
-  dataset$X_E <- dataset$level0_in_degree
+  dataset$X_E <- dataset$Score
 }
 if (level_report_iteration == 1) {
   print("Compute level1 Subclusters")
   dataset$X_C <- dataset$subcluster_label1 %>% as.character()
-  dataset$X_E <- dataset$level0_in_degree
+  dataset$X_E <- dataset$Score
 }
 
 list_of_cluster_codes <- dataset$X_C %>%
@@ -217,7 +218,7 @@ write.csv(
       documents, PY_Mean, Z9_Mean, description
     ),
   file.path(
-    bibliometrics_folder_path,
+    output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
     glue("level{level_report_iteration}"),
@@ -228,7 +229,7 @@ write.csv(
 
 write.csv(rcs_merged,
   file.path(
-    bibliometrics_folder_path,
+    output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
     glue("level{level_report_iteration}"),

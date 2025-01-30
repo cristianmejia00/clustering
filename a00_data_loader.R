@@ -134,6 +134,10 @@ if ("C1" %in% colnames(dataset)) {
 ############################################################################
 ############################################################################
 # Clean abstract
+dataset$AB <- enc2utf8(dataset$AB)
+#dataset$AB <- gsub("�|<ca><ca><ca>", " ", dataset$AB)
+dataset$AB <- iconv(dataset$AB, from = "UTF-8", to = "ASCII", sub = " ")
+dataset$AB <- enc2utf8(dataset$AB)
 dataset$AB <- remove_copyright_statements(dataset$AB)
 dataset$AB <- remove_word_counts_line(dataset$AB)
 

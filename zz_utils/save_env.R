@@ -1,0 +1,1 @@
+save.image("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q324_EU_Act/a01_tm__f01_e01__km01/level0/environ.RData")

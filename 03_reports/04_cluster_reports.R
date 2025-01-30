@@ -92,11 +92,6 @@ generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
   write.csv(result_list, file = file.path(output_folder_level, paste("report_", a_column, ".csv", sep = "")), row.names = FALSE)
 }
 
-## Write reports
-for (cc in categorical_long_reports) {
-  generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = settings$rp$top_items)
-}
-
 
 generate_categorical_simple_wide_reports <- function(df, a_column) {
   # Creates a `clusters x a_column` reports for frequencies and proportions based on selected column.
@@ -217,19 +212,35 @@ generate_numerical_report <- function(df, a_column, clusters, with_all = TRUE) {
 
 ## Write reports
 for (cc in categorical_long_reports) {
-  generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = settings$rp$top_items)
+  if (!all(is.na(myDataCorrect[,cc]))) {
+    generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = settings$rp$top_items)
+  } else {
+    print(glue("{cc} is totally empty. Report not created"))
+  }
 }
 
 for (cc in categorical_simple_wide_reports) {
+  if (!all(is.na(myDataCorrect[,cc]))) {
   generate_categorical_simple_wide_reports(df = myDataCorrect, a_column = cc)
+  } else {
+    print(glue("{cc} is totally empty. Report not created"))
+  }
 }
 
 for (cc in categorical_multi_wide_reports) {
+  if (!all(is.na(myDataCorrect[,cc]))) {
   generate_categorical_multi_wide_reports(df = myDataCorrect, a_column = cc, clusters = list_of_clusters)
+  } else {
+    print(glue("{cc} is totally empty. Report not created"))
+  }
 }
 
 for (cc in numerical_reports) {
+  if (!all(is.na(myDataCorrect[,cc]))) {
   generate_numerical_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters)
+  } else {
+    print(glue("{cc} is totally empty. Report not created"))
+  }
 }
 
 # Cleaning up

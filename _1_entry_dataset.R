@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q323_ofshore_wind"
-settings_directive <- "settings_dataset_directive_2025-01-29-15-10.json"
+project_folder_name <- "Q324_EU_Act"
+settings_directive <- "settings_dataset_directive_2025-01-30-16-32.json"
 
 ###############################################################################
 # Call necessary libraries

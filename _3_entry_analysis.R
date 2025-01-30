@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q323_ofshore_wind"
-analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2025-01-29-16-33.json"
+project_folder_name = "Q324_EU_Act"
+analysis_folder_name <- "a01_tm__f01_e01__km01"
+settings_directive <- "settings_analysis_directive_2025-01-30-17-06.json"
 
 ###############################################################################
 # Call necessary libraries

@@ -9,23 +9,23 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q323_ofshore_wind",
+  raw_input_folder_name = "Q324_EU_Act",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q323_ofshore_wind",
+  project_folder = "Q324_EU_Act",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2025-01-29",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2025-01-30",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Q323',
+  query = 'Q324',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "offshore_wind",
-  dataset_file_name_suffix = "offshore_wind", #suffix is used for file names
+  dataset_name = "EU_act",
+  dataset_file_name_suffix = "EU_act", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
   notes = "Part of the Human Augmentation project for Mitsubishi"
@@ -81,7 +81,7 @@ settings$embeds <- list(
 
 settings$network <- list(
   # If compute network
-  get_network = TRUE,
+  get_network = FALSE,
   
   # The filtered label
   from_filtered_dataset = "f01",
