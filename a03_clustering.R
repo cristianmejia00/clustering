@@ -75,14 +75,14 @@ rm(list = ls())
 
 # # Orphans treatment
 # if (settings$addons$include_orphans == "99" | settings$addons$include_orphans == "999") {
-#   source(file.path(getwd(), "04_utils", "zz-append_orphans.R"))
+#   source(file.path(getwd(), "zz_utils", "zz-append_orphans.R"))
 # }
 # 
 # # Add-ons
 # if (settings$params$type_of_analysis == "citation_network" & 
 #     exists('g1') &
 #     (settings$addons$page_rank | settings$addons$eigen_centrality | settings$addons$closeness_centrality | settings$addons$betweeness_centrality)) {
-#   source(file.path(getwd(), "04_utils", "zz-centrality_meassures.R"))
+#   source(file.path(getwd(), "zz_utils", "zz-centrality_meassures.R"))
 # }
 # file.path(report_path, "dataset_clustering.csv")
 

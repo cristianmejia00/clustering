@@ -68,7 +68,7 @@ dataset <- merge(
 )
 
 # Verify the data is correctly formatted for reports
-source(file.path(getwd(), "04_utils", "00_verify_data.R"))
+source(file.path(getwd(), "zz_utils", "00_verify_data.R"))
 zz_env <- list("x01" = ls())
 
 

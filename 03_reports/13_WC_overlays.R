@@ -10,7 +10,7 @@ print("###################### reports/13_WC_overlays.R")
 
 library("tools")
 library("ggrepel")
-load(file.path(getwd(), "05_assets", "overlay_master.rdata"))
+load(file.path(getwd(), "zz_assets", "overlay_master.rdata"))
 WC_per_cluster_counts <- read.csv(file.path(output_folder_level, "report_WC_frequencies.csv"), check.names = FALSE)
 
 # Add the totals to the last row

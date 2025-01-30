@@ -109,7 +109,7 @@ for (level_report_iteration in c(0:settings$params$recursive_level)) {
   # # if (level_report <= 4) {
   # #   print("Citations to topic model visual")
   # #   use_tfidf <- TRUE
-  # #   source("04_utils/zz_createJSON_cnet.R")
+  # #   source("zz_utils/zz_createJSON_cnet.R")
   # #   source("03_reports/06_citation_to_topic_model_converter.R")
   # #   source("03_reports/07_prob_exclu_keywords.R")
   # # }

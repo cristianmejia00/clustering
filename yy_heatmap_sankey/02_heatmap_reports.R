@@ -9,8 +9,8 @@ settings_directive = 'heatmap_settings_H010_Human_Aug-Robotics.json'
 
 ###############################################################################
 # Call necessary libraries
-source("04_utils/02_libraries.R")
-source("04_utils/00_system_paths.R")
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
 
 ###############################################################################
 # Load the directive file

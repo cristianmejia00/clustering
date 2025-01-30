@@ -25,7 +25,7 @@ if (settings$network$get_network & settings$network$network_type == "direct_cita
 ###############################################################################
 # Save
 results_folder_path <- file.path(
-  bibliometrics_folder_path,
+  output_folder_path,
   project_folder_name,
   settings$network$from_filtered_dataset,
   settings$network$network_type

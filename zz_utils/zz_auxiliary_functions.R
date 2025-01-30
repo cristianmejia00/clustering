@@ -63,7 +63,7 @@ getCountries <- function(a_C1_column) {
 # We need this codes to plot in map libraries
 # The conversion tables is expected to be a data frame with headers including "ISO3166alpha3" and "WOS" with the corresponding ISO code and country names as appear in the WOS.
 # I already created this file and have it here as an asset. 
-country_codes <- read.csv(file.path(getwd(), "05_assets", "country_conversion.csv"), header = TRUE, stringsAsFactors = FALSE)
+country_codes <- read.csv(file.path(getwd(), "zz_assets", "country_conversion.csv"), header = TRUE, stringsAsFactors = FALSE)
 iso_search <- country_codes$ISO3166alpha3
 names(iso_search) <- country_codes$WOS
 rm(country_codes)

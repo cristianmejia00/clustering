@@ -9,9 +9,9 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q321_TI_robot",
+  project_folder = "Q323_ofshore_wind",
   filtered_folder = "f01",
-  analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01"
+  analysis_id = "a01_cn__f01_dc__c01_lv" #"a01_tm__f01_e01__km01" #
 )
 
 
@@ -102,15 +102,13 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 59,
+    n_topics = 357,
 
     # The minimum size for a topic
-    min_topic_size = 10
-  )
+    min_topic_size = 10)
 }
 
-
-# add-ons
+## add-ons
 settings$addons <- list(
   "include_orphans" = "NO", # NO, 99, 999
   # Sentiment analysis is computed outside R, with Python
@@ -123,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "robotics",
-  "description" = "the study and practice of designing, constructing, operating, and using robots. Robots are machines that perform tasks that humans traditionally do. Robotics is an interdisciplinary field that involves mechanical engineering, computer science, and other areas.",
+  "theme" = "offshore wind and floating power plants",
+  "description" = "electricity generating facilities built at sea, utilizing wind turbines to harness the force of ocean winds and convert it into electricity, which is then transmitted to the mainland through underwater cables, providing a renewable energy source with minimal environmental impact; essentially, it's a wind farm located in the ocean. ",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

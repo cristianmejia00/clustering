@@ -1,7 +1,7 @@
 # 20230717
 
 # Create bibliography.
-# This is a custom version of "04_utils/04a-wos_to_bibtext.R"
+# This is a custom version of "zz_utils/04a-wos_to_bibtext.R"
 
 # transforms from a dataset to .
 library(RefManageR)
