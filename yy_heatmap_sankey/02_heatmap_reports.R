@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H010'
-settings_directive = 'heatmap_settings_H010_Human_Aug-Robotics.json'
+heatmap_analysis_id = 'H011'
+settings_directive = 'heatmap_settings_H011_EU_act-AI_libsci.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -16,7 +16,7 @@ source("zz_utils/00_system_paths.R")
 # Load the directive file
 settings <- RJSONIO::fromJSON(
   file.path(
-    bibliometrics_folder_path,
+    output_folder_path,
     heatmap_analysis_id,
     settings_directive
   ),
@@ -31,7 +31,7 @@ inputs <- lapply(settings$inputs, function(x) {data.frame(x)}) %>% rbind.fill()
 # The coordinates of all participating clusters across analysis in this heatmap
 # Computed in the Heatmap colab
 coords <- readr::read_csv(file.path(
-  bibliometrics_folder_path,
+  output_folder_path,
   heatmap_analysis_id,
   "coordinates.csv"
 )) %>% 
@@ -44,7 +44,7 @@ coords <- readr::read_csv(file.path(
 # The documents, PY_Mean, Z9_Mean, and the LLM_name (cluster_name)
 rcs <- lapply(c(1:nrow(inputs)), \(x) {
   this_df <- readr::read_csv(file.path(
-    bibliometrics_folder_path,#settings$metadata$input_directory,
+    output_folder_path,#settings$metadata$input_directory,
     settings$inputs[[x]]$project_folder_name,
     settings$inputs[[x]]$analysis_folder_name,
     settings$inputs[[x]]$level_folder_name,
@@ -185,7 +185,7 @@ tm_plot <- plot_scatter_group(tmp,
 tm_plot
 ggsave(
   filename = file.path(
-    bibliometrics_folder_path,
+    output_folder_path,
     settings$metadata$heatmap_analysis_id,
     "topic_model.png"),
   plot = tm_plot,
@@ -206,7 +206,7 @@ tm_plot <- plot_scatter_group(tmp,
 tm_plot
 ggsave(
   filename = file.path(
-    bibliometrics_folder_path,
+    output_folder_path,
     settings$metadata$heatmap_analysis_id,
     "topic_model_no_tags.png"),
   plot = tm_plot,
@@ -231,7 +231,7 @@ for (inst in unique(tmp$dataset)) {
                show_tags = TRUE)
   ggsave(
     filename = file.path(
-      bibliometrics_folder_path,
+      output_folder_path,
       settings$metadata$heatmap_analysis_id,
       paste("scatter_plot_", inst, ".png", sep = "")),
     plot = p,
@@ -246,7 +246,7 @@ for (inst in unique(tmp$dataset)) {
 
 # Heatmap
 hm <- readr::read_csv(file.path(
-  bibliometrics_folder_path,
+  output_folder_path,
   settings$metadata$heatmap_analysis_id,
   "heatmap_matrix.csv"
 )) %>% as.data.frame()
@@ -274,7 +274,7 @@ tm_hm
 ggsave(
   plot = tm_hm,
   filename = file.path(
-    bibliometrics_folder_path,
+    output_folder_path,
     settings$metadata$heatmap_analysis_id,
     "heatmap.png"),
   width = 8,  # Width in inches
@@ -300,7 +300,7 @@ ggsave(
 
 # Sankey
 melted <- readr::read_csv(file.path(
-  bibliometrics_folder_path,
+  output_folder_path,
   settings$metadata$heatmap_analysis_id,
   "heatmap_melted.csv"
 ))
@@ -338,23 +338,30 @@ melted <- merge(melted,
 
 ###############################################################################
 png(filename = file.path(
-  bibliometrics_folder_path,
+  output_folder_path,
   settings$metadata$heatmap_analysis_id,
   "similarity_boxplot.png"))
-bp <- boxplot(melted$Similarity, ylab = "Similarity")
 dev.off()
-bp$stats
-
-# Remove pairs in the same sankey level (they belong to same institution)
-# Remove pairs in separated for more than one step 
-
 
 
 ###############################################################################
-sankey_threshold <- bp$stats[3,1] #settings$global$sankey_threshold
+# Thresholding
+
+# Statistic threshold
+bp <- boxplot(melted %>% 
+                filter(source_sankey_order != target_sankey_order) %>%
+                pull(Similarity), 
+              ylab = "Similarity")
+
+bp$stats[3,1] #mean
+bp$stats[4,1] #3rd quartile
+settings$global$sankey_threshold #selected
+
+sankey_threshold <- bp$stats[4,1]#settings$global$sankey_threshold
 
 
-
+# Remove pairs in the same sankey level (they belong to same institution)
+# Remove pairs in separated for more than one step 
 melted_filtered <- melted %>% 
   filter(source_sankey_order != target_sankey_order) %>%
   #filter(abs(source_sankey_order - target_sankey_order) == 1) %>%
@@ -439,7 +446,7 @@ melted_sankey_topics <- melted_sankey_topics %>%
 
 # Save files
 write.csv(melted_sankey_topics, 
-          file=file.path(bibliometrics_folder_path, 
+          file=file.path(output_folder_path, 
                          settings$metadata$heatmap_analysis_id,
                          glue('sankey_df_with_deadends_{round(sankey_threshold, 2)}_selected.csv')), 
           row.names = FALSE)
@@ -447,7 +454,7 @@ write.csv(melted_sankey_topics,
 ###############################################################################
 # Write color codes for Flourish
 write.csv(paste(tmp$cluster_code, tmp$color, sep = ': '), 
-          file=file.path(bibliometrics_folder_path,  
+          file=file.path(output_folder_path,  
                          settings$metadata$heatmap_analysis_id,
                          'sankey_cluster_color_for_flourish.csv'), 
           row.names = FALSE)
@@ -465,7 +472,7 @@ if (length(bridge_clusters) > 0) {
     filter(`Step from` != 1 | Source %in% bridge_clusters)
 
   write.csv(melted_bridge, 
-            file=file.path(bibliometrics_folder_path,  
+            file=file.path(output_folder_path,  
                            settings$metadata$heatmap_analysis_id,
                            'sankey_df_without_deadends.csv'), 
             row.names = FALSE)
@@ -491,7 +498,7 @@ if (length(bridge_clusters) > 0) {
   melted_bridge_readable <- melted_bridge_readable %>% select(left, bridge, right, left_topic, bridge_topic, right_topic)
   
   write.csv(melted_bridge_readable, 
-            file=file.path(bibliometrics_folder_path,  
+            file=file.path(output_folder_path,  
                            settings$metadata$heatmap_analysis_id,
                            'sankey_df_without_deadends_readable.csv'), 
             row.names = FALSE)

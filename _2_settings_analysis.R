@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q324_EU_Act",
+  project_folder = "Q325_ai_libsci",
   filtered_folder = "f01",
   analysis_id = "a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
@@ -102,7 +102,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 33,
+    n_topics = 56,
 
     # The minimum size for a topic
     min_topic_size = 10)
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Artificial Intelligence European Act",
-  "description" = "is a European Union regulation concerning artificial intelligence (AI). It establishes a common regulatory and legal framework for AI within the European Union (EU).",
+  "theme" = "Artificial Intelligence in Library Science",
+  "description" = "At its core, this field focuses on developing and applying AI systems to improve how information is organized, accessed, and disseminated within library and information science contexts",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

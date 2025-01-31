@@ -29,7 +29,14 @@ if (settings$params$type_of_analysis == "topic_model") {
 time_01_started <- Sys.time()
 
 # Data preparation
-for (level_report_iteration in c(0:settings$params$recursive_level)) {
+if (settings$params$recursive_level > 0 & settings$params$type_of_analysis == "citation_network") {
+  available_levels <- c(0:settings$params$recursive_level)
+} else {
+  available_levels <- c(0)
+}
+
+
+for (level_report_iteration in available_levels) {
   level_report <<- level_report_iteration
   print(paste("...Starting reports for level",
     as.character(level_report),

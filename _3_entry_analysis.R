@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q324_EU_Act"
+project_folder_name = "Q325_ai_libsci"
 analysis_folder_name <- "a01_tm__f01_e01__km01"
-settings_directive <- "settings_analysis_directive_2025-01-30-17-06.json"
+settings_directive <- "settings_analysis_directive_2025-01-30-23-47.json"
 
 ###############################################################################
 # Call necessary libraries
