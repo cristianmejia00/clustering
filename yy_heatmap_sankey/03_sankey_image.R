@@ -83,7 +83,7 @@ sankey <- sankeyNetwork(
   nodePadding = 10,
   margin = c('right'=420, 'left'=300),
   height = 600,
-  width = 1600,
+  width = 12000,
   sinksRight = FALSE
 )
 
@@ -121,3 +121,66 @@ saveWidget(sankey,
                           settings$metadata$heatmap_analysis_id,
                           "sankey_diagram.html"), 
            selfcontained = TRUE)
+
+
+# # Tests for gradient edges
+# sankey <- htmlwidgets::onRender(
+#   sankey,
+#   '
+#   function(el, x) {
+#     // Color scales for each group
+#     const nodeColors = {
+#       group1: "#E67E22",  // Orange for PIK
+#       group2: "#82E0AA",  // Green for Plant
+#       group3: "#5DADE2"   // Blue for RIKEN
+#     };
+#     
+#     // Create gradient definitions
+#     const svg = d3.select(el).select("svg");
+#     const defs = svg.append("defs");
+#     
+#     // Create gradient for each link
+#     d3.select(el).selectAll(".link").each(function(d) {
+#       const gradientID = `gradient-${d.source.index}-${d.target.index}`;
+#       
+#       // Determine source and target colors based on node groups
+#       const sourceColor = nodeColors[d.source.node_group];
+#       const targetColor = nodeColors[d.target.node_group];
+#       
+#       // Create gradient definition
+#       const gradient = defs.append("linearGradient")
+#         .attr("id", gradientID)
+#         .attr("gradientUnits", "userSpaceOnUse")
+#         .attr("x1", d.source.x1)
+#         .attr("x2", d.target.x0);
+#       
+#       // Add gradient stops
+#       gradient.append("stop")
+#         .attr("offset", "0%")
+#         .attr("stop-color", sourceColor);
+#         
+#       gradient.append("stop")
+#         .attr("offset", "100%")
+#         .attr("stop-color", targetColor);
+#       
+#       // Apply gradient to link
+#       d3.select(this)
+#         .style("stroke", `url(#${gradientID})`)
+#         .style("opacity", 0.7);
+#     });
+#     
+#     // Customize node labels
+#     d3.select(el)
+#       .selectAll(".node text")
+#       .style("font-weight", "bold")
+#       .style("fill", "black")
+#       .attr("x", function(d) { 
+#         return d.x0 < width / 2 ? 6 + sankey.nodeWidth() : -6;
+#       })
+#       .attr("text-anchor", function(d) {
+#         return d.x0 < width / 2 ? "start" : "end";
+#       });
+#   }
+#   '
+# )
+
