@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q325_ai_libsci"
-settings_directive <- "settings_dataset_directive_2025-01-30-23-40.json"
+project_folder_name <- "Q326_offshore_wind_power"
+settings_directive <- "settings_dataset_directive_2025-02-09-20-42.json"
 
 ###############################################################################
 # Call necessary libraries

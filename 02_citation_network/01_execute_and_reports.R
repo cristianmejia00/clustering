@@ -13,7 +13,7 @@ if (settings$params$type_of_analysis == "citation_network") {
   )
 }
 
-settings$params$type_of_analysis <- "topic_model"
+#settings$params$type_of_analysis <- "topic_model"
 if (settings$params$type_of_analysis == "topic_model") {
   output_folder_reports <- file.path(
     settings$metadata$bibliometrics_folder,

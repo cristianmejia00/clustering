@@ -52,6 +52,29 @@ write.csv(dataset_minimal,
           file = file.path(results_folder_path, "dataset_minimal.csv"), 
           row.names = FALSE)
 
+# Write the edges counts
+write.csv(edges_level1, 
+          file = file.path(results_folder_path, "level0_edges_count.csv"), 
+          row.names = TRUE)
+
+if (settings$params$recursive_level >= 1) {
+  write.csv(edges_level2, 
+            file = file.path(results_folder_path, "level1_edges_count.csv"), 
+            row.names = TRUE)
+}
+
+if (settings$params$recursive_level >= 2) {
+  write.csv(edges_level3, 
+            file = file.path(results_folder_path, "level2_edges_count.csv"), 
+            row.names = TRUE)
+}
+
+if (settings$params$recursive_level >= 4) {
+  write.csv(edges_level4, 
+            file = file.path(results_folder_path, "level3_edges_count.csv"), 
+            row.names = TRUE)
+}
+
 # The components settings and info
 writeLines(RJSONIO::toJSON(settings$cno$thresholding, 
                            pretty = TRUE,

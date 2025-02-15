@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q325_ai_libsci"
-analysis_folder_name <- "a01_tm__f01_e01__km01"
-settings_directive <- "settings_analysis_directive_2025-01-30-23-47.json"
+project_folder_name = "Q322_TS_robot_2022_2024"
+analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
+settings_directive <- "settings_analysis_directive_2025-01-29-12-45.json"
 
 ###############################################################################
 # Call necessary libraries

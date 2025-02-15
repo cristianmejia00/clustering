@@ -9,26 +9,26 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q325_ai_libsci",
+  raw_input_folder_name = "Q326_offshore_wind_power",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q325_ai_libsci",
+  project_folder = "Q326_offshore_wind_power",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2025-01-30",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2025-02-09",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Q325',
+  query = 'Q326',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "ai_libsci",
-  dataset_file_name_suffix = "ai_libsci", #suffix is used for file names
+  dataset_name = "offshore_wind2",
+  dataset_file_name_suffix = "offshore_wind2", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "ISSI 2025"
+  notes = "Mitsubishi Project"
 )
 
 ## Dataset General Parameters
