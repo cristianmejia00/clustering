@@ -43,6 +43,22 @@ reorder_memberships <- function(membership) {
 # Component selection
 # Create the network object and retain the largest component
 g1 <- graph_from_data_frame(network, directed = TRUE)
+ecount(g1)
+vcount(g1)
+
+# Cocitation
+if (settings$cno$network_type == "cocitation") {
+  cci <- cocitation(g1)
+  mask <- colSums(cci) > 0
+  cci <- cci[mask, mask]
+  cci2 <- Matrix::Matrix(cci, sparse=TRUE)
+  g1 <- graph_from_adjacency_matrix(cci2, 
+                                    mode='undirected', 
+                                    weighted = TRUE,
+                                    diag = FALSE)
+  g1 <- simplify(g1)
+  rm(cci, cci2)
+}
 
 # Get components
 components_membership <- components(g1)
@@ -99,13 +115,15 @@ orphans <- dataset %>% filter(!(X_N %in% valid_vertices))
 dataset <- dataset %>% filter(X_N %in% valid_vertices)
 dataset <- dataset[match(valid_vertices, dataset$X_N), ]
 
-# Filter the network to have only nodes in the selected network
-network <- network[network$V1 %in% valid_vertices, ]
-network <- network[network$V2 %in% valid_vertices, ]
+# Network for this type of network and compnent
+if (settings$cno$network_type == "cocitation") {
+  network <- igraph::as_data_frame(g_valid, what="edges")
+} else {
+  # Filter the network to have only nodes in the selected network
+  network <- network[network$V1 %in% valid_vertices, ]
+  network <- network[network$V2 %in% valid_vertices, ]
+}
 
-
-# ttt1 <- graph_from_data_frame(network, directed = FALSE)
-# ttt2 <- graph_from_data_frame(network, directed = FALSE)
 
 ###############################################################################
 ###############################################################################

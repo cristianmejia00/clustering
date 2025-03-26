@@ -27,7 +27,12 @@ if (!settings$cno$using_mission_pairs_from_fukan) {
 
 # Verification
 stopifnot(
-  all(dataset_minimal$X_N == V(g1)$name)
+  all(as.numeric(dataset_minimal$X_N) %in% as.numeric(V(g1)$name))
+)
+
+dataset_minimal <- dataset_minimal[match(V(g1)$name, dataset_minimal$X_N),]
+stopifnot(
+  all(as.numeric(dataset_minimal$X_N) == as.numeric(V(g1)$name))
 )
 
 ###############################################################################

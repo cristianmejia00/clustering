@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q326_offshore_wind_power",
+  project_folder = "Q326_offshore_wind_CORRECT",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )

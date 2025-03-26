@@ -12,14 +12,14 @@ network <- readr::read_csv(file.path(analysis_folder_path, "network_comp.csv"))
 g1 <- graph_from_data_frame(network, directed = TRUE)
 
 # Select the list of clusters
-cluster_list <- unique(dataset_minimal$subcluster_label1)
+cluster_list <- unique(dataset_minimal$level0)
 
 # Compute the edges
 summary_list <- list()
 for (i in cluster_list) {
-  sections <- strsplit(i, "-")
+  sections <- strsplit(as.character(i), "-")
   tmp <- dataset_minimal %>% 
-    filter(subcluster_label1 == i) %>%
+    filter(level0 == i) %>%
     pull("X_N") %>% 
     as.character()
   
@@ -42,7 +42,9 @@ for (i in cluster_list) {
 summary_df <- rbindlist(summary_list) %>%
   arrange(main_cluster, subcluster)
 
-write.csv(summary_df, 'level1_edges.csv', row.names = FALSE)
+write.csv(summary_df, 
+          paste(analysis_folder_path, "/",'level0_edges.csv', sep = ""), 
+          row.names = FALSE)
 
 
 
