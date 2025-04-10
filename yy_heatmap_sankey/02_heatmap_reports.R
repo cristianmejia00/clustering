@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H011'
-settings_directive = 'heatmap_settings_H011_EU_act-AI_libsci.json'
+heatmap_analysis_id = 'H007_innovation_innovativeness'
+settings_directive = 'heatmap_settings_H007_Innovation-Innovativeness.json'
 
 ###############################################################################
 # Call necessary libraries
