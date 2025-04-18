@@ -9,26 +9,26 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q326_offshore_wind_CORRECT",
+  raw_input_folder_name = "Q327 TI Policy",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q326_offshore_wind_CORRECT",
+  project_folder = "Q327 TI Policy",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2025-03-04",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2025-04-17",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Q326',
+  query = 'Q327',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "offshore_wind3",
-  dataset_file_name_suffix = "offshore_wind3", #suffix is used for file names
+  dataset_name = "policy",
+  dataset_file_name_suffix = "policy", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Mitsubishi Project"
+  notes = "Policy"
 )
 
 ## Dataset General Parameters

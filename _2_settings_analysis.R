@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q326_offshore_wind_CORRECT",
+  project_folder = "Q327 TI Policy",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
@@ -102,7 +102,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 56,
+    n_topics = 279,
 
     # The minimum size for a topic
     min_topic_size = 10)
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "offshore wind and floating power plants",
-  "description"  = "electricity generating facilities built at sea, utilizing wind turbines to harness the force of ocean winds and convert it into electricity, which is then transmitted to the mainland through underwater cables, providing a renewable energy source with minimal environmental impact; essentially, it's a wind farm located in the ocean. ",
+  "theme" = "policy",
+  "description"  = "a course or principle of action adopted or proposed by an organization or individual.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
@@ -253,7 +253,7 @@ ana_lysis_results_folder_path <- file.path(
   settings$metadata$project_folder,
   settings$metadata$analysis_id
 )
-dir.create(ana_lysis_results_folder_path, showWarnings = FALSE)
+dir.create(ana_lysis_results_folder_path)
 
 # Save the analysis directive
 settings_file_path <- file.path(

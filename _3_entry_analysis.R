@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q322_TS_robot_2022_2024"
+project_folder_name = "Q327 TI Policy"
 analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2025-01-29-12-45.json"
+settings_directive <- "settings_analysis_directive_2025-04-17-23-20.json"
 
 ###############################################################################
 # Call necessary libraries

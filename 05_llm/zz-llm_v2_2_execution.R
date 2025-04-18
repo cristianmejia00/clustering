@@ -12,7 +12,7 @@ source("05_llm/zz-llm_v2_1_functions.R")
 
 level_report_iteration <- level_report_iteration
 level_report_iteration
-this_tops <- 3 # 5 for cluster, 3 for subclusters
+this_tops <- 5 # 5 for cluster, 3 for subclusters
 
 rcs_merged$cluster_id_backup <- rcs_merged$cluster
 rcs_merged$cluster <- rcs_merged$cluster_code %>% as.character()
@@ -84,9 +84,19 @@ for (i in c(1:nrow(oldest_data))) {
 # Cluster description and name
 ###################################
 for (cluster_code in list_of_cluster_codes) {
-  # Get this cluster tops
   print("=================================================================")
   print(glue("cluster: {cluster_code}"))
+  
+  # Check the current name of the cluster:
+  current_name = rcs_merged$name[rcs_merged$cluster_code == cluster_code]
+  if (current_name == "Error: 529" | current_name == "Error 529" | current_name == "") {
+    print("Computing name...")
+  } else {
+    print(glue("Name already computed: {current_name}"))
+    next
+  }
+  
+  # Get this cluster tops
   cluster_data <- get_cluster_data(dataset, cluster_ = cluster_code, top = this_tops)
   print(cluster_data$X_C)
 
@@ -255,4 +265,12 @@ write.csv(rcs_merged,
           row.names = FALSE
 )
 
-# save.image(file = "env20241113_Q317_l1_llm_completed.Rdata")
+save.image(file.path(
+            output_folder_path,
+            settings$metadata$project_folder,
+            settings$metadata$analysis_id,
+            settings$cno$clustering$algorithm,
+            settings$cno$thresholding$threshold,
+            glue("level{level_report_iteration}"),
+            "environ_llm.csv"
+          ))
