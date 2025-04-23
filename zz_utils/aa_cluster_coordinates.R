@@ -7,7 +7,7 @@
 # To plot the network we need to transfer the x and y coordinates manually in Excel or R to the respective RCS.
 # Then use the plotting code. 
 
-
+network <- read_csv(glue("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/{settings$metadata$project_folder}/f01/direct_citation/network.csv"))
 
 #network <- read.csv("file.ncol", sep = " ", header = FALSE, stringsAsFactors = FALSE)
 g1 <- graph_from_data_frame(network, directed = FALSE)
@@ -89,18 +89,53 @@ subcluster_network <- create_cluster_network(g1, cluster_attr = "subcluster")
 ##############################
 # Layout cluster
 coords <- layout_with_kk(cluster_network)
-V(cluster_network)$x <- coords[,1]
-V(cluster_network)$y <- coords[,2]
+V(cluster_network)$kk_x <- coords[,1]
+V(cluster_network)$kk_y <- coords[,2]
+
+coords <- layout_with_drl(cluster_network)
+V(cluster_network)$drl_x <- coords[,1]
+V(cluster_network)$drl_y <- coords[,2]
 
 ##############################
 # Layout subcluster
 sub_coords <- layout_with_kk(subcluster_network)
-V(subcluster_network)$x <- sub_coords[,1]
-V(subcluster_network)$y <- sub_coords[,2]
+V(subcluster_network)$kk_x <- sub_coords[,1]
+V(subcluster_network)$kk_y <- sub_coords[,2]
+
+sub_coords <- layout_with_drl(subcluster_network)
+V(subcluster_network)$drl_x <- sub_coords[,1]
+V(subcluster_network)$drl_y <- sub_coords[,2]
+
+sub_coords <- layout_with_mds(subcluster_network)
+V(subcluster_network)$mds_x <- sub_coords[,1]
+V(subcluster_network)$mds_y <- sub_coords[,2]
+
+sub_coords <- layout_with_graphopt(subcluster_network)
+V(subcluster_network)$gh_x <- sub_coords[,1]
+V(subcluster_network)$gh_y <- sub_coords[,2]
+
+sub_coords <- layout_with_lgl(subcluster_network)
+V(subcluster_network)$lgl_x <- sub_coords[,1]
+V(subcluster_network)$lgl_y <- sub_coords[,2]
+
+sub_coords <- layout_with_gem(subcluster_network)
+V(subcluster_network)$gem_x <- sub_coords[,1]
+V(subcluster_network)$gem_y <- sub_coords[,2]
+
+sub_coords <- layout_with_fr(subcluster_network)
+V(subcluster_network)$fr_x <- sub_coords[,1]
+V(subcluster_network)$fr_y <- sub_coords[,2]
 
 # Save
 coords_df <- igraph::as_data_frame(cluster_network, what = "vertices")
 sub_coords_df <- igraph::as_data_frame(subcluster_network, what = "vertices")
 
+#write.csv(sub_coords_df, file="subcoords_df.csv", row.names = FALSE)
 
-write.csv(sub_coords_df, file="subcoords_df.csv", row.names = FALSE)
+##############################
+# Layout subcluster
+rcs_merged$drl_x <- rcs_merged$drl_y <- NULL 
+rcs_merged$kk_x <- rcs_merged$kk_y <- NULL 
+rcs_merged <- merge(rcs_merged, sub_coords_df, 
+      by.x = "cluster_code", by.y = "name",
+      all.x = TRUE, all.y = FALSE)

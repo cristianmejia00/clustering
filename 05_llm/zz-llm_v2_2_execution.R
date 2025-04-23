@@ -272,5 +272,5 @@ save.image(file.path(
             settings$cno$clustering$algorithm,
             settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
-            "environ_llm.csv"
+            "environ_llm.rdata"
           ))

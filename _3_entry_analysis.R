@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q327 TI Policy"
+project_folder_name = "Q330_payment_es"
 analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2025-04-17-23-20.json"
+settings_directive <- "settings_analysis_directive_2025-04-22-14-00.json"
 
 ###############################################################################
 # Call necessary libraries

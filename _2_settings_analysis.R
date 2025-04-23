@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q327 TI Policy",
+  project_folder = "Q330_payment_es",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
@@ -121,15 +121,15 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "policy",
-  "description"  = "a course or principle of action adopted or proposed by an organization or individual.",
+  "theme" = "Payment for Ecosystem Services",
+  "description"  = "is a mechanism where individuals or entities (buyers) financially compensate others (providers) for managing or protecting land or resources that provide valuable environmental benefits. This encourages conservation and sustainable land use by incentivizing those who provide services like water purification, carbon sequestration, or biodiversity protection.",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
 ########################################################### for 00_reports.R
 ## Reporting
 settings$rp <- list(
-  most_recent_year = 2024, # This is needed so the charts do not plot 2024, or future years where data is incomplete
+  most_recent_year = 2025, # This is needed so the charts do not plot 2024, or future years where data is incomplete
   top_documents = 0, # 0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze
