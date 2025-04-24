@@ -22,10 +22,10 @@ library(readr)
 library(scales)
 
 # Read the data
-data <- melted_sankey_topics #
+data <- melted_sankey_topics2 #
 
 # Retain upto 50
-data <- data %>% top_n(100, wt=Similarity)
+data <- data %>% top_n(50, wt=Similarity)
 
 # Remove 'others'
 data<- data %>% 
@@ -33,6 +33,8 @@ data<- data %>%
   filter(!grepl("99---|99$", Dest))
 
 # Remove dashes
+data$Source <- gsub("-0---", ": ", data$Source)
+data$Dest <- gsub("-0---", ": ", data$Dest)
 data$Source <- gsub("---", ": ", data$Source)
 data$Dest <- gsub("---", ": ", data$Dest)
 
@@ -78,12 +80,12 @@ sankey <- sankeyNetwork(
   NodeGroup = "node_group",
   LinkGroup = "link_group",
   colourScale = my_color_scale,
-  fontSize = 11,
+  fontSize = 12,
   nodeWidth = 25,
-  nodePadding = 10,
-  margin = c('right'=420, 'left'=300),
+  #nodePadding = 10,
+  #margin = c('right'=420, 'left'=300),
   height = 600,
-  width = 12000,
+  width = 1100,
   sinksRight = FALSE
 )
 

@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H007_innovation_innovativeness'
-settings_directive = 'heatmap_settings_H007_Innovation-Innovativeness.json'
+heatmap_analysis_id = 'H006_Human-Aug_Sust_Wellbeing_QoL'
+settings_directive = 'heatmap_settings_H006_HumanAugment_Wellb_QoL_Sust_SUBCLUSTERS.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -247,7 +247,7 @@ for (inst in unique(tmp$dataset)) {
 # Heatmap
 hm <- readr::read_csv(file.path(
   output_folder_path,
-  settings$metadata$heatmap_analysis_id,
+  heatmap_analysis_id, #settings$metadata$heatmap_analysis_id,
   "heatmap_matrix.csv"
 )) %>% as.data.frame()
 rownames(hm) <- colnames(hm)
@@ -301,9 +301,13 @@ ggsave(
 # Sankey
 melted <- readr::read_csv(file.path(
   output_folder_path,
-  settings$metadata$heatmap_analysis_id,
+  heatmap_analysis_id, #settings$metadata$heatmap_analysis_id,
   "heatmap_melted.csv"
 ))
+
+# Careful here. This was used for the Human Augmentation x Socila Issues 
+melted$Source <- gsub("Sut", "Sust", melted$Source)
+melted$Target <- gsub("Sut", "Sust", melted$Target)
 
 melted <- melted %>%
   separate(Source, 
@@ -336,6 +340,8 @@ melted <- merge(melted,
                 by.x = "target_dataset",
                 by.y = "display_name")
 
+table(melted$source_dataset)
+table(melted$target_dataset)
 ###############################################################################
 png(filename = file.path(
   output_folder_path,
@@ -366,6 +372,9 @@ melted_filtered <- melted %>%
   filter(source_sankey_order != target_sankey_order) %>%
   #filter(abs(source_sankey_order - target_sankey_order) == 1) %>%
   filter(Similarity >= sankey_threshold)
+
+
+table(melted_filtered$target_dataset)
 
 sankey_steps <- unique(inputs$sankey_display_order) %>% sort()
 
@@ -442,7 +451,9 @@ melted_sankey_topics <- melted_sankey_topics %>%
 
 
 # Special filtering
-
+# Go to the respective R file in each "Hxxx" folder.
+# For example for the paper on Human Augmentation x Social Issues H006 we filtered for technical clusters.
+# There's the file "special_filteringmelted.R"
 
 # Save files
 write.csv(melted_sankey_topics, 

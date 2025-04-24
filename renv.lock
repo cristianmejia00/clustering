@@ -409,6 +409,19 @@
       ],
       "Hash": "d06cd1a942bb17b607df7d57048d6840"
     },
+    "data.tree": {
+      "Package": "data.tree",
+      "Version": "1.1.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "R6",
+        "methods",
+        "stringi"
+      ],
+      "Hash": "d7602f0f55e0335b83f2353337848d6f"
+    },
     "desc": {
       "Package": "desc",
       "Version": "1.4.3",
@@ -1106,6 +1119,21 @@
         "methods"
       ],
       "Hash": "4fd8900853b746af55b81fda99da7695"
+    },
+    "networkD3": {
+      "Package": "networkD3",
+      "Version": "0.4.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "data.tree",
+        "htmlwidgets",
+        "igraph",
+        "jsonlite",
+        "magrittr"
+      ],
+      "Hash": "a4c0a43c1fe6182e7f9684b3bf014bcd"
     },
     "ngram": {
       "Package": "ngram",
