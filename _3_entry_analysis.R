@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q330_payment_es"
+project_folder_name = "Q10_brain_health_ts_20250501"
 analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2025-04-22-14-00.json"
+settings_directive <- "settings_analysis_directive_2025-05-07-11-53.json"
 
 ###############################################################################
 # Call necessary libraries

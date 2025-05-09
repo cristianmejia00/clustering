@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q330_payment_es"
-settings_directive <- "settings_dataset_directive_2025-04-22-13-56.json"
+project_folder_name <- "Q10_brain_health_ts_20250501"
+settings_directive <- "settings_dataset_directive_2025-05-07-11-52.json"
 
 ###############################################################################
 # Call necessary libraries

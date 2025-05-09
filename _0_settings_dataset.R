@@ -9,26 +9,26 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q330_payment_es",
+  raw_input_folder_name = "Q10_brain_health_ts_20250501",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q330_payment_es",
+  project_folder = "Q10_brain_health_ts_20250501",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2025-04-21",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2025-05-07",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Q330',
+  query = 'Q6',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "payment for ecosystem services",
-  dataset_file_name_suffix = "pes", #suffix is used for file names
+  dataset_name = "wellbeing",
+  dataset_file_name_suffix = "wb", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "pes"
+  notes = "wb"
 )
 
 ## Dataset General Parameters

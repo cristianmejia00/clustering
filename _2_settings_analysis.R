@@ -9,7 +9,7 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q330_payment_es",
+  project_folder = "Q10_brain_health_ts_20250501",
   filtered_folder = "f01",
   analysis_id = "a01_cn__f01_dc__c01_lv" #a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Payment for Ecosystem Services",
-  "description"  = "is a mechanism where individuals or entities (buyers) financially compensate others (providers) for managing or protecting land or resources that provide valuable environmental benefits. This encourages conservation and sustainable land use by incentivizing those who provide services like water purification, carbon sequestration, or biodiversity protection.",
+  "theme" = "brain health",
+  "description"  = "brain health research",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
