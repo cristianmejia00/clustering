@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H013'
-settings_directive = 'heatmap_settings_H013_Brain_Heath_Social_Issues.json'
+heatmap_analysis_id = 'H007_innovation_innovativeness'
+settings_directive = 'heatmap_settings_H007_Innovation-Innovativeness.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -47,10 +47,10 @@ rcs <- lapply(c(1:nrow(inputs)), \(x) {
     output_folder_path,#settings$metadata$input_directory,
     settings$inputs[[x]]$project_folder_name,
     settings$inputs[[x]]$analysis_folder_name,
-    "louvain",
-    "0.9",
+    #"louvain",
+    #"0.9",
     settings$inputs[[x]]$level_folder_name,
-    "cluster_summary.csv"
+    "cluster_summary.csv"#"rcs_merged.csv"
   )) %>% mutate(
     # Add the dataset name to the RCS cluster code
     cluster_code = paste(inputs$display_name[[x]], cluster_code, sep = '-')

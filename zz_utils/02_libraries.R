@@ -12,7 +12,7 @@ if (!("Rmpfr"       %in% rownames(installed.packages()))) {install.packages("Rmp
 if (!("plyr"        %in% rownames(installed.packages()))) {install.packages("plyr")}
 if (!("dplyr"       %in% rownames(installed.packages()))) {install.packages("dplyr")}
 if (!("topicmodels" %in% rownames(installed.packages()))) {install.packages("topicmodels")}
-if (!("ldatuning"   %in% rownames(installed.packages()))) {install.packages("ldatuning")}
+#if (!("ldatuning"   %in% rownames(installed.packages()))) {install.packages("ldatuning")}
 if (!("plotly"      %in% rownames(installed.packages()))) {install.packages("plotly")}
 if (!("stringr"     %in% rownames(installed.packages()))) {install.packages("stringr")}
 if (!("ngram"       %in% rownames(installed.packages()))) {install.packages("ngram")}
@@ -20,10 +20,10 @@ if (!("slam"        %in% rownames(installed.packages()))) {install.packages("sla
 if (!("Rtsne"       %in% rownames(installed.packages()))) {install.packages("Rtsne")}
 if (!("tools"       %in% rownames(installed.packages()))) {install.packages("tools")}
 if (!("devtools"    %in% rownames(installed.packages()))) {install.packages("devtools")}
-if (!("Opener5"     %in% rownames(installed.packages()))) {
-  library(devtools)
-  install_github("cristianmejia00/Opener5")
-}
+# if (!("Opener5"     %in% rownames(installed.packages()))) {
+#   library(devtools)
+#   install_github("cristianmejia00/Opener5")
+# }
 if (!("DT"          %in% rownames(installed.packages()))) {install.packages("DT")}
 if (!("glue"        %in% rownames(installed.packages()))) {install.packages("glue")}
 if (!("svglite"     %in% rownames(installed.packages()))) {install.packages("svglite")}
@@ -45,7 +45,7 @@ library(plyr)
 library(dplyr)
 # sudo apt-get install libgsl-dev
 library(topicmodels)
-library(ldatuning)
+#library(ldatuning)
 # apt-get install r-cran-rjava
 #library(qdap)
 library(plotly)
@@ -53,7 +53,7 @@ library(stringr)
 library(ngram)
 #library(devtools)
 #install_github("cristianmejia00/Opener5")
-library(Opener5)
+#library(Opener5)
 #library(rowr) #Not available for R 3.6.3 (?!) Dont know where it goes.
 library(slam)
 library(Rtsne)
@@ -61,3 +61,4 @@ library(tools)
 library(DT)
 library(glue)
 library(uuid)
+

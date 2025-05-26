@@ -22,15 +22,15 @@ library(readr)
 library(scales)
 
 # Read the data
-data <- melted_sankey_topics2 #
-
-# Retain upto 50
-data <- data %>% top_n(50, wt=Similarity)
+data <- melted_sankey_topics #
 
 # Remove 'others'
 data<- data %>% 
-  filter(!grepl("99---|99$", Source)) %>%
-  filter(!grepl("99---|99$", Dest))
+  filter(!grepl("99---|99$|-99|19-7|19-6", Source)) %>%
+  filter(!grepl("99---|99$|-99|19-6|19-7", Dest))
+
+# Retain upto 50
+data <- data %>% top_n(50, wt=Similarity)
 
 # Remove dashes
 data$Source <- gsub("-0---", ": ", data$Source)
@@ -41,6 +41,9 @@ data$Dest <- gsub("---", ": ", data$Dest)
 # Prepare names
 data$Source <- paste(data$Source, data$source_topic)
 data$Dest <- paste(data$Dest, data$target_topic)
+
+data$Source <- substr(data$Source, 1, 60)
+data$Dest <- substr(data$Dest, 1, 60)
 
 # Create nodes dataframe
 # Get unique nodes from both source and destination
@@ -83,15 +86,12 @@ sankey <- sankeyNetwork(
   fontSize = 12,
   nodeWidth = 25,
   #nodePadding = 10,
-  #margin = c('right'=420, 'left'=300),
+  margin = c('right'=380, 'left'=100),
   height = 600,
-  width = 1100,
+  width = 1200,
   sinksRight = FALSE
 )
-
-# Display the Sankey in R
 sankey
-
 # Add JavaScript to modify label positions
 sankey <- htmlwidgets::onRender(
   sankey,

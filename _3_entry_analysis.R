@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q10_brain_health_ts_20250501"
-analysis_folder_name <- "a01_cn__f01_dc__c01_lv"
-settings_directive <- "settings_analysis_directive_2025-05-07-11-53.json"
+project_folder_name = "Q331_TI_sdgs_TS_policy"
+analysis_folder_name <- "a01_tm__f01_e01__km01"
+settings_directive <- "settings_analysis_directive_2025-05-10-12-53.json"
 
 ###############################################################################
 # Call necessary libraries

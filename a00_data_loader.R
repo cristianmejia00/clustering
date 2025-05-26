@@ -27,7 +27,7 @@ paths_to_files <- list.files(
 # Read each file and store them in a vector
 # fread sometimes fails when reading the header, what to do?
 list_of_all_files <- lapply(paths_to_files, function(a_path) {
-  data1 <- fread(a_path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-8", quote = "")
+  data1 <- fread(a_path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-8")
   # data1 <- read_from_wos(a_path) # NOTE: DO NOT USE read_from_wos() from package OPNER5, it cut off the lines before finish it, hence it does not read PY and UT for all rows.
   # data1 <- read.table(a_path, sep = '\t', fill = TRUE, stringsAsFactors = FALSE, header = TRUE, check.names = FALSE, quote = "", comment.char="", encoding = "UTF-16")
   # data1 <- read.csv(a_path, stringsAsFactors = FALSE, check.names = FALSE)
@@ -67,8 +67,12 @@ if (settings$filtering[[filter_label]]$rows_filter$removed_duplicated_UT) {
 
 # A record without PY, EA, or CY can be NA or "" empty string. We normalize anything to NA
 dataset$PY[dataset$PY == ""] <- NA
-dataset$EA[dataset$EA == ""] <- NA
-dataset$CY[dataset$CY == ""] <- NA
+if ("C1" %in% colnames(dataset)) {
+  dataset$EA[dataset$EA == ""] <- NA
+}
+if ("CY" %in% colnames(dataset)) {
+  dataset$CY[dataset$CY == ""] <- NA
+}
 
 # Correct records without PY
 table(dataset$PY)

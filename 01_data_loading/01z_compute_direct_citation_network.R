@@ -11,31 +11,39 @@ if (length(blank_ut_index) > 0 ){
 # Transform each article in the dataset to the "record" format:
 # Author, Year, Publication name, vol, page, DOI
 # AU, PY, J9, VL, BP, DI
-first_author <- gsub("; .*$", "", dataset$AU) %>% gsub(",", "", .)
-volume <- paste("V", dataset$VL, sep = "")
-page <- paste("P", dataset$BP, sep = "")
-article_records <- paste(first_author, dataset$PY, dataset$J9, volume, page, sep = ", ") 
-# Cleansing
-article_records <- gsub(", VNA|, P$", ",", article_records)
-article_records <- gsub(", ,|,,", ",", article_records)
-article_records <- gsub(", ,|,,", ",", article_records) #Yes, we need it twice.
-article_records <- gsub(",$|, $", "", article_records)
-article_records <- tolower(article_records)
-
-
-# Valid articles to use: 
-# If we would like to have a threshold then put it here
-# e.g. Those mentioned at least by 2 articles in the dataset
-valid_article_records <-  article_records # No thresholds
+if (all(c('J9', 'VL', 'BP') %in% colnames(dataset))){
+  first_author <- gsub("; .*$", "", dataset$AU) %>% gsub(",", "", .)
+  volume <- paste("V", dataset$VL, sep = "")
+  page <- paste("P", dataset$BP, sep = "")
+  article_records <- paste(first_author, dataset$PY, dataset$J9, volume, page, sep = ", ") 
+  # Cleansing
+  article_records <- gsub(", VNA|, P$", ",", article_records)
+  article_records <- gsub(", ,|,,", ",", article_records)
+  article_records <- gsub(", ,|,,", ",", article_records) #Yes, we need it twice.
+  article_records <- gsub(",$|, $", "", article_records)
+  article_records <- tolower(article_records)
+  
+  # Valid articles to use: 
+  # If we would like to have a threshold then put it here
+  # e.g. Those mentioned at least by 2 articles in the dataset
+  valid_article_records <-  article_records # No thresholds
+} else {
+  print('A column from J9, Vl, or BP is missing.')
+  print('Because we are likely dealing with Derwent data')
+}
 
 # Get and format the dois from the articles in the dataset.
-article_dois <- dataset$DI %>% unlist %>% tolower
-valid_article_dois <-  article_dois[article_dois!=""]
+if ('DI' %in% colnames(dataset)) {
+  article_dois <- dataset$DI %>% unlist %>% tolower
+  valid_article_dois <-  article_dois[article_dois!=""]
+} else {
+  print('This dataset does not have DI column!')
+}
+
 
 # Get the cited references
 # For each article in the dataset, we get a list of the cited references from the CR column.
 references <- strsplit(dataset$CR, "; ")
-
 
 # Count the number of references per article
 number_of_references <- sapply(references, length)
@@ -69,20 +77,37 @@ rm(references_unlisted)
 # Here we separate the DOI and put it as a different column.
 # It will help to match the cited references to the articles in our dataset by comparing
 # either the formated citation or the DOI.
-separated <- str_split_fixed(references_df$reference_records, ", doi ", 2)
-references_df$reference_records <- separated[, 1]
-references_df$reference_dois <- separated[, 2]
-rm(separated)
+if (all(c('J9', 'VL', 'BP') %in% colnames(dataset))){
+  separated <- str_split_fixed(references_df$reference_records, ", doi ", 2)
+  references_df$reference_records <- separated[, 1]
+  references_df$reference_dois <- separated[, 2]
+  rm(separated)
+} else {
+  references_df$reference_dois <- references_df$reference_records
+  references_df$reference_records <- ''
+}
+
+# Check object size
 format(object.size(references_df), units = "Gb")
 
 # Let only valid references
 # The list of cited references also contains references to paper outside our dataset (or even outside of WOS)
 # The citation network approach we use in our lab, stablish connection to among the papers within our dataset only.
 # Therefore, we must remove any other unncesery reference. As naturally it won't create a match.
-references_df$is_valid_reference_record <- references_df$reference_records %in% valid_article_records
+if (exists('valid_article_records')) {
+  references_df$is_valid_reference_record <- references_df$reference_records %in% valid_article_records
+} else {
+  references_df$is_valid_reference_record <- FALSE
+}
 table(references_df$is_valid_reference_record)
-references_df$is_valid_reference_doi <- references_df$reference_dois %in% valid_article_dois
+
+if (exists('valid_article_dois')) {
+  references_df$is_valid_reference_doi <- references_df$reference_dois %in% valid_article_dois
+} else {
+  references_df$is_valid_reference_doi <- FALSE
+}
 table(references_df$is_valid_reference_doi)
+
 references_df <- references_df[references_df$is_valid_reference_record|references_df$is_valid_reference_doi,]
 
 ###########
@@ -102,6 +127,3 @@ ncol_file <- cbind(as.character(references_df$article_index),
 
 # As data frame
 network <- ncol_file %>% as.data.frame()
-
-
-

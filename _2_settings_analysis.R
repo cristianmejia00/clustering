@@ -9,9 +9,9 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q10_brain_health_ts_20250501",
+  project_folder = "Q331_TI_sdgs_TS_policy",
   filtered_folder = "f01",
-  analysis_id = "a01_cn__f01_dc__c01_lv" #a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
+  analysis_id = "a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
 
 
@@ -20,7 +20,7 @@ settings$params <- list(
   recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
+  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -102,10 +102,10 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     year_column = "PY",
 
     # The number of topics to get. Use 0 to infer the topics with HDBScan
-    n_topics = 279,
+    n_topics = 62,
 
     # The minimum size for a topic
-    min_topic_size = 10)
+    min_topic_size = 5)
 }
 
 ## add-ons
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "brain health",
-  "description"  = "brain health research",
+  "theme" = "Sustainable Development Goals Policy",
+  "description"  = "academic research and policy documentation",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

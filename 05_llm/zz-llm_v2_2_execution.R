@@ -12,7 +12,7 @@ source("05_llm/zz-llm_v2_1_functions.R")
 
 level_report_iteration <- level_report_iteration
 level_report_iteration
-this_tops <- 5 # 5 for cluster, 3 for subclusters
+this_tops <- 4 # 5 for cluster, 3 for subclusters
 
 rcs_merged$cluster_id_backup <- rcs_merged$cluster
 rcs_merged$cluster <- rcs_merged$cluster_code %>% as.character()
@@ -34,7 +34,7 @@ if (level_report_iteration == 1) {
   dataset$X_C <- dataset$subcluster_label1 %>% as.character()
   dataset$X_E <- dataset$level0_in_degree
 }
-
+dataset$X_E <- dataset$Z9
 list_of_cluster_codes <- dataset$X_C %>%
   unique() %>%
   sort()
@@ -231,8 +231,8 @@ write.csv(
     output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
-    settings$cno$clustering$algorithm,
-    settings$cno$thresholding$threshold,
+    #settings$cno$clustering$algorithm,
+    #settings$cno$thresholding$threshold,
     glue("level{level_report_iteration}"),
     "cluster_summary_short_dc.csv"
   ),
@@ -244,8 +244,8 @@ write.csv(rcs_merged,
     output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
-    settings$cno$clustering$algorithm,
-    settings$cno$thresholding$threshold,
+    #settings$cno$clustering$algorithm,
+    #settings$cno$thresholding$threshold,
     glue("level{level_report_iteration}"),
     "cluster_summary_extended_dc.csv"
   ),
@@ -257,8 +257,8 @@ write.csv(rcs_merged,
             output_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            settings$cno$clustering$algorithm,
-            settings$cno$thresholding$threshold,
+            #settings$cno$clustering$algorithm,
+            #settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
             "cluster_summary_dc.csv"
           ),
@@ -269,8 +269,8 @@ save.image(file.path(
             output_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            settings$cno$clustering$algorithm,
-            settings$cno$thresholding$threshold,
+            #settings$cno$clustering$algorithm,
+            #settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
             "environ_llm.rdata"
           ))
