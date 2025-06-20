@@ -1,14 +1,15 @@
 ###################################################################
 # Data Scope
-if (scope == "all") {
-    myDataCorrect <- dataset
-}
-if (scope == "cl99") {
-    myDataCorrect <- subset(dataset, dataset$cl99 == FALSE)
-}
-if (scope == "cl_99") {
-    myDataCorrect <- subset(dataset, dataset$cl_99 == FALSE)
-}
+myDataCorrect <- dataset
+# if (scope == "all") {
+#     myDataCorrect <- dataset
+# }
+# if (scope == "cl99") {
+#     myDataCorrect <- subset(dataset, dataset$cl99 == FALSE)
+# }
+# if (scope == "cl_99") {
+#     myDataCorrect <- subset(dataset, dataset$cl_99 == FALSE)
+# }
 
 # Remove small clusters
 min_selector <- table(myDataCorrect$subcluster_label2)

@@ -9,18 +9,18 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q331_TI_sdgs_TS_policy",
+  project_folder = "Q336_derwent_fukuhara",
   filtered_folder = "f01",
-  analysis_id = "a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
+  analysis_id = "a01_cn__f01_dc__c01_lv"#"a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
 
 
 ## General Parameters
 settings$params <- list(
-  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+  recursive_level = 3, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
   unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
+  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Sustainable Development Goals Policy",
-  "description"  = "academic research and policy documentation",
+  "theme" = "Sustainability",
+  "description"  = "academic research about Sustainability",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
@@ -133,11 +133,152 @@ settings$rp <- list(
   top_documents = 0, # 0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze
-  article_report_columns = list("X_C", "cluster_code", "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "UT", "sentiment", "sentiment_factor"),
-  categorical_long_reports = list("AU", "WC", "SO", "Countries", "Institutions", "DE", "sentiment_factor", "ID", "issues"), # Columns in the dataset for long-form summary. These are also used for RCS.
+  article_report_columns = list("X_C", "cluster_code", "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", 
+                                "Countries", "UT", "sentiment", "sentiment_factor"
+                                # 'ethnicities', 'race', 'is_japanese', 'nationality', 'gender',
+                                # 'nationality_processed', 'ethnicities_total_elements',
+                                # 'ethnicities_unique_elements', 'ethnicities_variety_ratio',
+                                # 'ethnicities_hhi', 'ethnicities_hhi_normalized',
+                                # 'ethnicities_shannon_entropy', 'ethnicities_shannon_max',
+                                # 'ethnicities_shannon_evenness', 'ethnicities_simpson_diversity',
+                                # 'ethnicities_simpson_dominance', 'ethnicities_berger_parker_dominance',
+                                # 'ethnicities_effective_species_shannon',
+                                # 'ethnicities_effective_species_simpson', 'ethnicities_gini_coefficient',
+                                # 'ethnicities_coefficient_of_variation', 'race_total_elements',
+                                # 'race_unique_elements', 'race_variety_ratio', 'race_hhi',
+                                # 'race_hhi_normalized', 'race_shannon_entropy', 'race_shannon_max',
+                                # 'race_shannon_evenness', 'race_simpson_diversity',
+                                # 'race_simpson_dominance', 'race_berger_parker_dominance',
+                                # 'race_effective_species_shannon', 'race_effective_species_simpson',
+                                # 'race_gini_coefficient', 'race_coefficient_of_variation',
+                                # 'nationality_total_elements', 'nationality_unique_elements',
+                                # 'nationality_variety_ratio', 'nationality_hhi',
+                                # 'nationality_hhi_normalized', 'nationality_shannon_entropy',
+                                # 'nationality_shannon_max', 'nationality_shannon_evenness',
+                                # 'nationality_simpson_diversity', 'nationality_simpson_dominance',
+                                # 'nationality_berger_parker_dominance',
+                                # 'nationality_effective_species_shannon',
+                                # 'nationality_effective_species_simpson', 'nationality_gini_coefficient',
+                                # 'nationality_coefficient_of_variation', 'is_japanese_total_elements',
+                                # 'is_japanese_unique_elements', 'is_japanese_variety_ratio',
+                                # 'is_japanese_hhi', 'is_japanese_hhi_normalized',
+                                # 'is_japanese_shannon_entropy', 'is_japanese_shannon_max',
+                                # 'is_japanese_shannon_evenness', 'is_japanese_simpson_diversity',
+                                # 'is_japanese_simpson_dominance', 'is_japanese_berger_parker_dominance',
+                                # 'is_japanese_effective_species_shannon',
+                                # 'is_japanese_effective_species_simpson', 'is_japanese_gini_coefficient',
+                                # 'is_japanese_coefficient_of_variation', 'gender_total_elements',
+                                # 'gender_unique_elements', 'gender_variety_ratio', 'gender_hhi',
+                                # 'gender_hhi_normalized', 'gender_shannon_entropy', 'gender_shannon_max',
+                                # 'gender_shannon_evenness', 'gender_simpson_diversity',
+                                # 'gender_simpson_dominance', 'gender_berger_parker_dominance',
+                                # 'gender_effective_species_shannon', 'gender_effective_species_simpson',
+                                # 'gender_gini_coefficient', 'gender_coefficient_of_variation',
+                                # 'Z9_rank_normalized',
+                                # 'institutions_total_elements',
+                                # 'institutions_unique_elements',
+                                # 'institutions_variety_ratio',
+                                # 'institutions_hhi',
+                                # 'institutions_hhi_normalized',
+                                # 'institutions_shannon_entropy',
+                                # 'institutions_shannon_max',
+                                # 'institutions_shannon_evenness',
+                                # 'institutions_simpson_diversity',
+                                # 'institutions_simpson_dominance',
+                                # 'institutions_berger_parker_dominance',
+                                # 'institutions_effective_species_shannon',
+                                # 'institutions_effective_species_simpson',
+                                # 'institutions_gini_coefficient',
+                                # 'institutions_coefficient_of_variation',
+                                # 'countries_total_elements',
+                                # 'countries_unique_elements',
+                                # 'countries_variety_ratio',
+                                # 'countries_hhi',
+                                # 'countries_hhi_normalized',
+                                # 'countries_shannon_entropy',
+                                # 'countries_shannon_max',
+                                # 'countries_shannon_evenness',
+                                # 'countries_simpson_diversity',
+                                # 'countries_simpson_dominance',
+                                # 'countries_berger_parker_dominance',
+                                # 'countries_effective_species_shannon',
+                                # 'countries_effective_species_simpson',
+                                # 'countries_gini_coefficient',
+                                # 'countries_coefficient_of_variation'
+                                ),
+  categorical_long_reports = list("AU", "WC", "SO", "Countries", "Institutions", "DE", "sentiment_factor", "ID", "issues",
+                                  'ethnicities', 'race', 'is_japanese', 'nationality', 'gender'), # Columns in the dataset for long-form summary. These are also used for RCS.
   categorical_simple_wide_reports = list("PY", "sentiment_factor"), # Columns in the dataset without ';' for matrix type summary
   categorical_multi_wide_reports = list("WC", "Countries", "Institutions", "issues"), # Columns in the dataset with ';' for matrix type summary
-  numerical_reports = list("PY", "Z9", "sentiment", "score") # Numeric columns in the dataset for summary (min, max, mean, median, sd)
+  numerical_reports = list("PY", "Z9", "sentiment", "score")
+                           # 'nationality_processed', 'ethnicities_total_elements',
+                           # 'ethnicities_unique_elements', 'ethnicities_variety_ratio',
+                           # 'ethnicities_hhi', 'ethnicities_hhi_normalized',
+                           # 'ethnicities_shannon_entropy', 'ethnicities_shannon_max',
+                           # 'ethnicities_shannon_evenness', 'ethnicities_simpson_diversity',
+                           # 'ethnicities_simpson_dominance', 'ethnicities_berger_parker_dominance',
+                           # 'ethnicities_effective_species_shannon',
+                           # 'ethnicities_effective_species_simpson', 'ethnicities_gini_coefficient',
+                           # 'ethnicities_coefficient_of_variation', 'race_total_elements',
+                           # 'race_unique_elements', 'race_variety_ratio', 'race_hhi',
+                           # 'race_hhi_normalized', 'race_shannon_entropy', 'race_shannon_max',
+                           # 'race_shannon_evenness', 'race_simpson_diversity',
+                           # 'race_simpson_dominance', 'race_berger_parker_dominance',
+                           # 'race_effective_species_shannon', 'race_effective_species_simpson',
+                           # 'race_gini_coefficient', 'race_coefficient_of_variation',
+                           # 'nationality_total_elements', 'nationality_unique_elements',
+                           # 'nationality_variety_ratio', 'nationality_hhi',
+                           # 'nationality_hhi_normalized', 'nationality_shannon_entropy',
+                           # 'nationality_shannon_max', 'nationality_shannon_evenness',
+                           # 'nationality_simpson_diversity', 'nationality_simpson_dominance',
+                           # 'nationality_berger_parker_dominance',
+                           # 'nationality_effective_species_shannon',
+                           # 'nationality_effective_species_simpson', 'nationality_gini_coefficient',
+                           # 'nationality_coefficient_of_variation', 'is_japanese_total_elements',
+                           # 'is_japanese_unique_elements', 'is_japanese_variety_ratio',
+                           # 'is_japanese_hhi', 'is_japanese_hhi_normalized',
+                           # 'is_japanese_shannon_entropy', 'is_japanese_shannon_max',
+                           # 'is_japanese_shannon_evenness', 'is_japanese_simpson_diversity',
+                           # 'is_japanese_simpson_dominance', 'is_japanese_berger_parker_dominance',
+                           # 'is_japanese_effective_species_shannon',
+                           # 'is_japanese_effective_species_simpson', 'is_japanese_gini_coefficient',
+                           # 'is_japanese_coefficient_of_variation', 'gender_total_elements',
+                           # 'gender_unique_elements', 'gender_variety_ratio', 'gender_hhi',
+                           # 'gender_hhi_normalized', 'gender_shannon_entropy', 'gender_shannon_max',
+                           # 'gender_shannon_evenness', 'gender_simpson_diversity',
+                           # 'gender_simpson_dominance', 'gender_berger_parker_dominance',
+                           # 'gender_effective_species_shannon', 'gender_effective_species_simpson',
+                           # 'gender_gini_coefficient', 'gender_coefficient_of_variation','Z9_rank_normalized',
+                           # 'institutions_total_elements',
+                           # 'institutions_unique_elements',
+                           # 'institutions_variety_ratio',
+                           # 'institutions_hhi',
+                           # 'institutions_hhi_normalized',
+                           # 'institutions_shannon_entropy',
+                           # 'institutions_shannon_max',
+                           # 'institutions_shannon_evenness',
+                           # 'institutions_simpson_diversity',
+                           # 'institutions_simpson_dominance',
+                           # 'institutions_berger_parker_dominance',
+                           # 'institutions_effective_species_shannon',
+                           # 'institutions_effective_species_simpson',
+                           # 'institutions_gini_coefficient',
+                           # 'institutions_coefficient_of_variation',
+                           # 'countries_total_elements',
+                           # 'countries_unique_elements',
+                           # 'countries_variety_ratio',
+                           # 'countries_hhi',
+                           # 'countries_hhi_normalized',
+                           # 'countries_shannon_entropy',
+                           # 'countries_shannon_max',
+                           # 'countries_shannon_evenness',
+                           # 'countries_simpson_diversity',
+                           # 'countries_simpson_dominance',
+                           # 'countries_berger_parker_dominance',
+                           # 'countries_effective_species_shannon',
+                           # 'countries_effective_species_simpson',
+                           # 'countries_gini_coefficient',
+                           # 'countries_coefficient_of_variation') # Numeric columns in the dataset for summary (min, max, mean, median, sd)
   # methods = c("Data collection from WOS", "Created citation network", "Extracted Maximum Component", "Clustering using the Louvain method", "Cluster description")
 )
 

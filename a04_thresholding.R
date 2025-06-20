@@ -3,7 +3,7 @@
 #==============================================================================
 # Load settings
 source("_3_entry_analysis.R")
-
+settings$params$recursive_level <- 1
 ###############################################################################
 # Read input files
 analysis_folder_path <- file.path(settings$metadata$bibliometrics_folder,

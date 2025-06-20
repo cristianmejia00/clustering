@@ -20,6 +20,10 @@ if (!("slam"        %in% rownames(installed.packages()))) {install.packages("sla
 if (!("Rtsne"       %in% rownames(installed.packages()))) {install.packages("Rtsne")}
 if (!("tools"       %in% rownames(installed.packages()))) {install.packages("tools")}
 if (!("devtools"    %in% rownames(installed.packages()))) {install.packages("devtools")}
+if (!("ggrepel"          %in% rownames(installed.packages()))) {install.packages("ggrepel")}
+if (!("readr"          %in% rownames(installed.packages()))) {install.packages("readr")}
+if (!("reshape2"          %in% rownames(installed.packages()))) {install.packages("reshape2")}
+if (!("gridExtra"          %in% rownames(installed.packages()))) {install.packages("gridExtra")}
 # if (!("Opener5"     %in% rownames(installed.packages()))) {
 #   library(devtools)
 #   install_github("cristianmejia00/Opener5")

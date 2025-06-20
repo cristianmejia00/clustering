@@ -34,7 +34,7 @@ if (level_report_iteration == 1) {
   dataset$X_C <- dataset$subcluster_label1 %>% as.character()
   dataset$X_E <- dataset$level0_in_degree
 }
-dataset$X_E <- dataset$Z9
+
 list_of_cluster_codes <- dataset$X_C %>%
   unique() %>%
   sort()
@@ -193,12 +193,17 @@ for (cluster_code in list_of_cluster_codes) {
   # Get the topic of the cluster
   print("Get enhanced description")
   cluster_completed <- FALSE
+  cluster_description_verified <- rcs_merged$detailed_description[rcs_merged$cluster_code == cluster_code]
+  if (nchar(cluster_description_verified) > 5) {
+    print('This cluster already has an enhanced description')
+    next
+  }
   while (!cluster_completed) {
     tmp <- tryCatch(
       {
         prompt_enh <- prompt_cluster_description_enhanced(
           topic = MAIN_TOPIC,
-          cluster_description = rcs_merged$detailed_description[rcs_merged$cluster_code == cluster_code]
+          cluster_description = cluster_description_verified
         )
 
         print(prompt_enh$user)
@@ -231,8 +236,8 @@ write.csv(
     output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
-    #settings$cno$clustering$algorithm,
-    #settings$cno$thresholding$threshold,
+    settings$cno$clustering$algorithm,
+    settings$cno$thresholding$threshold,
     glue("level{level_report_iteration}"),
     "cluster_summary_short_dc.csv"
   ),
@@ -244,8 +249,8 @@ write.csv(rcs_merged,
     output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
-    #settings$cno$clustering$algorithm,
-    #settings$cno$thresholding$threshold,
+    settings$cno$clustering$algorithm,
+    settings$cno$thresholding$threshold,
     glue("level{level_report_iteration}"),
     "cluster_summary_extended_dc.csv"
   ),
@@ -257,8 +262,8 @@ write.csv(rcs_merged,
             output_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            #settings$cno$clustering$algorithm,
-            #settings$cno$thresholding$threshold,
+            settings$cno$clustering$algorithm,
+            settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
             "cluster_summary_dc.csv"
           ),
@@ -269,8 +274,8 @@ save.image(file.path(
             output_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            #settings$cno$clustering$algorithm,
-            #settings$cno$thresholding$threshold,
+            settings$cno$clustering$algorithm,
+            settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
             "environ_llm.rdata"
           ))

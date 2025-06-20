@@ -67,7 +67,7 @@ if (settings$filtering[[filter_label]]$rows_filter$removed_duplicated_UT) {
 
 # A record without PY, EA, or CY can be NA or "" empty string. We normalize anything to NA
 dataset$PY[dataset$PY == ""] <- NA
-if ("C1" %in% colnames(dataset)) {
+if ("EA" %in% colnames(dataset)) {
   dataset$EA[dataset$EA == ""] <- NA
 }
 if ("CY" %in% colnames(dataset)) {
@@ -238,3 +238,4 @@ rm(list = ls())
 # usable_columns <- c("PT", "AU", "TI", "SO", "LA", "DT", "DE", "ID", "AB", "C1", "OI", "AF",
 #                     "RP", "FU", "FX", "CR", "NR", "TC", "Z9", "U1", "U2", "PU", "SN", "J9",
 #                     "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT")
+
