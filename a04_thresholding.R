@@ -3,7 +3,9 @@
 #==============================================================================
 # Load settings
 source("_3_entry_analysis.R")
-settings$params$recursive_level <- 1
+if (settings$params$recursive_level == 0) {
+  settings$params$recursive_level <- 1 # Must be 1 or higher for this to work. This change wont affect the other code.
+}
 ###############################################################################
 # Read input files
 analysis_folder_path <- file.path(settings$metadata$bibliometrics_folder,

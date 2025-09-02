@@ -13,6 +13,11 @@ myDataCorrect$PY <- as.character(myDataCorrect$PY) %>% as.integer()
 id_com <- sort(unique(myDataCorrect$"X_C"))
 network_year <- round(mean(myDataCorrect$PY, na.rm = TRUE), digits = 1)
 
+myDataCorrect$TI <- myDataCorrect$TI %>%
+    # Convert to valid UTF-8, replacing invalid characters
+    iconv(to = "UTF-8", sub = "byte") %>%
+    # Remove non-ASCII characters (optional - keeps only English chars)
+    iconv(to = "ASCII//TRANSLIT", sub = "")
 
 # Create a summary with information of each cluster
 # per each cluster a list of data frames is created (one data frame per core patent)

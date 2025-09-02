@@ -43,6 +43,10 @@ if (!("Z9" %in% available_columns)) {
 
 get_keywords_split <- function(a_column) {
   text<- a_column %>%
+    # Convert to valid UTF-8, replacing invalid characters
+    iconv(to = "UTF-8", sub = "byte") %>%
+    # Remove non-ASCII characters (optional - keeps only English chars)
+    iconv(to = "ASCII//TRANSLIT", sub = "") %>%
     tolower() %>%  # Convert text to lowercase
     removeNumbers() %>%  # Remove numbers
     removePunctuation() %>%  # Remove punctuation

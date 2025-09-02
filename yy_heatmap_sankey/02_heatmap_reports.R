@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H007_innovation_innovativeness'
-settings_directive = 'heatmap_settings_H007_Innovation-Innovativeness.json'
+heatmap_analysis_id = 'H015'
+settings_directive = 'heatmap_settings_H015_SYNBIO_IGES.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -23,6 +23,8 @@ settings <- RJSONIO::fromJSON(
   simplify = FALSE
 )
 
+settings$inputs[[2]]$display_name <- "igem"
+
 # Save setting inputs as a df.
 inputs <- lapply(settings$inputs, function(x) {data.frame(x)}) %>% rbind.fill()
 
@@ -38,6 +40,7 @@ coords <- readr::read_csv(file.path(
   select(x, y, cluster) %>% 
   rename(cluster_code = cluster)
 
+coords$cluster_code <- gsub("iges", "igem", coords$cluster_code)
 
 # Read the RCS files
 # For the heatmap the RCS is expected to have already
@@ -50,7 +53,7 @@ rcs <- lapply(c(1:nrow(inputs)), \(x) {
     #"louvain",
     #"0.9",
     settings$inputs[[x]]$level_folder_name,
-    "cluster_summary.csv"#"rcs_merged.csv"
+    "cluster_summary_dc.csv"#"rcs_merged.csv"
   )) %>% mutate(
     # Add the dataset name to the RCS cluster code
     cluster_code = paste(inputs$display_name[[x]], cluster_code, sep = '-')
@@ -308,8 +311,8 @@ melted <- readr::read_csv(file.path(
 ))
 
 # Careful here. This was used for the Human Augmentation x Socila Issues 
-melted$Source <- gsub("Sut", "Sust", melted$Source)
-melted$Target <- gsub("Sut", "Sust", melted$Target)
+melted$Source <- gsub("iges", "igem", melted$Source)
+melted$Target <- gsub("iges", "igem", melted$Target)
 
 melted <- melted %>%
   separate(Source, 

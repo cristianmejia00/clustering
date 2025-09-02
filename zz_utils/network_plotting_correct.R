@@ -33,7 +33,9 @@
 # the global network image
 # the cluster by cluster image. 
 
+library(readr)
 #network <- read.csv("file.ncol", sep = " ", header = FALSE, stringsAsFactors = FALSE)
+network <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q337_science_policy/a01_cn__f01_dc__c01_lv/network_comp.csv")
 g1 <- graph_from_data_frame(network, directed = FALSE)
 
 
@@ -131,9 +133,11 @@ coords_all_df <- merge(coords_all_df,
                        all.y = FALSE)
 
 coords_all_centers <- coords_all_df %>% 
-  group_by(X_C) %>% 
-  summarize(mean_x = mean(x, na.rm=TRUE),
-            mean_y = mean(y, na.rm=TRUE))
+  dplyr::group_by(X_C) %>% 
+  dplyr::summarize(
+    mean_x = mean(x, na.rm=TRUE),
+    mean_y = mean(y, na.rm=TRUE))
+
 
 coords_all_centers$X_C[coords_all_centers$X_C == 99] <- nrow(coords_all_centers)
 coords_all_centers$mean_x <- scale(coords_all_centers$mean_x)

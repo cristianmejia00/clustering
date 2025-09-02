@@ -64,7 +64,7 @@ dataset <- merge(
   dataset,
   by = "uuid",
   all.x = TRUE,
-  all.y = TRUE
+  all.y = FALSE
 )
 
 # Verify the data is correctly formatted for reports

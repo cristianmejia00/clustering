@@ -31,8 +31,10 @@ time_01_started <- Sys.time()
 # Data preparation
 if (settings$params$recursive_level > 0 & settings$params$type_of_analysis == "citation_network") {
   available_levels <- c(0:settings$params$recursive_level)
+  #available_levels <- c(1)
 } else {
   available_levels <- c(0)
+  #available_levels <- c(1)
 }
 
 for (level_report_iteration in available_levels) {
@@ -130,49 +132,49 @@ for (level_report_iteration in available_levels) {
   # # }
   # # zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
 
-  # Overlays (Only for WOS data)
-  # if (settings$params$dataset_source == "wos" & "WC" %in% colnames(myDataCorrect)) {
-  #   source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
-  # }
+  #Overlays (Only for WOS data)
+  if (settings$params$dataset_source == "wos" & "WC" %in% colnames(myDataCorrect)) {
+    source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))
+  }
 
   ############################################################################
 
   # Dataset merged RCS
   source(file.path(getwd(), "03_reports", "15_rcs_merged.R"))
-# 
-#   # figures
-#   # Save PNG figures. Normal raster figures for easy navigation in PC.
-#   print("###################### PNG CHARTS")
-#   extension <- "png"
-#   subfolder_dataset <- "charts_dataset"
-#   subfolder_clusters <- "charts_clusters"
-#   source(file.path(getwd(), "04_charts", "zz-charts_dataset.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_scatterplots.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats1_bp.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats2_bars.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats3_lda.R"))
-#   # source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats4_heatmap.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_trends_and_clustered_bars.R"))
-# 
-# 
-#   # Save PNG figures. Needed for notebook.
-#   print("###################### SVG CHARTS")
-#   extension <- "svg"
-#   subfolder_dataset <- "index_files/charts"
-#   subfolder_clusters <- "index_files/charts"
-#   source(file.path(getwd(), "04_charts", "zz-charts_dataset.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_scatterplots.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats1_bp.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats2_bars.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats3_lda.R"))
-#   # source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats4_heatmap.R"))
-#   source(file.path(getwd(), "04_charts", "zz-charts_trends_and_clustered_bars.R"))
+
+  # figures
+  # Save PNG figures. Normal raster figures for easy navigation in PC.
+  print("###################### PNG CHARTS")
+  extension <- "png"
+  subfolder_dataset <- "charts_dataset"
+  subfolder_clusters <- "charts_clusters"
+  source(file.path(getwd(), "04_charts", "zz-charts_dataset.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats1_bp.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats2_bars.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats3_lda.R"))
+  # source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats4_heatmap.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_trends_and_clustered_bars.R"))
+
+
+  # Save PNG figures. Needed for notebook.
+  print("###################### SVG CHARTS")
+  extension <- "svg"
+  subfolder_dataset <- "index_files/charts"
+  subfolder_clusters <- "index_files/charts"
+  source(file.path(getwd(), "04_charts", "zz-charts_dataset.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_scatterplots.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats1_bp.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats2_bars.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats3_lda.R"))
+  # source(file.path(getwd(), "04_charts", "zz-charts_clusters_stats4_heatmap.R"))
+  source(file.path(getwd(), "04_charts", "zz-charts_trends_and_clustered_bars.R"))
 
   ############################################################################
   # Save complete environment by level. First remove unnecessary variables
   print("Saving image")
   # rm(list = setdiff(ls(), zz_env$x05))
-  #save.image(rn$PROJECTenviron)
+  save.image(rn$PROJECTenviron)
 
   # Time per level
   time_02_finished <- Sys.time()

@@ -117,18 +117,22 @@ source("zz_utils/zz_auxiliary_functions.R")
 
 
 # Add Countries column
-if ("C1" %in% colnames(dataset)) {
+if ((!"Countries" %in% colnames(dataset)) & ("C1" %in% colnames(dataset))) {
   dataset$Countries <- getCountries(dataset$C1)
   dataset$IsoCountries <- as.character(getIsoCountries(dataset$Countries))
   dataset$IsoCountries <- gsub("NA; |; NA$", "", dataset$IsoCountries)
   dataset$IsoCountries <- gsub("; NA", "", dataset$IsoCountries)
   print("Countries column has been added")
+} else {
+  print("Countries column is present or can't be computed")
 }
 
 # Add institutions column
-if ("C1" %in% colnames(dataset)) {
+if ((!"Institutions" %in% colnames(dataset)) & ("C1" %in% colnames(dataset))) {
   dataset$Institutions <- as.character(getInstitutions(dataset$C1))
   print("Institutions column has been added")
+} else {
+  print("Institutions column is present or can't be computed")
 }
 
 

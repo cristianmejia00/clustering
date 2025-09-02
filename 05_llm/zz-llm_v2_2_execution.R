@@ -12,7 +12,7 @@ source("05_llm/zz-llm_v2_1_functions.R")
 
 level_report_iteration <- level_report_iteration
 level_report_iteration
-this_tops <- 4 # 5 for cluster, 3 for subclusters
+this_tops <- 5 # 5 for cluster, 3 for subclusters
 
 rcs_merged$cluster_id_backup <- rcs_merged$cluster
 rcs_merged$cluster <- rcs_merged$cluster_code %>% as.character()
@@ -27,12 +27,14 @@ dataset$X_C_backup <- dataset$X_C
 if (level_report_iteration == 0) {
   print("Compute level0 Clusters")
   dataset$X_C <- dataset$level0 %>% as.character()
-  dataset$X_E <- dataset$global_in_degree
+  #dataset$X_E <- dataset$global_in_degree # Citation Network
+  dataset$X_E <- dataset$Z9 # Topic Model
 }
 if (level_report_iteration == 1) {
   print("Compute level1 Subclusters")
   dataset$X_C <- dataset$subcluster_label1 %>% as.character()
-  dataset$X_E <- dataset$level0_in_degree
+  #dataset$X_E <- dataset$level0_in_degree # Citation Network
+  dataset$X_E <- dataset$Z9 # Topic Model
 }
 
 list_of_cluster_codes <- dataset$X_C %>%
@@ -194,10 +196,10 @@ for (cluster_code in list_of_cluster_codes) {
   print("Get enhanced description")
   cluster_completed <- FALSE
   cluster_description_verified <- rcs_merged$detailed_description[rcs_merged$cluster_code == cluster_code]
-  if (nchar(cluster_description_verified) > 5) {
-    print('This cluster already has an enhanced description')
-    next
-  }
+  # if (nchar(cluster_description_verified) > 5) {
+  #   print('This cluster already has an enhanced description')
+  #   next
+  # }
   while (!cluster_completed) {
     tmp <- tryCatch(
       {
@@ -236,8 +238,8 @@ write.csv(
     output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
-    settings$cno$clustering$algorithm,
-    settings$cno$thresholding$threshold,
+    #settings$cno$clustering$algorithm,
+    #settings$cno$thresholding$threshold,
     glue("level{level_report_iteration}"),
     "cluster_summary_short_dc.csv"
   ),
@@ -249,8 +251,8 @@ write.csv(rcs_merged,
     output_folder_path,
     settings$metadata$project_folder,
     settings$metadata$analysis_id,
-    settings$cno$clustering$algorithm,
-    settings$cno$thresholding$threshold,
+    #settings$cno$clustering$algorithm,
+    #settings$cno$thresholding$threshold,
     glue("level{level_report_iteration}"),
     "cluster_summary_extended_dc.csv"
   ),
@@ -262,8 +264,8 @@ write.csv(rcs_merged,
             output_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            settings$cno$clustering$algorithm,
-            settings$cno$thresholding$threshold,
+            #settings$cno$clustering$algorithm,
+            #settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
             "cluster_summary_dc.csv"
           ),
@@ -274,8 +276,9 @@ save.image(file.path(
             output_folder_path,
             settings$metadata$project_folder,
             settings$metadata$analysis_id,
-            settings$cno$clustering$algorithm,
-            settings$cno$thresholding$threshold,
+            #settings$cno$clustering$algorithm,
+            #settings$cno$thresholding$threshold,
             glue("level{level_report_iteration}"),
             "environ_llm.rdata"
           ))
+25

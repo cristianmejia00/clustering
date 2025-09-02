@@ -212,7 +212,7 @@ generate_numerical_report <- function(df, a_column, clusters, with_all = TRUE) {
 
 ## Write reports
 for (cc in categorical_long_reports) {
-  if (!all(is.na(myDataCorrect[,cc]))) {
+  if (cc != "is_japanese" & !all(is.na(myDataCorrect[,cc]))) {
     generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = settings$rp$top_items)
   } else {
     print(glue("{cc} is totally empty. Report not created"))
