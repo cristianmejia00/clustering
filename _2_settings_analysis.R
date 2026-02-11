@@ -105,7 +105,7 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
     n_topics = 0,
 
     # The minimum size for a topic
-    min_topic_size = 5)
+    min_topic_size = 10)
 }
 
 ## add-ons
@@ -121,8 +121,8 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Synthetic biology",
-  "description"  = "Synthetic biology research",
+  "theme" = "Synthetic Biology",
+  "description"  = "Synthetic Biology",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 

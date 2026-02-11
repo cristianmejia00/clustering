@@ -84,7 +84,7 @@ all(as.numeric(names(V(g1))) == node_cluster$X_N)
 ########################################################################
 # Create color palette
 fukan_colors <- c("#f00f15","#2270e7","#e5e510","#ff8103","#4f3dd1","#26cc3a","#ec058e","#9cb8c2","#fffdd0","#b40e68")
-fukan_colors_extended <- c(fukan_colors, tolower(c("#5AFB5A", "#BEAED4", "#FDC086", "#99FDFF", "#C430FF", "#E4DBE0", "#BF5B17", "#666666")))#RColorBrewer::brewer.pal(8, "Accent"))
+fukan_colors_extended <- c(fukan_colors, tolower(c("#5AFB5A", "#BEAED4", "#FDC086", "#99FDFF", "#C430FF", "#E4DBE0", "#BF5B17", "#666666")))
 color_palette <- rep_len(fukan_colors_extended, length(id_com))
 
 ########################################################################

@@ -4,8 +4,8 @@ library(stats)
 library(tidyr)
 library(reshape2)  
 
-heatmap_analysis_id = 'H015'
-settings_directive = 'heatmap_settings_H015_SYNBIO_IGES.json'
+heatmap_analysis_id = 'H016'
+settings_directive = 'heatmap_settings_H016_Brain_Health.json'
 
 ###############################################################################
 # Call necessary libraries
@@ -23,8 +23,6 @@ settings <- RJSONIO::fromJSON(
   simplify = FALSE
 )
 
-settings$inputs[[2]]$display_name <- "igem"
-
 # Save setting inputs as a df.
 inputs <- lapply(settings$inputs, function(x) {data.frame(x)}) %>% rbind.fill()
 
@@ -40,7 +38,6 @@ coords <- readr::read_csv(file.path(
   select(x, y, cluster) %>% 
   rename(cluster_code = cluster)
 
-coords$cluster_code <- gsub("iges", "igem", coords$cluster_code)
 
 # Read the RCS files
 # For the heatmap the RCS is expected to have already
@@ -50,10 +47,10 @@ rcs <- lapply(c(1:nrow(inputs)), \(x) {
     output_folder_path,#settings$metadata$input_directory,
     settings$inputs[[x]]$project_folder_name,
     settings$inputs[[x]]$analysis_folder_name,
-    #"louvain",
-    #"0.9",
+    "louvain",
+    "0.9",
     settings$inputs[[x]]$level_folder_name,
-    "cluster_summary_dc.csv"#"rcs_merged.csv"
+    "cluster_summary.csv"#"rcs_merged.csv"
   )) %>% mutate(
     # Add the dataset name to the RCS cluster code
     cluster_code = paste(inputs$display_name[[x]], cluster_code, sep = '-')
@@ -85,6 +82,7 @@ tmp$scatter_labels <- paste(tmp$local_cluster, tmp$cluster_name, sep = ':')
 
 # Groups of clusters
 km1 <- kmeans(tmp[,c("x","y")], centers = floor(sqrt(nrow(rcs))))
+km1 <- kmeans(tmp[,c("x","y")], centers = 2)
 tmp$group <- as.factor(km1$cluster)
 
 ###############################################################################
@@ -118,7 +116,13 @@ plot_scatter_group <- function(rcs_data,
   if (show_tags) {
     p <- p + geom_text_repel(aes(label = gsub("---", "", point_labels)), max.overlaps = 30, size = 2)
   }
-  p <- p + theme_bw() + theme(legend.position = "none")
+  p <- p + theme_bw() + 
+    theme(
+      legend.position = "none",
+      panel.grid = element_blank(),      # Removes background grid lines
+      axis.text = element_blank(),       # Removes numbers on axes
+      axis.ticks = element_blank()       # Removes the small tick marks
+    )
   p
 }
 
@@ -155,7 +159,13 @@ plot_scatter <- function(rcs_data,
   if (show_tags) {
     p <- p + geom_text_repel(aes(label = gsub("---", "", point_labels)), max.overlaps = 15, size = 5)
   }
-  p <- p + theme_bw() + theme(legend.position = "none")
+  p <- p + theme_bw() + 
+    theme(
+      legend.position = "none",
+      panel.grid = element_blank(),      # Removes background grid lines
+      axis.text = element_blank(),       # Removes numbers on axes
+      axis.ticks = element_blank()       # Removes the small tick marks
+    )
   p
 }
 
@@ -188,6 +198,7 @@ tm_plot <- plot_scatter_group(tmp,
                    size_column = "documents", 
                    show_tags = TRUE)
 tm_plot
+
 ggsave(
   filename = file.path(
     output_folder_path,

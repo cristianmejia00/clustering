@@ -81,18 +81,18 @@ library(reticulate)
 library(glue)
 
 # One time operation to generate a python env
-#reticulate::conda_create(envname = 'openai_env', packages = 'openai', python_version = '3.9')
+reticulate::conda_create(envname = 'openai_env', packages = 'openai', python_version = '3.11')
 
 # Activate enviroment
-#reticulate::use_condaenv('openai_env')
+reticulate::use_condaenv('openai_env')
 
 # Attach key.
 # In VSCode create a file `openai.key`
 # Is only one line with the OpenAi key.
 # `credentials/openai.key` was added to .gitignore so is not committed to the repo.
 # import Openai Python library
-#openai <- reticulate::import('openai')
-#client = openai$OpenAI(api_key = readr::read_file('zz_assets/credentials/openai.key'))
+openai <- reticulate::import('openai')
+client = openai$OpenAI(api_key = readr::read_file('zz_assets/credentials/openai.key'))
 
 
 # utils
@@ -106,7 +106,7 @@ library(glue)
 #' @returns The JSON reply from OpenAI in R's LIST form. The actual reply text is located at `x$choices[[1]]$message$content` 
 ask_gpt <- function(system_prompt, 
                     user_prompt,
-                    model = 'gpt-3.5-turbo', 
+                    model = 'gpt-4.1-nano', 
                     temperature = 0.1, 
                     max_tokens = 500, 
                     n = 1) {

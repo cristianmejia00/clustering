@@ -45,8 +45,8 @@ length(list_of_cluster_codes)
 # Compute summaries
 COMPUTE_SUMMARIES <- FALSE
 
-# Dependency injection. Either `ask_claude`, or `ask_llm`
-ask_llm <- ask_claude
+# Dependency injection. Either `ask_claude`, or `ask_gpt`
+ask_llm <- ask_gpt
 
 ###################################
 ###################################
@@ -281,4 +281,3 @@ save.image(file.path(
             glue("level{level_report_iteration}"),
             "environ_llm.rdata"
           ))
-25
