@@ -6,6 +6,7 @@ library(dplyr)
 library(tidyr)
 library(viridis)
 library(readr)
+
 dff <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Ranjit/results/20250805/summary_intervention-scenario-outcome.csv")
 
 # Create mapping for Intervention categories (short labels)
@@ -22,7 +23,7 @@ intervention_mapping <- data.frame(
     "Stress Resilience and Climate Adaptation",
     "Soil and Water Remediation",
     "Pests, Weeds & Disease Management",
-    "Grazing and Livestock Related Interventions",
+    "Grazing and livestock-related interventions",
     "Other"
   ),
   intervention_short = c(
@@ -88,10 +89,52 @@ outcome_mapping <- data.frame(
   stringsAsFactors = FALSE
 )
 
+# Scenario names
+scenario_mapping <- data.frame(
+  scenario_category = c(
+    "Arid and Semi-Arid Systems",
+    "Coastal and Saline Environments",         
+    "Contaminated and Polluted Systems",
+    "Degraded and Low-Fertility Systems",      
+    "Drought-Prone and Water-Stressed Systems",
+    "General/Unspecified Mainland",            
+    "Lowland and Delta Systems",
+    "Monsoon and High-Rainfall Systems",       
+    "Organic-Rich and Enhanced Systems",
+    "Paddy Field Systems",                     
+    "Specialized and Extreme Conditions",
+    "Temperate and Subtropical Systems",       
+    "Tropical Climate Systems",
+    "Unspecified",                             
+    "Upland and Highland Systems"
+  ),
+  scenario_category1 = c(
+    "Arid and Semi-Arid Systems",
+    "Coastal and Saline Environments",         
+    "Contaminated and Polluted Systems",
+    "Degraded and Low-Fertility Systems",      
+    "Drought-Prone and Water-Stressed Systems",
+    "General Paddy Field Systems",            
+    "Lowland and Delta Systems",
+    "Monsoon and High-Rainfall Systems",       
+    "Organic-Rich and Enhanced Systems",
+    "General Paddy Field Systems",                     
+    "Specialized and Extreme Conditions",
+    "Temperate and Subtropical Systems",       
+    "Tropical Climate Systems",
+    "General Paddy Field Systems",                             
+    "Upland and Highland Systems"
+  )
+)
+
 # Prepare data with short labels
 dff_labeled <- dff %>%
   left_join(intervention_mapping, by = "intervention_category") %>%
-  left_join(outcome_mapping, by = "output_category")
+  left_join(scenario_mapping, by = "scenario_category")
+
+# Retain 
+dff_labeled$scenario_category <- NULL
+dff_labeled$scenario_category <- dff_labeled$scenario_category1
 
 # Calculate total counts for sorting
 intervention_totals <- dff_labeled %>%
@@ -99,8 +142,8 @@ intervention_totals <- dff_labeled %>%
   summarise(total_count = sum(count)) %>%
   arrange(desc(total_count))
 
-outcome_totals <- dff_labeled %>%
-  group_by(outcome_short) %>%
+scenario_totals <- dff_labeled %>%
+  group_by(scenario_category) %>%
   summarise(total_count = sum(count)) %>%
   arrange(desc(total_count))
 
@@ -109,21 +152,33 @@ dff_matrix <- dff_labeled %>%
   mutate(
     intervention_short = factor(intervention_short, 
                                 levels = intervention_totals$intervention_short),
-    outcome_short = factor(outcome_short, 
-                           levels = rev(outcome_totals$outcome_short))  # Reverse for top-to-bottom
+    scenario_category = factor(scenario_category, 
+                      levels = rev(scenario_totals$scenario_category))  # Reverse for top-to-bottom
   )
 
+dff_heatmap <- dff_labeled %>%
+  select(intervention_short, scenario_category, count) %>%
+  group_by(intervention_short, scenario_category) %>%
+  summarize(count = sum(count)) %>%
+  mutate(
+    intervention_short = factor(intervention_short, 
+                                levels = intervention_totals$intervention_short),
+    scenario_category = factor(scenario_category, 
+                      levels = rev(scenario_totals$scenario_category))
+  )
+  
+  
 # ============================================================================
 # OPTION 1: SCATTER PLOT (Dot size represents count)
 # ============================================================================
-p_scatter <- ggplot(dff_matrix, aes(x = intervention_short, y = outcome_short)) +
+p_scatter <- ggplot(dff_matrix, aes(x = intervention_short, y = scenario_category)) +
   geom_point(aes(size = count, color = count), alpha = 0.7) +
   scale_size_continuous(name = "Count", range = c(1, 20)) +
   scale_color_viridis_c(name = "Count", option = "plasma") +
   labs(
     x = "Intervention Category",
-    y = "Outcome Category",
-    title = "Intervention-Outcome Matrix: Scatter Plot",
+    y = "Scenario Category",
+    title = "Intervention-Scenario Matrix: Scatter Plot",
     subtitle = "Dot size and color intensity represent number of studies"
   ) +
   theme_minimal(base_size = 11) +
@@ -155,13 +210,16 @@ ggsave("matrix_scatter.pdf",
 # ============================================================================
 # OPTION 2: HEATMAP (Color intensity represents count)
 # ============================================================================
-p_heatmap <- ggplot(dff_matrix, aes(x = intervention_short, y = outcome_short, fill = count)) +
+p_heatmap <- ggplot(dff_heatmap, 
+                    aes(x = intervention_short, 
+                        y = scenario_category, 
+                        fill = count)) +
   geom_tile(color = "white", size = 0.5) +
   scale_fill_viridis_c(name = "Count", option = "inferno", direction = -1) +
   labs(
     x = "Intervention Category",
-    y = "Outcome Category",
-    title = "Intervention-Outcome Matrix: Heatmap",
+    y = "Scenario Category",
+    title = "Intervention-Scenario Matrix: Heatmap",
     subtitle = "Color intensity represents number of studies (darker = more studies)"
   ) +
   theme_minimal(base_size = 11) +
@@ -193,14 +251,14 @@ ggsave("matrix_heatmap.pdf",
 # ============================================================================
 # OPTION 3: HEATMAP WITH TEXT LABELS (showing actual counts)
 # ============================================================================
-p_heatmap_text <- ggplot(dff_matrix, aes(x = intervention_short, y = outcome_short, fill = count)) +
+p_heatmap_text <- ggplot(dff_heatmap, aes(x = intervention_short, y = scenario_category, fill = count)) +
   geom_tile(color = "white", size = 0.5) +
   geom_text(aes(label = count), color = "white", size = 3, fontface = "bold") +
   scale_fill_viridis_c(name = "Count", option = "inferno", direction = -1) +
   labs(
     x = "Intervention Category",
-    y = "Outcome Category",
-    title = "Intervention-Outcome Matrix: Heatmap with Labels",
+    y = "Scenario Category",
+    title = "Intervention-Scenario Matrix: Heatmap with Labels",
     subtitle = "Numbers show exact count of studies"
   ) +
   theme_minimal(base_size = 11) +
@@ -215,6 +273,7 @@ p_heatmap_text <- ggplot(dff_matrix, aes(x = intervention_short, y = outcome_sho
   )
 
 print(p_heatmap_text)
+write.csv(dff_heatmap, file="interventions_scenarios_data.csv")
 
 ggsave("matrix_heatmap_text.png", 
        plot = p_heatmap_text, 

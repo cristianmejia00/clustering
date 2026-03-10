@@ -9,26 +9,26 @@ settings <- list()
 settings$metadata <- list(
   # Raw files path (# As downloaded in WoS, etc.)
   raw_input_directory = "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads",
-  raw_input_folder_name = "Q342_science_communication",
+  raw_input_folder_name = "Q343_science_diplomacy_2",
   
   # Directory path
   bibliometrics_directory = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive",#"C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q342_science_communication",
+  project_folder = "Q343_science_diplomacy_2",
   
   # Analysis ID (the date + number is the label of this analysis)
-  date_id = "2026-01-14",#format(Sys.Date(), "%Y-%m-%d"),
+  date_id = "2026-02-27",#format(Sys.Date(), "%Y-%m-%d"),
   
   # Query and data
-  query = 'Q342_science_communication',
+  query = 'Q343_science_diplomacy_2',
   type_of_dataset = "papers", # "papers", "patents" or "news"
   dataset_source = "wos", # wos, derwent, factiva (dimensions = wos)
   
   # project
-  dataset_name = "Q342_science_communication",
-  dataset_file_name_suffix = "Q342", #suffix is used for file names
+  dataset_name = "Q343_science_diplomacy_2",
+  dataset_file_name_suffix = "Q343", #suffix is used for file names
   dataset_description = "",
   created_by = "cristianmejia00@gmail.com",
-  notes = "Project texts from Q342_science_communication (STS Book Chapter)"
+  notes = "Project texts from Q343_science_diplomacy_2"
 )
 
 ## Dataset General Parameters
@@ -41,7 +41,16 @@ settings$filtering = list(
     columns_filter = list(
       columns_selected = c("PT", "AU", "TI", "SO", "LA", "DT", "DE", "ID", "AB", "C1", "OI", "AF", "OA",
                            "RP", "FU", "FX", "CR", "NR", "TC", "Z9", "U1", "U2", "PU", "SN", "J9",
-                           "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT")
+                           "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT",
+                           'is_science_diplomacy', 'is_bibliometrics', 'policy_dimension',
+                           'policy_dimension_reasoning', 'framework_2025_categories_main',
+                           'framework_2025_categories_detailed', 'framework_2025_reasoning',
+                           'article_type', 'article_type_reasoning', 'main_domain',
+                           'geographic_focus', 'geographic_focus_reasoning', 'power_dynamic',
+                           'power_dynamic_reasoning', 'diplomacy_goal', 'diplomacy_goal_reasoning',
+                           'key_actors', 'key_actors_reasoning', 'global_commons',
+                           'global_commons_reasoning', 'geopolitical_context',
+                           'geopolitical_context_reasoning', 'outcome', 'technology_type', 'notes', 'model')
     )
   )
 )
