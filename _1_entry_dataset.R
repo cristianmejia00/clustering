@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q343_science_diplomacy_2"
-settings_directive <- "settings_dataset_directive_2026-02-27-15-37.json"
+project_folder_name <- "Q339_igem"
+settings_directive <- "settings_dataset_directive_2025-08-04-16-31.json"
 
 ###############################################################################
 # Call necessary libraries
