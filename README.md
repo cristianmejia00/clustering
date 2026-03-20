@@ -1,24 +1,48 @@
-# clustering
+# Bibliometric Clustering Pipeline
 
-The main repo for clustering academic articles, news, and patents using citation networks and topic model.
+Analysis pipeline for clustering academic articles, news, and patents using citation networks and topic models.
 
-## Setting up a new project
+## Quick Start
 
-- Go to GitHub, and create a new repository. I use the convention `{id}-{longer_name}`.
-- Open R and create a new project from version control. Use the url from the recently created repository. Create the project in Desktop/GitHub/
-- Copy the copiable contents from  Desktop/GitHub/clustering including:
-  - the `renv` folder and `renv.lock`
-  - the `.gitignore` (i.e., we replace it)
-  - this README.
-- Open the project and run `renv::restore()`
+### 1. Configure
 
-## Processing:
+Edit the two YAML config files in the project root:
 
-- Step 1: Create a `data.rdata` file.
-  - This file contains the `dataset`. And optionally, the `orphans` and the `network` objects. These are created with any of the codes in the `/01_data_loading` folder.
-  - The `data.rdata` file is saved in its query code folder in `C:documents/03_bibliometrics/inputs`
-- Step 2: Copy the `settings.r` file and fill it out with the corresponding info.
-  - This file is usually the only one we need to save in the research project folder as a backup for the parameters.
-- Step 3: Run the file processing code `00_run_me.r`
+- **`config_dataset.yml`** — Data source paths, file filtering, column selection, embedding parameters, and network type.
+- **`config_analysis.yml`** — Analysis parameters: clustering algorithm, thresholding, topic model options, LLM prompts, and report settings.
 
-After all, input data and output reports are saved in the `C:documents/03_bibliometrics` folder.
+### 2. Run the Pipeline
+
+Execute the scripts **in order** from an R session with the working directory set to this repo:
+
+| Step | Script | Purpose |
+|------|--------|---------|
+| 1 | `a00_data_loader.R` | Load raw data files, clean, filter, and save dataset |
+| 2 | `a01_network.R` | Build the citation network |
+| 3 | `a02_components.R` | Extract connected components |
+| 4 | `a03_clustering.R` | Apply clustering algorithm (Louvain/Infomap/Newman) |
+| 5 | `a04_thresholding.R` | Recursive sub-clustering and size thresholds |
+| 6 | `a05_reports.R` | Generate all reports, charts, and archives |
+
+Each script sources its dependencies automatically. A JSON snapshot of the active config is archived with each run for reproducibility.
+
+### 3. System Paths
+
+`zz_utils/00_system_paths.R` resolves the cloud-storage root (`output_folder_path`) per OS (macOS, Windows, Linux). Update the paths there if your mount point differs.
+
+## Project Structure
+
+```
+config_dataset.yml          # Dataset configuration (YAML)
+config_analysis.yml         # Analysis configuration (YAML)
+a00–a05_*.R                 # Main pipeline scripts (run in order)
+01_data_loading/            # Data loading helpers
+02_citation_network/        # Network clustering subroutines
+03_reports/                 # Report generators
+04_charts/                  # Visualization scripts
+05_llm/                     # LLM integration (Claude API)
+06_quarto/                  # Quarto document generation
+yy_heatmap_sankey/          # Heatmap and Sankey diagrams
+zz_utils/                   # Shared utilities and config loader
+zz_assets/                  # Static assets (colors, overlays, credentials)
+```
