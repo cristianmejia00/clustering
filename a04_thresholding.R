@@ -1,8 +1,15 @@
 
+# ==============================================================================
+# a04_thresholding.R
+#
+# Applies recursive clustering and thresholding to the clustered dataset.
+# ==============================================================================
 
-#==============================================================================
-# Load settings
-source("_3_entry_analysis.R")
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
+source("zz_utils/load_config.R")
+
+settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 if (settings$params$recursive_level == 0) {
   settings$params$recursive_level <- 1 # Must be 1 or higher for this to work. This change wont affect the other code.
 }

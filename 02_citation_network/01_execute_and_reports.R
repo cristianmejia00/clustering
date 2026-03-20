@@ -100,38 +100,7 @@ for (level_report_iteration in available_levels) {
   print("Computing RCS")
   source("03_reports/02_rcs.R")
   zz_env$x04 <- ls()
-  #
-  # # # Keywords for heatmap # Now, do it for all.
-  # # print("Heatmap keywords")
-  # # if (file.exists(file.path(output_folder_reports, "papersText.rdata"))) {
-  # #   load(file.path(output_folder_reports, "papersText.rdata"))
-  # # }
-  # # source("03_reports/05_heatmap_keywords_part_1.R")
-  # # if (!exists("papersText")) {
-  # #   source("03_reports/05_heatmap_keywords_part_2.R")
-  # # }
-  # # source("03_reports/05_heatmap_keywords_part_3.R")
-  #
-  # # # Keywords explorer
-  # # # This takes a lot of time when there are too many clusters like in level 2 and 3.
-  # # if (level_report <= 4) {
-  # #   print("Citations to topic model visual")
-  # #   use_tfidf <- TRUE
-  # #   source("zz_utils/zz_createJSON_cnet.R")
-  # #   source("03_reports/06_citation_to_topic_model_converter.R")
-  # #   source("03_reports/07_prob_exclu_keywords.R")
-  # # }
-  # #
-  # # # Create the Keywords report
-  # # if (level_report <= 4) {
-  # #   print("Keywords report")
-  # #   source("03_reports/08_all_keywords_report.R")
-  # #   # Optional views
-  # #   # source("03_reports/09_keywords_per_clusters.R")
-  # #   source("03_reports/10_rcs_keywords.R")
-  # # }
-  # # zz_env$x05 <- c(zz_env$x04, "papersText", "myDataCorrect_SAMPLE", "unified_keywords", "PHI", "from_stem_to_raw")
-
+  
   #Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos" & "WC" %in% colnames(myDataCorrect)) {
     source(file.path(getwd(), "03_reports", "13_WC_overlays.R"))

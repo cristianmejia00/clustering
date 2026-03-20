@@ -32,6 +32,7 @@ if (!("DT"          %in% rownames(installed.packages()))) {install.packages("DT"
 if (!("glue"        %in% rownames(installed.packages()))) {install.packages("glue")}
 if (!("svglite"     %in% rownames(installed.packages()))) {install.packages("svglite")}
 if (!("uuid"        %in% rownames(installed.packages()))) {install.packages("uuid")}
+if (!("yaml"        %in% rownames(installed.packages()))) {install.packages("yaml")}
 ####################################################
 # Load libraries
 
@@ -65,4 +66,5 @@ library(tools)
 library(DT)
 library(glue)
 library(uuid)
+library(yaml)
 

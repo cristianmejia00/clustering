@@ -1,0 +1,145 @@
+# ==============================================================================
+# Dataset Configuration
+# ==============================================================================
+# Edit this file, then run:  source("a00_data_loader.R")
+#                        or:  source("a01_network.R")
+#
+# This single file replaces the old workflow of:
+#   1. Editing _0_settings_dataset.R  (R code)
+#   2. Running it to generate a JSON directive
+#   3. Pasting the JSON filename into _1_entry_dataset.R
+#
+# A JSON snapshot is still archived automatically for reproducibility.
+# ==============================================================================
+
+metadata:
+  # --- Raw input (WoS export files as downloaded) ---
+  raw_input_directory: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads"
+  raw_input_folder_name: "Q344 - hydrogen economy"
+
+  # --- Output directory (Google Drive / Bibliometrics) ---
+  bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
+  project_folder: "Q344 - hydrogen economy"
+
+  # --- Query and data source ---
+  date_id: "2026-02-27"                # Analysis date label
+  query: "Q344 - hydrogen economy"
+  type_of_dataset: "papers"             # papers | patents | news
+  dataset_source: "wos"                 # wos | derwent | factiva
+
+  # --- Project metadata ---
+  dataset_name: "Q344 - hydrogen economy"
+  dataset_file_name_suffix: "Q344 "     # Used in output file names
+  dataset_description: ""
+  created_by: "cristianmejia00@gmail.com"
+  notes: "Project texts from Q344 - hydrogen economy"
+
+
+# ==============================================================================
+# Filtering
+# ==============================================================================
+# Each key (e.g. f01) defines a filtering profile. The key becomes the
+# subfolder name in the output directory.
+filtering:
+  f01:
+    rows_filter:
+      removed_duplicated_UT: true
+      most_recent_year: "2026"          # Fill missing PY with this year
+
+    columns_filter:
+      columns_selected:
+        # --- Standard WoS fields ---
+        - PT
+        - AU
+        - TI
+        - SO
+        - LA
+        - DT
+        - DE
+        - ID
+        - AB
+        - C1
+        - OI
+        - AF
+        - OA
+        - RP
+        - FU
+        - FX
+        - CR
+        - NR
+        - TC
+        - Z9
+        - U1
+        - U2
+        - PU
+        - SN
+        - J9
+        - JI
+        - PY
+        - VL
+        - IS
+        - BP
+        - EP
+        - AR
+        - DI
+        - PG
+        - WC
+        - SC
+        - UT
+        # --- Custom / LLM-enriched columns ---
+        - is_science_diplomacy
+        - is_bibliometrics
+        - policy_dimension
+        - policy_dimension_reasoning
+        - framework_2025_categories_main
+        - framework_2025_categories_detailed
+        - framework_2025_reasoning
+        - article_type
+        - article_type_reasoning
+        - main_domain
+        - geographic_focus
+        - geographic_focus_reasoning
+        - power_dynamic
+        - power_dynamic_reasoning
+        - diplomacy_goal
+        - diplomacy_goal_reasoning
+        - key_actors
+        - key_actors_reasoning
+        - global_commons
+        - global_commons_reasoning
+        - geopolitical_context
+        - geopolitical_context_reasoning
+        - outcome
+        - technology_type
+        - notes
+        - model
+
+
+# ==============================================================================
+# Embeddings
+# ==============================================================================
+embeds:
+  get_embeds: true
+  from_filtered_dataset: "f01"
+
+  e01:
+    text_columns: [TI, AB]
+    to_lowercase: false
+    remove_stopwords: false
+    remove_numbers: false
+    remove_symbols: false
+    stemming: false
+    lemmatization: false
+    id_column: [UT]
+    transformer_model: "all-MiniLM-L6-v2"
+    notes: ""
+
+
+# ==============================================================================
+# Network
+# ==============================================================================
+network:
+  get_network: true
+  from_filtered_dataset: "f01"
+  network_type: "direct_citation"       # direct_citation | bibliographic_coupling | co-citation
+  notes: ""

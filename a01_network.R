@@ -1,10 +1,24 @@
 # ==============================================================================
-source("_1_entry_dataset.R")
+# a01_network.R
+#
+# Builds a direct-citation network from the cleaned dataset.
+#
+# Prerequisites:
+#   Edit config_dataset.yml with your project settings, then source this file.
+#   Run a00_data_loader.R first to produce dataset_raw_cleaned.csv.
+# ==============================================================================
+
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
+source("zz_utils/load_config.R")
+
+settings <- load_config("config_dataset.yml")
+project_folder_name <- settings$metadata$project_folder
 
 ###############################################################################
 # Load dataset
 dataset <- readr::read_csv(file.path(
-  settings$metadata$bibliometrics_directory,
+  output_folder_path,
   settings$metadata$project_folder,
   settings$network$from_filtered_dataset,
   "dataset_raw_cleaned.csv"

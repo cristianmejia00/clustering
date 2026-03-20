@@ -1,17 +1,14 @@
-# 20180323 -> 20220526 -> 20221220
-# Framework for Citation Network Analysis with Recursive Clustering, or Topic Models.
+# ==============================================================================
+# a03_clustering.R
+#
+# Applies clustering algorithm to the citation network component.
+# ==============================================================================
 
-# Input.
-# A dataset having:
-# - Web of Science formatted file (header and columns)
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
+source("zz_utils/load_config.R")
 
-# Output
-# A `dataset.rdata` object
-# Being the same input dataset but with the "X_C" column.
-
-#==============================================================================
-# Load settings
-source("_3_entry_analysis.R")
+settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 
 ###############################################################################
 # Read input files

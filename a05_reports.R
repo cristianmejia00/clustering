@@ -1,9 +1,14 @@
-# 20180323 -> 20220526
-# Framework for Citation Network Analysis with Recursive Clustering, or Topic Models.
-
 # ==============================================================================
-# Load settings
-source("_3_entry_analysis.R")
+# a05_reports.R
+#
+# Generates all reports, charts, and archives for the analysis.
+# ==============================================================================
+
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
+source("zz_utils/load_config.R")
+
+settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 
 ###############################################################################
 # Load raw dataset

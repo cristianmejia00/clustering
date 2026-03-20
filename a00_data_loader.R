@@ -5,20 +5,24 @@
 # a single dataset, and produces a cleaned CSV ready for downstream analysis.
 #
 # Prerequisites:
-#   1. Create a settings directive JSON via `_0_settings_dataset.R`.
-#   2. Set the project folder and directive filename in `_1_entry_dataset.R`.
+#   Edit config_dataset.yml with your project settings, then source this file.
 #
 # Inputs:
+#   - config_dataset.yml        : Project configuration
 #   - Raw WoS .txt files in the directory specified by settings$metadata
-#   - Settings directive JSON (loaded via _1_entry_dataset.R)
 #
 # Outputs (written to <output_folder>/<project>/<filter_label>/):
 #   - dataset_raw_cleaned.csv   : The cleaned, filtered dataset
 #   - filtering_settings.json   : Copy of the filtering settings used
 # ==============================================================================
 
-source("_1_entry_dataset.R")
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
+source("zz_utils/load_config.R")
 source("zz_utils/zz_auxiliary_functions.R")
+
+settings <- load_config("config_dataset.yml")
+project_folder_name <- settings$metadata$project_folder
 
 # --- 1. Read and merge raw WoS files -----------------------------------------
 

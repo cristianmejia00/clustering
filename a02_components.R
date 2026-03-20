@@ -1,5 +1,21 @@
-# Load settings
-source("_3_entry_analysis.R")
+# ==============================================================================
+# a02_components.R
+#
+# Extracts the selected connected component(s) from the citation network.
+# ==============================================================================
+
+source("zz_utils/02_libraries.R")
+source("zz_utils/00_system_paths.R")
+source("zz_utils/load_config.R")
+
+settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
+
+# Archive config snapshot to the analysis output folder
+archive_path <- file.path(output_folder_path,
+                          settings$metadata$project_folder,
+                          settings$metadata$analysis_id)
+dir.create(archive_path, showWarnings = FALSE, recursive = TRUE)
+load_config("config_analysis.yml", archive_to = archive_path)
 
 ###############################################################################
 # Load input files
