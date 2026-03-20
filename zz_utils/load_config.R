@@ -47,7 +47,6 @@ load_config <- function(yaml_path, archive_to = NULL) {
 #'
 #' It also resolves conditional structures:
 #'   - column_labels: selects the sub-key matching params$dataset_source
-#'   - stopwords: merges article + news into myStopWords
 #'
 #' @param config The list returned by load_config().
 #' @return The same list with legacy aliases added.
@@ -79,15 +78,6 @@ add_legacy_aliases <- function(config) {
       config$reporting$column_labels <- config$reporting$column_labels[[source_key]]
       config$rp$column_labels <- config$reporting$column_labels
     }
-  }
-
-  # Merge stopwords into myStopWords (legacy: union of article + news)
-  if (!is.null(config$stopwords)) {
-    article_sw <- unlist(config$stopwords$article)
-    news_sw    <- unlist(config$stopwords$news)
-    config$stopwords$article_StopWords <- as.list(article_sw)
-    config$stopwords$news_Stopwords    <- as.list(news_sw)
-    config$stopwords$myStopWords       <- unique(c(article_sw, news_sw))
   }
 
   return(config)
