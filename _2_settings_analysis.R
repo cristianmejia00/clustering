@@ -9,18 +9,18 @@ settings <- list()
 settings$metadata <- list(
   # Directory path
   bibliometrics_folder = "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive", # "C:\\Users\\crist\\OneDrive\\Documentos\\03-bibliometrics",#
-  project_folder = "Q343_science_diplomacy_2",
+  project_folder = "Q344 - hydrogen economy",
   filtered_folder = "f01",
-  analysis_id = "a01_tm__f01_e01__hdbs" #"a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
+  analysis_id = "a01_cn__f01_dc__c01_lv_v2" #"a01_tm__f01_e01__hdbs" #"a01_tm__f01_e01__km01" #"a01_cn__f01_dc__c01_lv" #
 )
 
 
 ## General Parameters
 settings$params <- list(
-  recursive_level = 0, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
+  recursive_level = 1, # Reports will be generated to this level. 0 means clusters, 1 subclusters, 2 subclusters of subclusters
   dataset_source = "wos",
-  unit_of_analysis = "topic", # topic, cluster, facet, firm, country, institution, author, etc.
-  type_of_analysis = "topic_model", # "topic_model", "citation_network", or "both"
+  unit_of_analysis = "cluster", # topic, cluster, facet, firm, country, institution, author, etc.
+  type_of_analysis = "citation_network", # "topic_model", "citation_network", or "both"
   seed = 100 # The seed for random initialization. Needed for reproducibility
 )
 
@@ -80,10 +80,10 @@ if (settings$params$type_of_analysis %in% c("citation_network", "both")) {
       ###   - We have a WOS dataset without X_C
 
       # Subcluster only if having this or more
-      size_limit = 350,
+      size_limit = 270,
 
       # Include cluster having collecting a minimum of __ articles
-      size_lower_limit = 45,
+      size_lower_limit = 30,
 
       # When recursive clustering there is a label "-0" that might be annoying. TRUE to remove it. However, Excel will think they are dates.
       remove_zero = FALSE
@@ -121,15 +121,15 @@ settings$addons <- list(
 ###########################################################
 ## For LLM
 settings$llm <- list(
-  "theme" = "Synthetic Biology",
-  "description"  = "Synthetic Biology",
+  "theme" = "Hydrogen Economy",
+  "description"  = "a proposed energy system that uses hydrogen as a clean, versatile fuel source to replace fossil fuels, producing only water vapor upon combustion",
   "compute" = c("old_paper_summaries", "representative_docs_summaries", "cluster_title", "cluster_description", "cluster_enhanced_description")
 )
 
 ########################################################### for 00_reports.R
 ## Reporting
 settings$rp <- list(
-  most_recent_year = 2025, # This is needed so the charts do not plot 2024, or future years where data is incomplete
+  most_recent_year = 2026, # This is needed so the charts do not plot 2024, or future years where data is incomplete
   top_documents = 0, # 0 means ALL # Select the number of top documents to show in the article report
   top_items = 20, ## 0 means ALL # Select the number of top `documents`field`` to show in the clusters report
   text_columns = c("TI", "AB"), # Column(s) with text contents to merge and analyze

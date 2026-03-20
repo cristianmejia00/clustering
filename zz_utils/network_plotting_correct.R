@@ -35,7 +35,7 @@
 
 library(readr)
 #network <- read.csv("file.ncol", sep = " ", header = FALSE, stringsAsFactors = FALSE)
-network <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q337_science_policy/a01_cn__f01_dc__c01_lv/network_comp.csv")
+network <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q344 - hydrogen economy/a01_cn__f01_dc__c01_lv_v2/network_comp.csv")
 g1 <- graph_from_data_frame(network, directed = FALSE)
 
 

@@ -1,8 +1,8 @@
 # ==============================================================================
 # The folder and settings_directive file
-project_folder_name = "Q339_igem"
-analysis_folder_name <- "a01_tm__f01_e01__hdbs"
-settings_directive <- "settings_analysis_directive_2025-08-04-16-40.json"
+project_folder_name = "Q344 - hydrogen economy"
+analysis_folder_name <- "a01_cn__f01_dc__c01_lv_v2"
+settings_directive <- "settings_analysis_directive_2026-03-20-10-03.json"
 
 ###############################################################################
 # Call necessary libraries

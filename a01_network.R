@@ -17,7 +17,7 @@ dataset <- readr::read_csv(file.path(
 if (settings$network$get_network & settings$network$network_type == "direct_citation") {
   source("./01_data_loading/01z_compute_direct_citation_network.R")
 } else {
-  print("User did not request acitation network")
+  print("User did not request a citation network")
 }
 
 ###############################################################################

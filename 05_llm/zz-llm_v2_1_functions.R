@@ -81,7 +81,7 @@ library(reticulate)
 library(glue)
 
 # One time operation to generate a python env
-reticulate::conda_create(envname = 'openai_env', packages = 'openai', python_version = '3.11')
+#reticulate::conda_create(envname = 'openai_env', packages = 'openai', python_version = '3.11')
 
 # Activate enviroment
 reticulate::use_condaenv('openai_env')

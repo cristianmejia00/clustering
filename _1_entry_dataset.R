@@ -4,8 +4,8 @@
 # And click save.
 
 # The folder and settings_directive file
-project_folder_name <- "Q339_igem"
-settings_directive <- "settings_dataset_directive_2025-08-04-16-31.json"
+project_folder_name <- "Q344 - hydrogen economy"
+settings_directive <- "settings_dataset_directive_2026-03-20-09-16.json"
 
 ###############################################################################
 # Call necessary libraries
