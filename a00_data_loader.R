@@ -1,245 +1,159 @@
-# ==================================================
-# Created in R; 2024-10-27 to replace the older version.
-# Before running this code, create a `settings_directive....json` file
-# Using the `settings_dataset.R` code.
-# And input here, the folder and file name of the directive file inside
-# GDrive/Bibliometrics_Drive/
 # ==============================================================================
+# a00_data_loader.R
+#
+# Reads raw Web of Science (WoS) tab-delimited export files, merges them into
+# a single dataset, and produces a cleaned CSV ready for downstream analysis.
+#
+# Prerequisites:
+#   1. Create a settings directive JSON via `_0_settings_dataset.R`.
+#   2. Set the project folder and directive filename in `_1_entry_dataset.R`.
+#
+# Inputs:
+#   - Raw WoS .txt files in the directory specified by settings$metadata
+#   - Settings directive JSON (loaded via _1_entry_dataset.R)
+#
+# Outputs (written to <output_folder>/<project>/<filter_label>/):
+#   - dataset_raw_cleaned.csv   : The cleaned, filtered dataset
+#   - filtering_settings.json   : Copy of the filtering settings used
+# ==============================================================================
+
 source("_1_entry_dataset.R")
+source("zz_utils/zz_auxiliary_functions.R")
 
-###############################################################################
+# --- 1. Read and merge raw WoS files -----------------------------------------
 
-# Open a window to select the directory with the files to merge
-myfolder <- file.path(
+raw_input_path <- file.path(
   settings$metadata$raw_input_directory,
   settings$metadata$raw_input_folder_name
 )
 paths_to_files <- list.files(
-  path = myfolder,
+  path = raw_input_path,
   full.names = TRUE,
-  pattern = "*.txt",
+  pattern = "\\.txt$",
   recursive = TRUE
 )
 
-###########################################################################################
-## Path to the Bibliometrics folder
-
-# Read each file and store them in a vector
-# fread sometimes fails when reading the header, what to do?
-list_of_all_files <- lapply(paths_to_files, function(a_path) {
-  data1 <- fread(a_path, sep = "\t", stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-8")
-  # data1 <- read_from_wos(a_path) # NOTE: DO NOT USE read_from_wos() from package OPNER5, it cut off the lines before finish it, hence it does not read PY and UT for all rows.
-  # data1 <- read.table(a_path, sep = '\t', fill = TRUE, stringsAsFactors = FALSE, header = TRUE, check.names = FALSE, quote = "", comment.char="", encoding = "UTF-16")
-  # data1 <- read.csv(a_path, stringsAsFactors = FALSE, check.names = FALSE)
-  # data1 <- read.delim(a_path, stringsAsFactors = FALSE, check.names = FALSE, encoding = "UTF-16", sep = "\t")
-  return(data1)
-})
-
-# Verify than the files have the expected number of rows: 500. Except for a few that were the tails.
-plot(unlist(sapply(list_of_all_files, nrow))) # The number of rows in each file, mostly 500.
-
-# Create the merged dataset
-dataset <- rbind.fill(list_of_all_files)
-dataset <- as.data.frame(dataset)
-if (colnames(dataset)[1] == "V1") {
-  colnames(dataset) <- c("PT", colnames(dataset)[3:length(colnames(dataset))], "END")
-  dataset["END"] <- NULL
+if (length(paths_to_files) == 0) {
+  stop("No .txt files found in: ", raw_input_path)
 }
 
-# check for possible errors
-# Verify correct reading by inspecting the publication year.
-# If several non numeric values are present, it means there, there was a problem reading the files.
-names(dataset)[1:20]
+list_of_all_files <- lapply(paths_to_files, function(path) {
+  fread(path, sep = "\t", stringsAsFactors = FALSE,
+        check.names = FALSE, encoding = "UTF-8")
+})
 
-############################################################################
-############################################################################
-# Filtering ----- ROWS
-############################################################################
-############################################################################
+cat(sprintf("Read %d files (%s rows each)\n",
+            length(list_of_all_files),
+            paste(sapply(list_of_all_files, nrow), collapse = ", ")))
 
-# Remove duplicated records
+dataset <- bind_rows(list_of_all_files) %>% as.data.frame()
+
+# fread occasionally misreads the header, producing "V1" as the first column.
+# When that happens, shift column names to restore the expected WoS layout.
+if (colnames(dataset)[1] == "V1") {
+  colnames(dataset) <- c("PT", colnames(dataset)[3:ncol(dataset)], "END")
+  dataset[["END"]] <- NULL
+}
+
+# --- 2. Row filtering ---------------------------------------------------------
+
 filter_label <- names(settings$filtering)
 
-# Remove duplicates
+# Remove duplicate records by UT (unique WoS identifier)
 if (settings$filtering[[filter_label]]$rows_filter$removed_duplicated_UT) {
   dataset <- dataset %>% filter(!duplicated(UT))
 }
 
-# A record without PY, EA, or CY can be NA or "" empty string. We normalize anything to NA
-dataset$PY[dataset$PY == ""] <- NA
-if ("EA" %in% colnames(dataset)) {
-  dataset$EA[dataset$EA == ""] <- NA
-}
-if ("CY" %in% colnames(dataset)) {
-  dataset$CY[dataset$CY == ""] <- NA
+# Normalize empty strings to NA in date-related columns
+for (col in intersect(c("PY", "EA", "CY"), colnames(dataset))) {
+  dataset[[col]][dataset[[col]] == ""] <- NA
 }
 
-# Correct records without PY
-table(dataset$PY)
-table(is.na(dataset$PY))
+# Fill missing publication year (PY) with the most recent year from settings
+fallback_year <- as.numeric(settings$filtering[[filter_label]]$rows_filter$most_recent_year)
+dataset$PY[is.na(dataset$PY)] <- fallback_year
 
-# Apply most recent year to NAs
-dataset$PY[is.na(dataset$PY)] <- settings$filtering[[filter_label]]$rows_filter$most_recent_year %>% as.numeric()
+# Keep only records where PY is a valid 4-digit year
+dataset <- dataset %>% filter(nchar(as.character(PY)) == 4)
 
-test <- sapply(dataset$PY, function(x) {
-  return(nchar(as.character(x)))
-}) %>% unname()
+# Convert all columns to UTF-8 character (required for consistent downstream processing)
+dataset <- dataset %>% mutate(across(everything(), ~ enc2utf8(as.character(.x))))
 
-dataset <- dataset %>% filter(test == 4)
+# --- 3. Append derived columns ------------------------------------------------
 
-# Correct records without PY
-table(dataset$PY)
-table(is.na(dataset$PY))
-dataset$TI[is.na(dataset$PY)]
-
-dataset$PY <- as.character(dataset$PY)
-for (i in c(1:ncol(dataset))) {
-  dataset[, i] <- as.character(dataset[, i]) %>% enc2utf8()
-}
-
-
-############################################################################
-############################################################################
-# Appending Columns
-############################################################################
-############################################################################
-# IDs
+# Row index and UUID
 dataset <- dataset %>%
   mutate(
-    X_N = c(1:n()),
+    X_N = row_number(),
     uuid = UUIDgenerate(n = n())
   )
 
-# Countries and Institutions
-
-# Load utils
-source("zz_utils/zz_auxiliary_functions.R")
-
-
-# Add Countries column
-if ((!"Countries" %in% colnames(dataset)) & ("C1" %in% colnames(dataset))) {
-  dataset$Countries <- getCountries(dataset$C1)
-  dataset$IsoCountries <- as.character(getIsoCountries(dataset$Countries))
-  dataset$IsoCountries <- gsub("NA; |; NA$", "", dataset$IsoCountries)
-  dataset$IsoCountries <- gsub("; NA", "", dataset$IsoCountries)
-  print("Countries column has been added")
+# Countries and ISO codes (derived from the C1 affiliations column)
+if (!"Countries" %in% colnames(dataset) && "C1" %in% colnames(dataset)) {
+  dataset$Countries    <- getCountries(dataset$C1)
+  dataset$IsoCountries <- getIsoCountries(dataset$Countries) %>%
+    as.character() %>%
+    gsub("NA; |; NA$|; NA", "", .)
+  message("Countries column added")
 } else {
-  print("Countries column is present or can't be computed")
+  message("Countries column already present or C1 not available")
 }
 
-# Add institutions column
-if ((!"Institutions" %in% colnames(dataset)) & ("C1" %in% colnames(dataset))) {
+# Institutions (derived from the C1 affiliations column)
+if (!"Institutions" %in% colnames(dataset) && "C1" %in% colnames(dataset)) {
   dataset$Institutions <- as.character(getInstitutions(dataset$C1))
-  print("Institutions column has been added")
+  message("Institutions column added")
 } else {
-  print("Institutions column is present or can't be computed")
+  message("Institutions column already present or C1 not available")
 }
 
+# --- 4. Clean abstracts -------------------------------------------------------
 
-############################################################################
-############################################################################
-# Edits
-############################################################################
-############################################################################
-# Clean abstract
-dataset$AB <- enc2utf8(dataset$AB)
-#dataset$AB <- gsub("�|<ca><ca><ca>", " ", dataset$AB)
-dataset$AB <- iconv(dataset$AB, from = "UTF-8", to = "ASCII", sub = " ")
-dataset$AB <- enc2utf8(dataset$AB)
-dataset$AB <- remove_copyright_statements(dataset$AB)
-dataset$AB <- remove_word_counts_line(dataset$AB)
+if ("AB" %in% colnames(dataset)) {
+  dataset$AB <- dataset$AB %>%
+    enc2utf8() %>%
+    iconv(from = "UTF-8", to = "ASCII", sub = " ") %>%
+    enc2utf8() %>%
+    remove_copyright_statements() %>%
+    remove_word_counts_line()
+}
 
+# --- 5. Column filtering ------------------------------------------------------
 
-############################################################################
-############################################################################
-# Filtering ----- COLUMNS
-############################################################################
-############################################################################
-available_columns <- intersect(colnames(dataset), c(unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected), "Countries", "IsoCountries", "Institutions"))
-dataset <- dataset %>% 
-  select(all_of(c("X_N", "uuid", available_columns)))
+# Keep only the columns specified in settings, plus the derived columns
+selected_cols <- c(
+  "X_N", "uuid",
+  intersect(
+    colnames(dataset),
+    c(unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected),
+      "Countries", "IsoCountries", "Institutions")
+  )
+)
+dataset <- dataset %>% select(all_of(selected_cols))
 
+# --- 6. Save outputs ----------------------------------------------------------
 
-##########################
-# Save the file
-# From the pov of this very code, this is actually the output folder. Where the files generated by this code will be placed.
 results_folder_path <- file.path(
   output_folder_path,
   project_folder_name,
   filter_label
 )
-
-dir.create(file.path(results_folder_path), showWarnings = FALSE)
+dir.create(results_folder_path, showWarnings = FALSE, recursive = TRUE)
 
 write.csv(dataset,
   file = file.path(results_folder_path, "dataset_raw_cleaned.csv"),
   row.names = FALSE
 )
 
-# Write the filtering settings in the same location
 writeLines(
-  RJSONIO::toJSON(settings$filtering,
-    pretty = TRUE,
-    auto_unbox = TRUE
-  ),
+  RJSONIO::toJSON(settings$filtering, pretty = TRUE, auto_unbox = TRUE),
   file.path(results_folder_path, "filtering_settings.json")
 )
+
+cat(sprintf(
+  "Done. %d records x %d columns saved to:\n  %s\n",
+  nrow(dataset), ncol(dataset),
+  file.path(results_folder_path, "dataset_raw_cleaned.csv")
+))
+
 rm(list = ls())
-
-############################################################################
-# Run this only if there are many missing PY
-#
-# # Conference papers may have the year in CY
-# # Early access paper may have the year in EA
-# # So, we are going to complete from there
-# idx <- is.na(dataset$PY) & !is.na(dataset$CY)
-# dataset$PY[idx] <- sapply(dataset$CY[idx], function(x) {substr(x,nchar(x)-4, nchar(x))}) %>% as.numeric()
-#
-# idx <- is.na(dataset$PY) & !is.na(dataset$EA)
-# dataset$PY[idx] <- sapply(dataset$EA[idx], function(x) {substr(x,nchar(x)-4, nchar(x))}) %>% as.numeric()
-#
-# table(is.na(dataset$PY))
-# # A way to infer the PY of an article is by looking at the cited references. An article will cite articles
-# # that were published on the same year of publication at most. i.e. by extracting the max year in the CR
-# # We know that the paper was published in that or a posterior year. Hence, we infer here that it was published
-# # On the same year of the last reference.
-#
-# ## An extra way to know the PY is by looking at the copyright year in the Abstract. (But I have not yet implemented this)
-# idx <- is.na(dataset$PY) & dataset$CR != ""
-# CR_years_available <- str_extract_all(dataset$CR[idx], "[[:digit:]]{4},")
-# CR_max_year <- sapply(CR_years_available, function(x) {
-#   tmp <- gsub(",", "", x)
-#   tmp <- as.numeric(tmp)
-#   if (length(tmp) > 0) {
-#     tmp <- tmp[tmp > 0]
-#     tmp <- tmp[tmp <= 2021]
-#     return(max(tmp))
-#   } else {
-#     return (NA)
-#   }
-# })
-# dataset$PY[idx] <- CR_max_year
-#
-# table(is.na(dataset$PY))
-
-# Check NA UTs
-# test <- dataset[!grepl("^WOS", dataset$UT),]
-
-#
-# # Correct records without UT
-# table(grepl("^WOS", dataset$UT))
-#
-# idx <- !grepl("^WOS", dataset$UT)
-# #dataset$UT[idx] <- paste(as.character(dataset$PY[idx]), gsub("[[:punct:]]| ", "", tolower(dataset$TI[idx])), sep = "") %>% sapply(., function(x) {substr(x,1,50)})
-# dataset$UT
-# # Remove files without UT
-# #dataset <- dataset[!nchar(dataset$UT) != 19,]
-
-
-#
-# # Remove columns that are not used anywhere (i.e. let only those that are used or can be used)
-# # Usable columns as of 20181201
-# usable_columns <- c("PT", "AU", "TI", "SO", "LA", "DT", "DE", "ID", "AB", "C1", "OI", "AF",
-#                     "RP", "FU", "FX", "CR", "NR", "TC", "Z9", "U1", "U2", "PU", "SN", "J9",
-#                     "JI", "PY", "VL", "IS", "BP", "EP", "AR", "DI", "PG", "WC", "SC","UT")
-
