@@ -1,6 +1,6 @@
 # Analysis pipeline (citation network + reports)
 
-if (!file.exists("pipelines/analysis/citation_network/components.R") || !file.exists("a05_reports.R")) {
+if (!file.exists("pipelines/analysis/citation_network/components.R") || !file.exists("pipelines/reports/generator.R")) {
   stop("Run this script from repository root.")
 }
 

@@ -21,6 +21,7 @@ core_packages <- c(
   "stringr",      # String operations (str_split, str_replace, etc.)
   "glue",         # String interpolation
   "ggplot2",      # Visualization (used in charts, reports, overlays)
+  "svglite",      # SVG graphics device for vector exports
   "ggrepel",      # Non-overlapping text labels on plots
   "plotly",       # Interactive plots (ggplotly, plot_ly)
   "reshape2",     # Data reshaping (melt, dcast)
@@ -43,6 +44,7 @@ library(igraph)
 library(stringr)
 library(glue)
 library(ggplot2)
+library(svglite)
 library(ggrepel)
 library(plotly)
 library(reshape2)
