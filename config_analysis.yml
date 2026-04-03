@@ -16,9 +16,9 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q344 - hydrogen economy"
+  project_folder: "Q346_hydrogen_d3"
   filtered_folder: "f01"
-  analysis_id: "a01_cn__f01_dc__c01_lv_v2"
+  analysis_id: "a01_cn__f01_dc__c01_lv_v1"
 
 
 # ==============================================================================
@@ -121,31 +121,7 @@ reporting:
     - UT
     - sentiment
     - sentiment_factor
-    - is_science_diplomacy
-    - is_bibliometrics
-    - policy_dimension
-    - policy_dimension_reasoning
-    - framework_2025_categories_main
-    - framework_2025_categories_detailed
-    - framework_2025_reasoning
-    - article_type
-    - article_type_reasoning
-    - main_domain
-    - geographic_focus
-    - geographic_focus_reasoning
-    - power_dynamic
-    - power_dynamic_reasoning
-    - diplomacy_goal
-    - diplomacy_goal_reasoning
-    - key_actors
-    - key_actors_reasoning
-    - global_commons
-    - global_commons_reasoning
-    - geopolitical_context
-    - geopolitical_context_reasoning
-    - outcome
-    - technology_type
-    - notes
+
 
   categorical_long_reports:
     - AU
@@ -156,21 +132,7 @@ reporting:
     - DE
     - sentiment_factor
     - ID
-    - is_science_diplomacy
-    - is_bibliometrics
-    - policy_dimension
-    - framework_2025_categories_main
-    - framework_2025_categories_detailed
-    - article_type
-    - main_domain
-    - geographic_focus
-    - power_dynamic
-    - diplomacy_goal
-    - key_actors
-    - global_commons
-    - geopolitical_context
-    - outcome
-    - technology_type
+
 
   categorical_simple_wide_reports: [PY, sentiment_factor]
   categorical_multi_wide_reports: [WC, Countries, Institutions]
