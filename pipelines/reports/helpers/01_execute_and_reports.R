@@ -103,7 +103,7 @@ for (level_report_iteration in available_levels) {
   
   #Overlays (Only for WOS data)
   if (settings$params$dataset_source == "wos" & "WC" %in% colnames(myDataCorrect)) {
-    source(file.path(getwd(), "pipelines", "reports", "helpers", "13_WC_overlays.R"))
+    source(file.path(getwd(), "pipelines", "reports", "charts", "overlays.R"))
   }
 
   ############################################################################
@@ -117,13 +117,13 @@ for (level_report_iteration in available_levels) {
   extension <- "png"
   subfolder_dataset <- "charts_dataset"
   subfolder_clusters <- "charts_clusters"
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_dataset.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_scatterplots.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats1_bp.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats2_bars.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats3_lda.R"))
-  # source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats4_heatmap.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_trends_and_clustered_bars.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "dataset.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_scatterplots.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats1_bp.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats2_bars.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats3_lda.R"))
+  # source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats4_heatmap.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "trends_and_clustered_bars.R"))
 
 
   # Save PNG figures. Needed for notebook.
@@ -131,13 +131,13 @@ for (level_report_iteration in available_levels) {
   extension <- "svg"
   subfolder_dataset <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_dataset.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_scatterplots.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats1_bp.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats2_bars.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats3_lda.R"))
-  # source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_clusters_stats4_heatmap.R"))
-  source(file.path(getwd(), "pipelines", "reports", "charts", "zz-charts_trends_and_clustered_bars.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "dataset.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_scatterplots.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats1_bp.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats2_bars.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats3_lda.R"))
+  # source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats4_heatmap.R"))
+  source(file.path(getwd(), "pipelines", "reports", "charts", "trends_and_clustered_bars.R"))
 
   ############################################################################
   # Save complete environment by level. First remove unnecessary variables

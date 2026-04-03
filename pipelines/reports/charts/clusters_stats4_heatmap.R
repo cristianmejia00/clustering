@@ -1,4 +1,4 @@
-print("###################### zz-charts_clusters_stats4_heatmap.R")
+print("###################### clusters_stats4_heatmap.R")
 
 # 20230729
 # Save the self-heatmap
