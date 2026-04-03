@@ -108,9 +108,6 @@ for (level_report_iteration in available_levels) {
 
   ############################################################################
 
-  # Dataset merged RCS
-  source(file.path(getwd(), "pipelines", "reports", "helpers", "15_rcs_merged.R"))
-
   # figures
   # Save PNG figures. Normal raster figures for easy navigation in PC.
   print("###################### PNG CHARTS")

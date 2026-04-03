@@ -28,7 +28,7 @@ potential_columns <- c(
   "X_C", "cluster_code",
   "topic", "related_topics", "TD",
   "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "sentiment", "sentiment_factor", "UT", "uuid",
-  "global_degree", "global_in_degree", "global_page_rank",
+  "global_degree", "global_in_degree", "global_page_rank"
 )
 
 if (level_report == 0) {

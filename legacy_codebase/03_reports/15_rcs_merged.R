@@ -1,3 +1,3 @@
 # Backward-compat wrapper.
-# Canonical location: pipelines/reports/helpers/15_rcs_merged.R
-source(file.path(getwd(), "pipelines", "reports", "helpers", "15_rcs_merged.R"))
+# Merged into pipelines/reports/helpers/02_rcs.R
+source(file.path(getwd(), "pipelines", "reports", "helpers", "02_rcs.R"))
