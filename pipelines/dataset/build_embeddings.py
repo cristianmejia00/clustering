@@ -37,21 +37,6 @@ def _get_embed_profiles(embeds_cfg: dict) -> list[tuple[str, dict]]:
     return profiles
 
 
-def _read_dotenv_var(key: str, dotenv_path: Path = Path(".env")) -> str:
-    if not dotenv_path.exists():
-        return ""
-    for raw in dotenv_path.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-        if "=" not in line:
-            continue
-        k, v = line.split("=", 1)
-        if k.strip() == key:
-            return v.strip().strip('"').strip("'")
-    return ""
-
-
 def main() -> None:
     cfg_path = Path("config_dataset.yml")
     if not cfg_path.exists():
@@ -63,11 +48,7 @@ def main() -> None:
     metadata = cfg["metadata"]
     embeds_cfg = cfg["embeds"]
 
-    env_root = _read_dotenv_var("BIBLIOMETRICS_DRIVE")
-    if env_root:
-        root = Path(env_root)
-    else:
-        root = Path(metadata["bibliometrics_directory"])
+    root = Path(metadata["bibliometrics_directory"])
 
     project = root / metadata["project_folder"]
     filtered_folder = embeds_cfg["from_filtered_dataset"]

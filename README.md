@@ -4,10 +4,9 @@ Analysis pipeline for clustering academic articles, news, and patents using cita
 
 ## Quick Start
 
-### 1. Configure Environment Path
+### 1. Configure Paths in YAML
 
-1. Copy `.env.example` to `.env`
-2. Set `BIBLIOMETRICS_DRIVE` to your local cloud drive path
+Set your bibliometrics root path directly in the configuration files.
 
 ### 2. Configure Pipeline
 
