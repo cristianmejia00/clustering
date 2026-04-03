@@ -4,9 +4,9 @@
 # Applies clustering algorithm to the citation network component.
 # ==============================================================================
 
-source("zz_utils/02_libraries.R")
-source("zz_utils/00_system_paths.R")
-source("zz_utils/load_config.R")
+source("utils/libraries.R")
+source("utils/system_paths.R")
+source("utils/load_config.R")
 
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 
@@ -72,14 +72,14 @@ rm(list = ls())
 
 # # Orphans treatment
 # if (settings$addons$include_orphans == "99" | settings$addons$include_orphans == "999") {
-#   source(file.path(getwd(), "zz_utils", "zz-append_orphans.R"))
+#   source(file.path(getwd(), "utils", "zz-append_orphans.R"))
 # }
 # 
 # # Add-ons
 # if (settings$params$type_of_analysis == "citation_network" &
 #     exists('g1') &
 #     (settings$addons$page_rank | settings$addons$eigen_centrality | settings$addons$closeness_centrality | settings$addons$betweeness_centrality)) {
-#   source(file.path(getwd(), "zz_utils", "zz-centrality_meassures.R"))
+#   source(file.path(getwd(), "utils", "zz-centrality_meassures.R"))
 # }
 # file.path(report_path, "dataset_clustering.csv")
 

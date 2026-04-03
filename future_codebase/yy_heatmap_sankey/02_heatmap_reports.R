@@ -9,8 +9,8 @@ settings_directive = 'heatmap_settings_H016_Brain_Health.json'
 
 ###############################################################################
 # Call necessary libraries
-source("zz_utils/02_libraries.R")
-source("zz_utils/00_system_paths.R")
+source("utils/libraries.R")
+source("utils/system_paths.R")
 
 ###############################################################################
 # Load the directive file

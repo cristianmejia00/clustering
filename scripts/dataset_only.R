@@ -33,7 +33,7 @@ if (!identical(status, 0L)) {
 
 # Re-read config (prior scripts clear workspace with rm(list = ls()))
 cfg <- yaml::read_yaml("config_dataset.yml")
-source("zz_utils/00_system_paths.R")
+source("utils/system_paths.R")
 project_folder <- cfg$metadata$project_folder
 filtered_folder <- cfg$embeds$from_filtered_dataset
 embed_keys <- names(cfg$embeds)

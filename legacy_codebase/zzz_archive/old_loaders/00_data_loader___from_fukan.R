@@ -29,8 +29,8 @@ dataset_metadata <- list(
 # RUN FROM HERE
 ###########################################################################################
 ## Libraries
-source("zz_utils/02_libraries.R")
-source(file.path(getwd(), "zz_utils", "read_from_fukan_function.R"))
+source("utils/libraries.R")
+source(file.path(getwd(), "legacy_codebase", "zzz_archive", "read_from_fukan_function.R"))
 
 ## Path to `/inputs`
 # Here 'input' refer to the inputs for clustering.

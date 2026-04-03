@@ -5,7 +5,7 @@
 # `settings` list expected by all downstream scripts in this project.
 #
 # Usage:
-#   source("zz_utils/load_config.R")
+#   source("utils/load_config.R")
 #   settings <- load_config("config_dataset.yml")
 #
 # The function also archives a timestamped JSON snapshot to the output folder

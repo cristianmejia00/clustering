@@ -3,7 +3,7 @@
 print("###################### reports/02_rcs.R")
 
 # Load utils
-source("zz_utils/zz_auxiliary_functions.R")
+source("utils/auxiliary_functions.R")
 
 # INPUTS
 #myDataCorrect

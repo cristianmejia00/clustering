@@ -15,7 +15,7 @@ if (!file.exists("config_dataset.yml")) {
 cfg_analysis <- yaml::read_yaml("config_analysis.yml")
 cfg_dataset <- yaml::read_yaml("config_dataset.yml")
 
-source("zz_utils/00_system_paths.R")
+source("utils/system_paths.R")
 
 project_folder <- cfg_analysis$metadata$project_folder
 filtered_folder <- cfg_analysis$metadata$filtered_folder

@@ -16,10 +16,10 @@
 #   - filtering_settings.json   : Copy of the filtering settings used
 # ==============================================================================
 
-source("zz_utils/02_libraries.R")
-source("zz_utils/00_system_paths.R")
-source("zz_utils/load_config.R")
-source("zz_utils/zz_auxiliary_functions.R")
+source("utils/libraries.R")
+source("utils/system_paths.R")
+source("utils/load_config.R")
+source("utils/auxiliary_functions.R")
 
 settings <- load_config("config_dataset.yml")
 project_folder_name <- settings$metadata$project_folder

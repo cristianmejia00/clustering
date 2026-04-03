@@ -2,7 +2,7 @@
 print("###################### reports/04_cluster_reports.R")
 
 # Load utils
-source("zz_utils/zz_auxiliary_functions.R")
+source("utils/auxiliary_functions.R")
 
 # INPUT
 list_of_clusters <- myDataCorrect$X_C %>%

@@ -4,9 +4,9 @@
 # Extracts the selected connected component(s) from the citation network.
 # ==============================================================================
 
-source("zz_utils/02_libraries.R")
-source("zz_utils/00_system_paths.R")
-source("zz_utils/load_config.R")
+source("utils/libraries.R")
+source("utils/system_paths.R")
+source("utils/load_config.R")
 
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 

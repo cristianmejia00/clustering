@@ -6,8 +6,8 @@ settings_directive <- "settings_analysis_directive_2026-03-20-10-03.json"
 
 ###############################################################################
 # Call necessary libraries
-source("zz_utils/02_libraries.R")
-source("zz_utils/00_system_paths.R")
+source("utils/libraries.R")
+source("utils/system_paths.R")
 
 ###############################################################################
 # Load the directive file

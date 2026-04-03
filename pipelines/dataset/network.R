@@ -8,9 +8,9 @@
 #   Run pipelines/dataset/loader.R first to produce dataset_raw_cleaned.csv.
 # ==============================================================================
 
-source("zz_utils/02_libraries.R")
-source("zz_utils/00_system_paths.R")
-source("zz_utils/load_config.R")
+source("utils/libraries.R")
+source("utils/system_paths.R")
+source("utils/load_config.R")
 
 settings <- load_config("config_dataset.yml")
 project_folder_name <- settings$metadata$project_folder

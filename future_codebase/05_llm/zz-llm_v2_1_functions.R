@@ -1,6 +1,6 @@
 ##########################################################
 # Load libraries
-source("zz_utils/02_libraries.R")
+source("utils/libraries.R")
 
 # Load settings from the project we are interested in
 #source("settings.R")
@@ -12,7 +12,7 @@ source("zz_utils/02_libraries.R")
 library(httr)
 library(jsonlite)
 
-claude_api_key = readr::read_file(file.path('zz_assets', 'credentials', 'claude.key'))
+claude_api_key = readr::read_file(file.path('assets', 'credentials', 'claude.key'))
 
 #' @description
 #' Get answers from OpenAI's GPT. Here used for ARTICLE summarization.
@@ -92,7 +92,7 @@ reticulate::use_condaenv('openai_env')
 # `credentials/openai.key` was added to .gitignore so is not committed to the repo.
 # import Openai Python library
 openai <- reticulate::import('openai')
-client = openai$OpenAI(api_key = readr::read_file('zz_assets/credentials/openai.key'))
+client = openai$OpenAI(api_key = readr::read_file('assets/credentials/openai.key'))
 
 
 # utils
