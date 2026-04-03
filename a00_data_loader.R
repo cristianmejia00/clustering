@@ -43,7 +43,8 @@ if (length(paths_to_files) == 0) {
 
 list_of_all_files <- lapply(paths_to_files, function(path) {
   fread(path, sep = "\t", stringsAsFactors = FALSE,
-        check.names = FALSE, encoding = "UTF-8")
+        check.names = FALSE, encoding = "UTF-8",
+        colClasses = "character")
 })
 
 cat(sprintf("Read %d files (%s rows each)\n",

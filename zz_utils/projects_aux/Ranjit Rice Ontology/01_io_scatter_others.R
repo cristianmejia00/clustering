@@ -191,7 +191,7 @@ p4 <- ggplot(dff_filtered, aes(x = mean_year, y = mean_citations)) +
   facet_wrap(~intervention_short, scales = "free_x") +  # Only x-axis is free, y-axis is fixed
   labs(x = "Average Publication Year",
        y = "Average Citations",
-       title = "Interventions and Outcomes by Category (Fixed Y-axis)") +
+       title = "Outcomes per Intervention Category") +
   theme_bw() +
   theme(legend.position = "bottom",
         strip.text = element_text(face = "bold", size = 8))
