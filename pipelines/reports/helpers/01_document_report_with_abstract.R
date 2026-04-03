@@ -14,14 +14,12 @@ print("###################### reports/01_document_report_with_abstract.R")
 
 # Helper function to get urls from DOI
 convert_doi_to_url <- function(a_list_of_DOI) {
-  a_list_of_DOI[is.na(a_list_of_DOI)] <- ""
-  sapply(a_list_of_DOI, function(x) {
-    if (nchar(x) > 0) {
-      paste("https://doi.org/", x, sep = "")
-    } else {
-      x
-    }
-  })
+  doi <- dplyr::coalesce(a_list_of_DOI, "")
+  dplyr::if_else(
+    nchar(doi) > 0,
+    paste0("https://doi.org/", doi),
+    doi
+  )
 }
 
 # Find which colnames exist.
@@ -31,46 +29,6 @@ potential_columns <- c(
   "topic", "related_topics", "TD",
   "AU", "PY", "DI", "TI", "AB", "Z9", "X_E", "DE", "SO", "WC", "Countries", "sentiment", "sentiment_factor", "UT", "uuid",
   "global_degree", "global_in_degree", "global_page_rank",
-  'ethnicities', 'race', 'is_japanese', 'nationality', 'gender',
-  'nationality_processed', 'ethnicities_total_elements',
-  'ethnicities_unique_elements',
-  'ethnicities_variety_ratio',
-  'ethnicities_hhi', 'ethnicities_hhi_normalized',
-  'ethnicities_shannon_entropy', 'ethnicities_shannon_max',
-  'ethnicities_shannon_evenness', 'ethnicities_simpson_diversity',
-  'ethnicities_simpson_dominance', 'ethnicities_berger_parker_dominance',
-  'ethnicities_effective_species_shannon',
-  'ethnicities_effective_species_simpson', 'ethnicities_gini_coefficient',
-  'ethnicities_coefficient_of_variation', 'race_total_elements',
-  'race_unique_elements', 'race_variety_ratio', 'race_hhi',
-  'race_hhi_normalized', 'race_shannon_entropy', 'race_shannon_max',
-  'race_shannon_evenness', 'race_simpson_diversity',
-  'race_simpson_dominance', 'race_berger_parker_dominance',
-  'race_effective_species_shannon', 'race_effective_species_simpson',
-  'race_gini_coefficient', 'race_coefficient_of_variation',
-  'nationality_total_elements', 'nationality_unique_elements',
-  'nationality_variety_ratio', 'nationality_hhi',
-  'nationality_hhi_normalized', 'nationality_shannon_entropy',
-  'nationality_shannon_max', 'nationality_shannon_evenness',
-  'nationality_simpson_diversity', 'nationality_simpson_dominance',
-  'nationality_berger_parker_dominance',
-  'nationality_effective_species_shannon',
-  'nationality_effective_species_simpson', 'nationality_gini_coefficient',
-  'nationality_coefficient_of_variation', 'is_japanese_total_elements',
-  'is_japanese_unique_elements', 'is_japanese_variety_ratio',
-  'is_japanese_hhi', 'is_japanese_hhi_normalized',
-  'is_japanese_shannon_entropy', 'is_japanese_shannon_max',
-  'is_japanese_shannon_evenness', 'is_japanese_simpson_diversity',
-  'is_japanese_simpson_dominance', 'is_japanese_berger_parker_dominance',
-  'is_japanese_effective_species_shannon',
-  'is_japanese_effective_species_simpson', 'is_japanese_gini_coefficient',
-  'is_japanese_coefficient_of_variation', 'gender_total_elements',
-  'gender_unique_elements', 'gender_variety_ratio', 'gender_hhi',
-  'gender_hhi_normalized', 'gender_shannon_entropy', 'gender_shannon_max',
-  'gender_shannon_evenness', 'gender_simpson_diversity',
-  'gender_simpson_dominance', 'gender_berger_parker_dominance',
-  'gender_effective_species_shannon', 'gender_effective_species_simpson',
-  'gender_gini_coefficient', 'gender_coefficient_of_variation'
 )
 
 if (level_report == 0) {
@@ -87,43 +45,48 @@ columns_in_myDataCorrect <- intersect(
   colnames(myDataCorrect)
 )
 
-# Create the file
-article_report <- myDataCorrect %>% select(all_of(columns_in_myDataCorrect))
+# Precompute values used in mutate
+py_median <- suppressWarnings(as.integer(myDataCorrect$PY)) %>%
+  median(na.rm = TRUE)
 
-## Format columns
-# Format DOI
-if ("DI" %in% colnames(article_report)) {
-  article_report$DI <- convert_doi_to_url(article_report$DI)
+if (is.na(py_median)) {
+  py_median <- 0L
 }
 
-# Replace NA by empty character
-article_report[is.na(article_report)] <- ""
+# Build report with consistent dplyr flow
+article_report <- myDataCorrect %>%
+  dplyr::select(dplyr::all_of(columns_in_myDataCorrect)) %>%
+  dplyr::mutate(
+    dplyr::across(where(is.character), ~ dplyr::coalesce(.x, "")),
+    DI = if ("DI" %in% names(.)) convert_doi_to_url(DI) else DI,
+    Z9 = if ("Z9" %in% names(.)) dplyr::coalesce(suppressWarnings(as.integer(Z9)), 0L) else Z9,
+    PY = if ("PY" %in% names(.)) dplyr::coalesce(suppressWarnings(as.integer(PY)), py_median) else PY
+  )
 
-# Filter to the top_documents of each cluster
-if (settings$rp$top_documents != 0) {
+# Filter to the top_documents of each cluster when requested
+if (settings$rp$top_documents != 0 && all(c("X_C", "X_E") %in% names(article_report))) {
   article_report <- article_report %>%
-    group_by(X_C) %>%
-    top_n(settings$rp$top_documents, X_E)
+    dplyr::group_by(X_C) %>%
+    dplyr::slice_max(order_by = X_E, n = settings$rp$top_documents, with_ties = TRUE) %>%
+    dplyr::ungroup()
 }
 
-# Clean the columns
-article_report$Z9 <- as.integer(article_report$Z9)
-article_report$Z9[is.na(article_report$Z9)] <- 0
-
-article_report$PY <- as.integer(article_report$PY)
-article_report$PY[is.na(article_report$PY)] <- median(article_report$PY, na.rm = TRUE)
-
-# Order the report 
-article_report <- article_report[order(article_report$X_C, 
-                                       -article_report$X_E, 
-                                       -article_report$Z9, 
-                                       -article_report$PY),]
+# Order report rows
+sort_columns <- intersect(c("X_C", "X_E", "Z9", "PY"), names(article_report))
+if (length(sort_columns) > 0) {
+  desc_columns <- intersect(c("X_E", "Z9", "PY"), sort_columns)
+  article_report <- article_report %>%
+    dplyr::arrange(
+      dplyr::across(dplyr::all_of(setdiff(sort_columns, desc_columns))),
+      dplyr::across(dplyr::all_of(desc_columns), dplyr::desc)
+    )
+}
 
 # Change colnames to natural names
-setnames(article_report, 
-         names(settings$rp$column_labels), 
-         unname(settings$rp$column_labels) %>% unlist(), 
-         skip_absent = TRUE)
+rename_from <- names(settings$rp$column_labels)
+rename_to <- unname(unlist(settings$rp$column_labels))
+rename_idx <- match(names(article_report), rename_from)
+names(article_report)[!is.na(rename_idx)] <- rename_to[rename_idx[!is.na(rename_idx)]]
 
 
 # Write the article report
@@ -131,17 +94,15 @@ write.csv(article_report,
           file = rn$PROJECTarticlereport, 
           row.names = FALSE)
 
-# Cleaning up
-rm('columns_in_myDataCorrect')
-
 # Filter to the top_documents of each cluster
 if (settings$rp$top_documents == 0) {
   article_report_20 <- article_report %>%
-    group_by(`Cluster Code`) %>%
-    top_n(20, Degree)
-}
+    dplyr::group_by(`Cluster Code`) %>%
+    dplyr::slice_max(order_by = Degree, n = 20, with_ties = TRUE) %>%
+    dplyr::ungroup()
 
-# Write the article report
-write.csv(article_report_20,
-          file = gsub('_report', '_report_20', rn$PROJECTarticlereport),
-          row.names = FALSE)
+  # Write the article report
+  write.csv(article_report_20,
+            file = gsub('_report', '_report_20', rn$PROJECTarticlereport),
+            row.names = FALSE)
+}
