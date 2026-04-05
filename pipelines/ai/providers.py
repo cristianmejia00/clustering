@@ -7,6 +7,7 @@ backend (OpenAI, Anthropic, Google, etc.).
 
 from __future__ import annotations
 
+import json
 import os
 import time
 from pathlib import Path
@@ -110,4 +111,55 @@ def call_llm(
 
     raise RuntimeError(
         f"LLM call failed after {retries} attempts: {last_error!r}"
+    )
+
+
+def call_llm_with_tools(
+    system_prompt: str,
+    user_prompt: str,
+    model: str,
+    tools: list[dict],
+    tool_choice: dict | None = None,
+    temperature: float = 0.2,
+    max_tokens: int = 4096,
+    retries: int = 3,
+    retry_delay: float = 5.0,
+) -> dict[str, Any]:
+    """Send a prompt with function-calling tools via litellm.
+
+    Forces the model to call the specified tool and returns the parsed
+    JSON arguments.
+
+    Returns
+    -------
+    dict
+        Parsed arguments from the tool call.
+    """
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ]
+
+    last_error: Exception | None = None
+    for attempt in range(1, retries + 1):
+        try:
+            response = litellm.completion(
+                model=model,
+                messages=messages,
+                tools=tools,
+                tool_choice=tool_choice or {"type": "function", "function": {"name": tools[0]["function"]["name"]}},
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            tool_call = response.choices[0].message.tool_calls[0]
+            return json.loads(tool_call.function.arguments)
+        except Exception as exc:
+            last_error = exc
+            if attempt < retries:
+                wait = retry_delay * attempt
+                print(f"  [retry {attempt}/{retries}] {exc!r} — waiting {wait:.0f}s")
+                time.sleep(wait)
+
+    raise RuntimeError(
+        f"LLM tool call failed after {retries} attempts: {last_error!r}"
     )

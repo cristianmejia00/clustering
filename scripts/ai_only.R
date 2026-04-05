@@ -92,7 +92,15 @@ if (!nzchar(py_exec)) {
   stop("Python not found. Install Python and run: pip install -r pipelines/ai/requirements.txt")
 }
 
-for (level_report in available_levels) {
+# Read compute tasks from config
+llm_compute <- settings$llm$compute
+if (is.null(llm_compute)) llm_compute <- character(0)
+
+# Process deepest level first (e.g. level1 before level0) so that
+# global_naming at level0 can use subcluster names as context.
+ordered_levels <- sort(available_levels, decreasing = TRUE)
+
+for (level_report in ordered_levels) {
   output_folder_level <- file.path(output_folder_reports, paste0("level", level_report))
 
   rcs_path <- file.path(output_folder_level, "rcs_merged.csv")
@@ -125,6 +133,7 @@ for (level_report in available_levels) {
   ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(level_dataset))
   readr::write_csv(level_dataset[, ai_cols], ai_dataset_path)
 
+  # Step 1: Per-cluster enrichment (names, descriptions)
   ai_status <- system2(
     py_exec,
     args = c(
@@ -140,6 +149,44 @@ for (level_report in available_levels) {
     message("AI enrichment completed for level ", level_report)
   } else {
     warning("AI enrichment exited with status ", ai_status, " for level ", level_report)
+  }
+
+  # Step 2: Global naming — rename all clusters at once for distinctiveness
+  if ("global_naming" %in% llm_compute) {
+    message("=== Global Naming: level ", level_report, " ===")
+
+    # For level 0, pass subcluster summary as context (if available)
+    subcluster_args <- character(0)
+    if (level_report == 0) {
+      # Find the deepest available subcluster summary
+      for (sub_level in sort(setdiff(available_levels, 0), decreasing = TRUE)) {
+        sub_summary <- file.path(output_folder_reports,
+                                 paste0("level", sub_level),
+                                 "cluster_summary.csv")
+        if (file.exists(sub_summary)) {
+          subcluster_args <- c("--subcluster-summary", shQuote(sub_summary))
+          message("  Using subcluster context from level ", sub_level)
+          break
+        }
+      }
+    }
+
+    gn_status <- system2(
+      py_exec,
+      args = c(
+        "pipelines/ai/global_naming.py",
+        "--rcs", shQuote(rcs_path),
+        "--output-dir", shQuote(output_folder_level),
+        subcluster_args
+      ),
+      stdout = "", stderr = ""
+    )
+
+    if (gn_status == 0) {
+      message("Global naming completed for level ", level_report)
+    } else {
+      warning("Global naming exited with status ", gn_status, " for level ", level_report)
+    }
   }
 }
 

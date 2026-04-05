@@ -95,6 +95,7 @@ llm:
     - cluster_title
     - cluster_description
     - cluster_enhanced_description
+    - global_naming                     # Rename all clusters at once for distinctive, non-overlapping names
 
 
 # ==============================================================================

@@ -148,6 +148,7 @@ if (!is.null(llm_compute) && length(llm_compute) > 0) {
     warning("Python not found — skipping AI enrichment. Install Python and ",
             "run: pip install -r pipelines/ai/requirements.txt")
   } else {
+    # Step 1: Per-cluster enrichment
     ai_status <- system2(
       py_exec,
       args = c(
@@ -164,6 +165,26 @@ if (!is.null(llm_compute) && length(llm_compute) > 0) {
     } else {
       warning("AI enrichment script exited with status ", ai_status,
               ". Cluster names/descriptions may be incomplete.")
+    }
+
+    # Step 2: Global naming (distinctive renaming across all clusters)
+    if ("global_naming" %in% llm_compute) {
+      message("=== Global Naming ===")
+      gn_status <- system2(
+        py_exec,
+        args = c(
+          "pipelines/ai/global_naming.py",
+          "--rcs", shQuote(rcs_path),
+          "--output-dir", shQuote(output_folder_level)
+        ),
+        stdout = "", stderr = ""
+      )
+      if (gn_status == 0) {
+        message("Global naming completed. Reloading rcs_merged.csv")
+        rcs_merged <- readr::read_csv(rcs_path, show_col_types = FALSE)
+      } else {
+        warning("Global naming exited with status ", gn_status)
+      }
     }
   }
 } else {
