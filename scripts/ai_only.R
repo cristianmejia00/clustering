@@ -103,10 +103,27 @@ for (level_report in available_levels) {
 
   message("=== AI Enrichment: level ", level_report, " ===")
 
+  # Remap X_C to the correct cluster column for this level
+  # (level 0 = level0/X_C, level N = subcluster_labelN)
+  level_dataset <- dataset
+  if (level_report == 0) {
+    if ("level0" %in% colnames(level_dataset)) {
+      level_dataset$X_C <- as.character(level_dataset$level0)
+    }
+  } else {
+    sub_col <- paste0("subcluster_label", level_report)
+    if (sub_col %in% colnames(level_dataset)) {
+      level_dataset$X_C <- as.character(level_dataset[[sub_col]])
+    } else {
+      warning("Skipping level ", level_report, " — column ", sub_col, " not found in dataset")
+      next
+    }
+  }
+
   # Write the minimal dataset CSV
   ai_dataset_path <- file.path(output_folder_level, "dataset_for_ai.csv")
-  ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(dataset))
-  readr::write_csv(dataset[, ai_cols], ai_dataset_path)
+  ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(level_dataset))
+  readr::write_csv(level_dataset[, ai_cols], ai_dataset_path)
 
   ai_status <- system2(
     py_exec,
