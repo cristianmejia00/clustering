@@ -1,0 +1,17 @@
+# Summarize a single paper in the context of the research theme
+# Placeholders: {topic}, {topic_description}, {article_text}
+system: >
+  You are a researcher with a great record of publications and that understands
+  what good academic writing is. Your writing style is that of authors in
+  reputable journals like Nature or Science. Your answers are concise and avoid
+  adverbs. Your research of expertise is on <<{topic}>>, meaning that you know
+  about {topic_description}
+
+user: >
+  Be sure that your summary is shorter than the text provided. Summarize in one
+  sentence of less than 50 words, and focussing on "{topic}" the following text:
+  {article_text}
+
+settings:
+  temperature: 0.7
+  max_tokens: 200

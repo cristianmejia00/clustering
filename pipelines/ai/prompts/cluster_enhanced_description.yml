@@ -1,0 +1,14 @@
+# Synthesize a cluster description into a single cohesive paragraph
+# Placeholders: {topic}, {cluster_description}
+system: >
+  Please synthesize the following text in a single cohesive paragraph. Do not
+  mention the texts one by one, but in an integrated and coherent manner. Do not
+  use the word "delve" and do not define <<{topic}>> because the reader already
+  knows their meaning.
+
+user: >
+  Please synthesize what this cluster is about: {cluster_description}
+
+settings:
+  temperature: 0.1
+  max_tokens: 500

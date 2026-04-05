@@ -122,21 +122,50 @@ writeLines(capture.output(sessionInfo()), file.path(output_folder_level, "sessio
 #   write.csv(cluster_comparison, file = file.path(output_folder_level, "cluster_id_comparison.csv"), row.names = FALSE)
 # }
 
-# ###############################################
-# # LLM
-# # Using OpenAI and Claude in R.
-# source("05_llm/zz-llm_v2_0_prompts.R")
-# source("05_llm/zz-llm_v2_1_functions.R")
-# source("05_llm/zz-llm_v2_2_execution.R")
-#
-# source("06_quarto/zz-create_bib_file.R")
-#
-# source("06_quarto/zz-generate_quarto_document.R")
-# #source("06_quarto/zz-generate_quarto_word.R")
-#
-# ###############################################
-# # Send to display
-# source("zzz-send_to_display_repo.R")
-#
-# # Save Global environment
-# save.image(file.path(output_folder_level, "environ_zzz_llm.rdata"))
+###############################################################################
+###############################################################################
+###############################################################################
+# AI Enrichment — LLM-generated cluster names and descriptions
+# Calls pipelines/ai/enrich_clusters.py via subprocess (same pattern as
+# build_embeddings.py).  Requires:  pip install -r pipelines/ai/requirements.txt
+
+llm_compute <- settings$llm$compute
+if (!is.null(llm_compute) && length(llm_compute) > 0) {
+  message("=== AI Enrichment: generating cluster names and descriptions ===")
+
+  # Write the minimal dataset CSV that the Python script needs
+  ai_dataset_path <- file.path(output_folder_level, "dataset_for_ai.csv")
+  ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(dataset))
+  readr::write_csv(dataset[, ai_cols], ai_dataset_path)
+
+  rcs_path <- file.path(output_folder_level, "rcs_merged.csv")
+
+  # Find a working Python interpreter — prefer the dedicated venv
+  py_exec <- file.path("pipelines", "ai", ".venv", "bin", "python3")
+  if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
+  if (!nzchar(py_exec)) py_exec <- Sys.which("python")
+  if (!nzchar(py_exec)) {
+    warning("Python not found — skipping AI enrichment. Install Python and ",
+            "run: pip install -r pipelines/ai/requirements.txt")
+  } else {
+    ai_status <- system2(
+      py_exec,
+      args = c(
+        "pipelines/ai/enrich_clusters.py",
+        "--rcs", rcs_path,
+        "--dataset", ai_dataset_path,
+        "--output-dir", output_folder_level
+      ),
+      stdout = "", stderr = ""
+    )
+    if (ai_status == 0) {
+      message("AI enrichment completed. Reloading rcs_merged.csv")
+      rcs_merged <- readr::read_csv(rcs_path, show_col_types = FALSE)
+    } else {
+      warning("AI enrichment script exited with status ", ai_status,
+              ". Cluster names/descriptions may be incomplete.")
+    }
+  }
+} else {
+  message("No LLM compute tasks configured — skipping AI enrichment.")
+}

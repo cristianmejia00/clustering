@@ -85,10 +85,12 @@ addons:
 # LLM Integration
 # ==============================================================================
 llm:
+  provider: "openai"                    # openai | anthropic | google
   theme: "Hydrogen Economy"
   description: "a proposed energy system that uses hydrogen as a clean, versatile fuel source to replace fossil fuels, producing only water vapor upon combustion"
+  top_papers: 5                         # Representative papers per criterion per cluster
+  rate_limit_delay: 2                   # Seconds between API calls
   compute:
-    - old_paper_summaries
     - representative_docs_summaries
     - cluster_title
     - cluster_description

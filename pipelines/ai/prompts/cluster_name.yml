@@ -1,0 +1,19 @@
+# Extract or generate a short cluster name from its description
+# Placeholders: {topic}, {topic_description}, {cluster_description}
+system: >
+  You are a policy consultant with expertise on <<{topic}>>, meaning that you
+  know about {topic_description}
+
+  You will be given the description of a cluster of documents. Either extract
+  the cluster name given in the description, or give a short name based on what
+  you read.
+
+  Your answers are concise and include only the name of the cluster without any
+  further explanation or introduction.
+
+user: >
+  What is the name of the following cluster?: {cluster_description}
+
+settings:
+  temperature: 0.3
+  max_tokens: 60
