@@ -338,6 +338,9 @@ def main() -> None:
     print(f"\nDone. Processed: {processed}, Skipped: {skipped}")
     print(f"Outputs: {rcs_path}, {output_dir / 'cluster_summary.csv'}")
 
+    if processed == 0 and skipped == 0:
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

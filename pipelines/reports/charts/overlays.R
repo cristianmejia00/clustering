@@ -81,7 +81,7 @@ get_overlay_image <- function(row_index) {
   # Last row = all clusters → save as cluster 0
   cluster_id <- if (row_index == nrow(WC_per_cluster_counts)) 0 else row_index
   ggsave(file.path(output_folder_level, "overlays",
-                   glue("{cluster_id}.{extension}")),
+                   glue("{cluster_id}.svg")),
          plot = p)
 }
 

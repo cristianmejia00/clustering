@@ -22,15 +22,15 @@ global_mean_py  <- mean(myDataCorrect$PY, na.rm = TRUE)
 myDataCorrect <- myDataCorrect %>%
   dplyr::group_by(PY) %>%
   dplyr::mutate(
-    Z9_rank = dplyr::if_else(dplyr::n() > 1, percent_rank(Z9), 0.5),
-    Z9_zs   = dplyr::if_else(
+    Z9_rank = ifelse(dplyr::n() > 1, percent_rank(Z9), 0.5),
+    Z9_zs   = ifelse(
       dplyr::n() > 1 & sd(Z9, na.rm = TRUE) > 0,
       as.numeric(scale(Z9)),
       0
     ),
     Z9_log  = {
       temp_log <- log(Z9 + 1)
-      dplyr::if_else(
+      ifelse(
         dplyr::n() > 1 & sd(temp_log, na.rm = TRUE) > 0,
         as.numeric(scale(temp_log)),
         0

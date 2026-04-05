@@ -43,9 +43,12 @@ def get_cluster_papers(
     if len(cluster) <= top:
         selected = cluster
     else:
-        by_connectivity = cluster.nlargest(top, "X_E")["UT"]
         by_citations = cluster.nlargest(top, "Z9")["UT"]
-        keep = pd.concat([by_connectivity, by_citations]).drop_duplicates()
+        if "X_E" in cluster.columns:
+            by_connectivity = cluster.nlargest(top, "X_E")["UT"]
+            keep = pd.concat([by_connectivity, by_citations]).drop_duplicates()
+        else:
+            keep = by_citations
         selected = cluster.loc[cluster["UT"].isin(keep)]
 
     selected = selected.copy()

@@ -91,7 +91,7 @@ llm:
   top_papers: 5                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:
-    - representative_docs_summaries
+    # - representative_docs_summaries   # Uncomment to summarize each paper via LLM before clustering (slow/costly)
     - cluster_title
     - cluster_description
     - cluster_enhanced_description

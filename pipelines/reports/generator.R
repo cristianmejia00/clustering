@@ -152,9 +152,9 @@ if (!is.null(llm_compute) && length(llm_compute) > 0) {
       py_exec,
       args = c(
         "pipelines/ai/enrich_clusters.py",
-        "--rcs", rcs_path,
-        "--dataset", ai_dataset_path,
-        "--output-dir", output_folder_level
+        "--rcs", shQuote(rcs_path),
+        "--dataset", shQuote(ai_dataset_path),
+        "--output-dir", shQuote(output_folder_level)
       ),
       stdout = "", stderr = ""
     )
