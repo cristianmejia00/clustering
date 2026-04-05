@@ -100,6 +100,3 @@ print(glue("Clusters: {dataset_minimal$level0 %>% unique() %>% length()}"))
 
 print(dataset_minimal$subcluster_label1 %>% unique() %>% sort())
 print(glue("Clusters: {dataset_minimal$subcluster_label1 %>% unique() %>% length()}"))
-
-# Clean
-rm(list = ls())

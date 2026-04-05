@@ -189,6 +189,3 @@ writeLines(
   ),
   file.path(results_folder_path, "component_settings.json")
 )
-
-
-rm(list = ls())

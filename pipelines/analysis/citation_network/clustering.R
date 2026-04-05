@@ -64,8 +64,6 @@ writeLines(RJSONIO::toJSON(network_description,
                            auto_unbox = TRUE),
            file.path(results_folder_path, "network_settings.json"))
 
-rm(list = ls())
-
 # # ========================================================================
 # # Create the summary
 # source(file.path(getwd(), "03_reports", "03_general_summary.R"))
