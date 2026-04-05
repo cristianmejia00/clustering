@@ -1,3 +1,3 @@
 # Backward-compat wrapper.
-# Canonical location: pipelines/reports/charts/clusters_scatterplots.R
-source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_scatterplots.R"))
+# Canonical location: pipelines/reports/charts/cluster_labeled.R
+source(file.path(getwd(), "pipelines", "reports", "charts", "cluster_labeled.R"))

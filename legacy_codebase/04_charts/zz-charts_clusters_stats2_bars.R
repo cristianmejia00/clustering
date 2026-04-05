@@ -1,3 +1,4 @@
 # Backward-compat wrapper.
-# Canonical location: pipelines/reports/charts/clusters_stats2_bars.R
-source(file.path(getwd(), "pipelines", "reports", "charts", "clusters_stats2_bars.R"))
+# Canonical location: pipelines/reports/charts/cluster_stats.R
+# Note: stats1_bp and stats2_bars merged into cluster_stats.R
+source(file.path(getwd(), "pipelines", "reports", "charts", "cluster_stats.R"))

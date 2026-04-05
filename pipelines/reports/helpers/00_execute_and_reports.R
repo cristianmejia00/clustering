@@ -84,12 +84,10 @@ for (level_report_iteration in available_levels) {
   subfolder_clusters <- "index_files/charts"
 
   chart_scripts <- c(
-    "dataset.R",
-    "clusters_scatterplots.R",
-    "clusters_stats1_bp.R",
-    "clusters_stats2_bars.R",
-    "clusters_stats3_lda.R",
-    "trends_and_clustered_bars.R"
+    "dataset_bars.R",
+    "dataset_trends.R",
+    "cluster_stats.R",
+    "cluster_labeled.R"
   )
   for (script in chart_scripts) {
     source(file.path(getwd(), "pipelines", "reports", "charts", script))
