@@ -1,6 +1,8 @@
-# Analysis pipeline runner (citation network and/or topic model reports)
+# Analysis pipeline runner — clustering only (citation network and/or topic model)
+# Does NOT generate reports, charts, or AI enrichment.
+# Those are separate pipeline stages: "reports", "charts", "ai".
 
-if (!file.exists("pipelines/analysis/citation_network/components.R") || !file.exists("pipelines/reports/generator.R")) {
+if (!file.exists("pipelines/analysis/citation_network/components.R")) {
   stop("Run this script from repository root.")
 }
 
@@ -85,18 +87,20 @@ if (analysis_type %in% c("topic_model", "both")) {
 }
 
 if (analysis_type %in% c("citation_network", "both")) {
-  message("=== Step 1/4: Components ===")
+  message("=== Step 1/3: Components ===")
   source("pipelines/analysis/citation_network/components.R")
 
-  message("=== Step 2/4: Clustering ===")
+  message("=== Step 2/3: Clustering ===")
   source("pipelines/analysis/citation_network/clustering.R")
 
-  message("=== Step 3/4: Thresholding ===")
+  message("=== Step 3/3: Thresholding ===")
   source("pipelines/analysis/citation_network/thresholding.R")
 }
 
-message("=== Reports: Generate outputs for type_of_analysis = ", analysis_type, " ===")
-source("pipelines/reports/generator.R")
+if (analysis_type %in% c("topic_model")) {
+  message("Analysis type is 'topic_model' — no clustering step needed.")
+  message("Ensure the topic-model notebook has been run to produce dataset_minimal.csv.")
+}
 
 analysis_folder <- file.path(output_folder_path, project_folder, analysis_id)
 if (!dir.exists(analysis_folder)) {

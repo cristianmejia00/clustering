@@ -10,7 +10,7 @@ Called from R via ``system2()`` during report generation, or standalone.
 
 Usage
 -----
-    python pipelines/reports/charts/umap_scatter.py \
+    python pipelines/charts/umap_scatter.py \
         --embeddings-dir  path/to/e01/ \
         --doc-clusters    path/to/doc_clusters.csv \
         --rcs             path/to/rcs_merged.csv \

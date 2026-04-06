@@ -7,7 +7,7 @@ print("###################### cluster_stats.R")
 #
 # Does NOT use cluster names — uses cluster codes/numbers only.
 
-source(file.path(getwd(), "pipelines", "reports", "charts", "chart_utils.R"))
+source(file.path(getwd(), "pipelines", "charts", "chart_utils.R"))
 library(dplyr)
 library(stringr)
 

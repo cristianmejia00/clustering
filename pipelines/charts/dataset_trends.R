@@ -7,7 +7,7 @@ print("###################### dataset_trends.R")
 # to match multi-value cells (O(n*k)). This version expands multi-value columns once
 # via separate_longer_delim() and uses dplyr joins/group_by for O(n) aggregation.
 
-source(file.path(getwd(), "pipelines", "reports", "charts", "chart_utils.R"))
+source(file.path(getwd(), "pipelines", "charts", "chart_utils.R"))
 library(dplyr)
 library(tidyr)
 library(scales)

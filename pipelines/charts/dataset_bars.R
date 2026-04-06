@@ -3,7 +3,7 @@ print("###################### dataset_bars.R")
 # Dataset-level bar charts for categorical columns and yearly publication trends.
 # Does NOT use cluster names — purely dataset-level stats.
 
-source(file.path(getwd(), "pipelines", "reports", "charts", "chart_utils.R"))
+source(file.path(getwd(), "pipelines", "charts", "chart_utils.R"))
 library(dplyr)
 library(tools)
 

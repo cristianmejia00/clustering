@@ -22,15 +22,24 @@ Run from an R session with working directory at repo root.
 Unified launcher:
 
 - `source("scripts/run_pipeline.R")`
-- `run_pipeline("dataset")` or `run_pipeline("analysis")` or `run_pipeline("full")` or `run_pipeline("topic")`
+- `run_pipeline(c("dataset", "analysis", "reports", "ai", "charts"))` — full pipeline
+- `run_pipeline(c("reports", "ai", "charts"))` — rerun from reports
+- `run_pipeline(c("ai", "charts"))` — AI enrichment + charts only
+- `run_pipeline(c("charts"))` — charts only
+
+Valid stages: `dataset`, `analysis`, `reports`, `ai`, `charts`. Supply any subset in any order.
 
 1. Dataset routine (mandatory embeddings included):
    Run `source("scripts/dataset_only.R")`.
    Produces cleaned dataset, citation network, and embeddings for all embed profiles.
-2. Analysis + reports routine:
+2. Analysis routine (clustering only):
    Run `source("scripts/analysis_only.R")`.
-3. Full routine (dataset + analysis + reports):
-   Run `source("scripts/full_pipeline.R")`.
+3. Reports routine (report tables):
+   Run `source("scripts/reports_only.R")`.
+4. AI enrichment:
+   Run `source("scripts/ai_only.R")`.
+5. Charts:
+   Run `source("scripts/charts_only.R")`.
 
 Embeddings are now part of the dataset pipeline for all datasets because they are also used later for optional cosine-similarity analyses, not only for topic modeling.
 

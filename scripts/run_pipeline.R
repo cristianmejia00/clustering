@@ -1,29 +1,53 @@
 # Unified pipeline launcher
 # Usage:
 #   source("scripts/run_pipeline.R")
-#   run_pipeline("dataset")
-#   run_pipeline("analysis")
-#   run_pipeline("ai")
-#   run_pipeline("full")
+#   run_pipeline(c("dataset", "analysis", "reports", "ai", "charts"))
+#   run_pipeline(c("reports", "ai", "charts"))
+#   run_pipeline(c("ai", "charts"))
+#   run_pipeline(c("charts"))
+#
+# The stages run in the order given. Each stage is independent and can be
+# combined in any sequence. Common sequences:
+#
+#   Full pipeline:     c("dataset", "analysis", "reports", "ai", "charts")
+#   Rerun from reports: c("reports", "ai", "charts")
+#   AI + charts only:  c("ai", "charts")
 
-run_pipeline <- function(mode = c("full", "dataset", "analysis", "ai")) {
-  mode <- match.arg(mode)
+VALID_STAGES <- c("dataset", "analysis", "reports", "ai", "charts")
+
+STAGE_SCRIPTS <- c(
+  dataset  = "scripts/dataset_only.R",
+  analysis = "scripts/analysis_only.R",
+  reports  = "scripts/reports_only.R",
+  ai       = "scripts/ai_only.R",
+  charts   = "scripts/charts_only.R"
+)
+
+run_pipeline <- function(stages) {
+  if (!is.character(stages) || length(stages) == 0) {
+    stop("stages must be a character vector, e.g. c(\"reports\", \"ai\", \"charts\")")
+  }
+
+  invalid <- setdiff(stages, VALID_STAGES)
+  if (length(invalid) > 0) {
+    stop("Unknown pipeline stage(s): ", paste(invalid, collapse = ", "),
+         "\nValid stages: ", paste(VALID_STAGES, collapse = ", "))
+  }
 
   if (!file.exists("scripts/dataset_only.R")) {
     stop("Run this script from repository root.")
   }
 
-  message(paste("=== run_pipeline mode:", mode, "==="))
+  message("=== run_pipeline: ", paste(stages, collapse = " -> "), " ===")
 
-  if (mode == "dataset") {
-    source("scripts/dataset_only.R")
-  } else if (mode == "analysis") {
-    source("scripts/analysis_only.R")
-  } else if (mode == "ai") {
-    source("scripts/ai_only.R")
-  } else if (mode == "full") {
-    source("scripts/full_pipeline.R")
-  } 
+  for (stage in stages) {
+    script <- STAGE_SCRIPTS[[stage]]
+    message("\n", paste(rep("=", 60), collapse = ""))
+    message("  Stage: ", stage)
+    message(paste(rep("=", 60), collapse = ""))
+    source(script)
+  }
 
+  message("\n=== Pipeline finished: ", paste(stages, collapse = " -> "), " ===")
   invisible(TRUE)
 }

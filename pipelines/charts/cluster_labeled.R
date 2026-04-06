@@ -10,7 +10,7 @@ print("###################### cluster_labeled.R")
 # When cluster names are set, labels show "code. name" (truncated to 27 chars).
 # The label column is resolved ONCE via resolve_cluster_labels() from chart_utils.R.
 
-source(file.path(getwd(), "pipelines", "reports", "charts", "chart_utils.R"))
+source(file.path(getwd(), "pipelines", "charts", "chart_utils.R"))
 library(ggrepel)
 library(dplyr)
 
