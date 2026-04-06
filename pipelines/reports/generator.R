@@ -133,13 +133,6 @@ llm_compute <- settings$llm$compute
 if (!is.null(llm_compute) && length(llm_compute) > 0) {
   message("=== AI Enrichment: generating cluster names and descriptions ===")
 
-  # Write the minimal dataset CSV that the Python script needs
-  ai_dataset_path <- file.path(output_folder_level, "dataset_for_ai.csv")
-  ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(dataset))
-  readr::write_csv(dataset[, ai_cols], ai_dataset_path)
-
-  rcs_path <- file.path(output_folder_level, "rcs_merged.csv")
-
   # Find a working Python interpreter — prefer the dedicated venv
   py_exec <- file.path("pipelines", "ai", ".venv", "bin", "python3")
   if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
@@ -148,43 +141,103 @@ if (!is.null(llm_compute) && length(llm_compute) > 0) {
     warning("Python not found — skipping AI enrichment. Install Python and ",
             "run: pip install -r pipelines/ai/requirements.txt")
   } else {
-    # Step 1: Per-cluster enrichment
-    ai_status <- system2(
-      py_exec,
-      args = c(
-        "pipelines/ai/enrich_clusters.py",
-        "--rcs", shQuote(rcs_path),
-        "--dataset", shQuote(ai_dataset_path),
-        "--output-dir", shQuote(output_folder_level)
-      ),
-      stdout = "", stderr = ""
-    )
-    if (ai_status == 0) {
-      message("AI enrichment completed. Reloading rcs_merged.csv")
-      rcs_merged <- readr::read_csv(rcs_path, show_col_types = FALSE)
-    } else {
-      warning("AI enrichment script exited with status ", ai_status,
-              ". Cluster names/descriptions may be incomplete.")
-    }
+    # Process deepest level first (e.g. level1 before level0) so that
+    # global_naming at level0 can use subcluster names as context.
+    ordered_levels <- sort(available_levels, decreasing = TRUE)
 
-    # Step 2: Global naming (distinctive renaming across all clusters)
-    if ("global_naming" %in% llm_compute) {
-      message("=== Global Naming ===")
-      gn_status <- system2(
+    for (ai_level in ordered_levels) {
+      ai_output_folder <- file.path(output_folder_reports, paste0("level", ai_level))
+
+      rcs_path <- file.path(ai_output_folder, "rcs_merged.csv")
+      if (!file.exists(rcs_path)) {
+        warning("Skipping level ", ai_level, " — rcs_merged.csv not found at: ", rcs_path)
+        next
+      }
+
+      message("=== AI Enrichment: level ", ai_level, " ===")
+
+      # Remap X_C to the correct cluster column for this level
+      # (level 0 = level0/X_C, level N = subcluster_labelN)
+      level_dataset <- dataset
+      if (ai_level == 0) {
+        if ("level0" %in% colnames(level_dataset)) {
+          level_dataset$X_C <- as.character(level_dataset$level0)
+        }
+      } else {
+        sub_col <- paste0("subcluster_label", ai_level)
+        if (sub_col %in% colnames(level_dataset)) {
+          level_dataset$X_C <- as.character(level_dataset[[sub_col]])
+        } else {
+          warning("Skipping level ", ai_level, " — column ", sub_col, " not found in dataset")
+          next
+        }
+      }
+
+      # Write the minimal dataset CSV with remapped X_C
+      ai_dataset_path <- file.path(ai_output_folder, "dataset_for_ai.csv")
+      ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(level_dataset))
+      readr::write_csv(level_dataset[, ai_cols], ai_dataset_path)
+
+      # Step 1: Per-cluster enrichment (names, descriptions)
+      ai_status <- system2(
         py_exec,
         args = c(
-          "pipelines/ai/global_naming.py",
+          "pipelines/ai/enrich_clusters.py",
           "--rcs", shQuote(rcs_path),
-          "--output-dir", shQuote(output_folder_level)
+          "--dataset", shQuote(ai_dataset_path),
+          "--output-dir", shQuote(ai_output_folder)
         ),
         stdout = "", stderr = ""
       )
-      if (gn_status == 0) {
-        message("Global naming completed. Reloading rcs_merged.csv")
-        rcs_merged <- readr::read_csv(rcs_path, show_col_types = FALSE)
+      if (ai_status == 0) {
+        message("AI enrichment completed for level ", ai_level)
       } else {
-        warning("Global naming exited with status ", gn_status)
+        warning("AI enrichment exited with status ", ai_status,
+                " for level ", ai_level)
       }
+
+      # Step 2: Global naming (distinctive renaming across all clusters)
+      if ("global_naming" %in% llm_compute) {
+        message("=== Global Naming: level ", ai_level, " ===")
+
+        # For level 0, pass subcluster summary as context (if available)
+        subcluster_args <- character(0)
+        if (ai_level == 0) {
+          for (sub_level in sort(setdiff(available_levels, 0), decreasing = TRUE)) {
+            sub_summary <- file.path(output_folder_reports,
+                                     paste0("level", sub_level),
+                                     "cluster_summary.csv")
+            if (file.exists(sub_summary)) {
+              subcluster_args <- c("--subcluster-summary", shQuote(sub_summary))
+              message("  Using subcluster context from level ", sub_level)
+              break
+            }
+          }
+        }
+
+        gn_status <- system2(
+          py_exec,
+          args = c(
+            "pipelines/ai/global_naming.py",
+            "--rcs", shQuote(rcs_path),
+            "--output-dir", shQuote(ai_output_folder),
+            subcluster_args
+          ),
+          stdout = "", stderr = ""
+        )
+        if (gn_status == 0) {
+          message("Global naming completed for level ", ai_level)
+        } else {
+          warning("Global naming exited with status ", gn_status,
+                  " for level ", ai_level)
+        }
+      }
+    }  # end for ai_level
+
+    # Reload rcs_merged for the last report level (used downstream)
+    final_rcs_path <- file.path(output_folder_level, "rcs_merged.csv")
+    if (file.exists(final_rcs_path)) {
+      rcs_merged <- readr::read_csv(final_rcs_path, show_col_types = FALSE)
     }
   }
 } else {
