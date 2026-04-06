@@ -100,10 +100,10 @@ def _resolve_label(row: pd.Series) -> str:
     Priority: global_name > cluster_name > clean cluster_code.
     """
     gn = str(row.get("global_name", "") or "").strip()
-    if gn:
+    if gn and gn.lower() != "nan":
         return gn
     cn = str(row.get("cluster_name", "") or "").strip()
-    if cn:
+    if cn and cn.lower() != "nan":
         code = _clean_code(str(row.get("cluster_code", "")))
         return f"{code}. {cn}"
     return _clean_code(str(row.get("cluster_code", row.get("cluster", ""))))
