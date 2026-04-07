@@ -31,6 +31,7 @@ projection.  Use ``--force`` to recompute.
 from __future__ import annotations
 
 import argparse
+import colorsys
 import json
 import re
 import sys
@@ -92,6 +93,86 @@ def _assign_colors(main_clusters: pd.Series, palette: list[str]) -> dict[str, st
         else:
             cmap[mc] = "#d3d3d3"
     return cmap
+
+
+def _hex_to_hsl(hex_color: str) -> tuple[float, float, float]:
+    """Convert hex color to (H, S, L) with all values in [0, 1]."""
+    hex_color = hex_color.lstrip("#")
+    r, g, b = (int(hex_color[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    return h, s, l
+
+
+def _hsl_to_hex(h: float, s: float, l: float) -> str:
+    """Convert (H, S, L) back to hex string."""
+    r, g, b = colorsys.hls_to_rgb(h, l, s)
+    return "#{:02x}{:02x}{:02x}".format(
+        int(round(r * 255)), int(round(g * 255)), int(round(b * 255))
+    )
+
+
+def _assign_subcluster_colors(
+    cluster_codes: pd.Series,
+    parent_color_map: dict[str, str],
+) -> dict[str, str]:
+    """Generate lightness ramps within each parent color for subclusters.
+
+    For each parent cluster, subclusters get shades that vary in lightness
+    from 0.30 to 0.70, keeping the parent hue and saturation recognisable.
+    Single-subcluster parents keep the original parent color.
+    """
+    codes = cluster_codes.unique()
+    parent_to_subs: dict[str, list[str]] = {}
+    code_to_clean: dict[str, str] = {}
+    for raw in codes:
+        clean = _clean_code(str(raw))
+        code_to_clean[str(raw)] = clean
+        parent = _extract_main(str(raw))
+        parent_to_subs.setdefault(parent, []).append(str(raw))
+
+    for parent in parent_to_subs:
+        parent_to_subs[parent] = sorted(
+            parent_to_subs[parent],
+            key=lambda c: _sort_key(code_to_clean.get(c, c)),
+        )
+
+    sub_color_map: dict[str, str] = {}
+    for parent, subs in parent_to_subs.items():
+        base_hex = parent_color_map.get(parent, "#d3d3d3")
+        if base_hex == "#d3d3d3" or len(subs) <= 1:
+            for s in subs:
+                sub_color_map[s] = base_hex
+            continue
+
+        h, s_val, _ = _hex_to_hsl(base_hex)
+        n = len(subs)
+        l_min, l_max = 0.30, 0.70
+        for i, sub_code in enumerate(subs):
+            l = l_min + (l_max - l_min) * i / max(n - 1, 1)
+            sub_color_map[sub_code] = _hsl_to_hex(h, s_val, l)
+
+    return sub_color_map
+
+
+def _draw_hulls(ax, df, color_col="sub_color", cluster_col="X_C", alpha=0.10):
+    """Draw convex hull outlines around each subcluster's points."""
+    from scipy.spatial import ConvexHull
+
+    for cluster_id, grp in df.groupby(cluster_col):
+        pts = grp[["x", "y"]].values
+        if len(pts) < 3:
+            continue
+        try:
+            hull = ConvexHull(pts)
+        except Exception:
+            continue
+        vertices = np.append(hull.vertices, hull.vertices[0])
+        color = grp[color_col].iloc[0]
+        ax.fill(
+            pts[vertices, 0], pts[vertices, 1],
+            fc=color, alpha=alpha, ec=color, linewidth=0.6,
+            zorder=1,
+        )
 
 
 def _resolve_label(row: pd.Series) -> str:
@@ -374,6 +455,20 @@ def main() -> None:
     df["color"] = df["main_cluster"].map(color_map).fillna("#d3d3d3")
     df.loc[~matched, "color"] = "#d3d3d3"
 
+    # Detect subclusters: codes like "1-1", "1-2", "2-1" etc.
+    clean_codes = df.loc[matched, "cluster_code"].apply(_clean_code)
+    is_subcluster = clean_codes.str.contains("-", na=False).any()
+
+    if is_subcluster:
+        sub_color_map = _assign_subcluster_colors(
+            df.loc[matched, "cluster_code"], color_map
+        )
+        df["sub_color"] = df["cluster_code"].map(sub_color_map).fillna(df["color"])
+        df.loc[~matched, "sub_color"] = "#d3d3d3"
+        print(f"[umap_scatter] Subcluster mode: {len(sub_color_map)} sub-shades")
+    else:
+        df["sub_color"] = df["color"]
+
     n_total = len(df)
     n_grey = (~matched).sum()
     print(
@@ -416,12 +511,16 @@ def main() -> None:
             c="#d3d3d3", s=2, alpha=0.15, edgecolors="none",
         )
 
-    # Layer 2: colored clusters on top
+    ## Layer 2: convex hull outlines per subcluster (behind dots)
+    #if is_subcluster:
+    #    _draw_hulls(ax, df[matched].copy(), color_col="sub_color", cluster_col="X_C")
+
+    # Layer 3: colored clusters on top (sub-shaded when subclusters exist)
     colored = df[df["color"] != "#d3d3d3"]
     if not colored.empty:
         ax.scatter(
             colored["x"], colored["y"],
-            c=colored["color"], s=3, alpha=0.5, edgecolors="none",
+            c=colored["sub_color"], s=3, alpha=0.5, edgecolors="none",
         )
 
     pad = 1.5

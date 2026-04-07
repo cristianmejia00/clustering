@@ -64,17 +64,17 @@ for (level_report_iteration in available_levels) {
   subfolder_dataset  <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
 
-  # ── Overlays (WOS data only) ───────────────────────────────────────────
-  if (settings$params$dataset_source == "wos" && "WC" %in% colnames(myDataCorrect)) {
-    source(file.path(getwd(), "pipelines", "charts", "overlays.R"))
-  }
+  ## ── Overlays (WOS data only) ───────────────────────────────────────────
+  #if (settings$params$dataset_source == "wos" && "WC" %in% colnames(myDataCorrect)) {
+  #  source(file.path(getwd(), "pipelines", "charts", "overlays.R"))
+  #}
 
   # ── SVG Charts ─────────────────────────────────────────────────────────
   print("###################### SVG CHARTS")
   chart_scripts <- c(
-    "dataset_bars.R",
-    "dataset_trends.R",
-    "cluster_stats.R",
+    #"dataset_bars.R",
+    #"dataset_trends.R",
+    #"cluster_stats.R",
     "cluster_labeled.R"
   )
   for (script in chart_scripts) {
