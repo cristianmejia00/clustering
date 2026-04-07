@@ -179,15 +179,16 @@ def _resolve_label(row: pd.Series) -> str:
     """Pick the best display label for a cluster.
 
     Priority: global_name > cluster_name > clean cluster_code.
+    The cluster_code is always prepended when a name is available.
     """
+    code = _clean_code(str(row.get("cluster_code", row.get("cluster", ""))))
     gn = str(row.get("global_name", "") or "").strip()
     if gn and gn.lower() != "nan":
-        return gn
+        return f"{code}. {gn}"
     cn = str(row.get("cluster_name", "") or "").strip()
     if cn and cn.lower() != "nan":
-        code = _clean_code(str(row.get("cluster_code", "")))
         return f"{code}. {cn}"
-    return _clean_code(str(row.get("cluster_code", row.get("cluster", ""))))
+    return code
 
 
 # ---------------------------------------------------------------------------

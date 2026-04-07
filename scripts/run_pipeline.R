@@ -13,14 +13,15 @@
 #   Rerun from reports: c("reports", "ai", "charts")
 #   AI + charts only:  c("ai", "charts")
 
-VALID_STAGES <- c("dataset", "analysis", "reports", "ai", "charts")
+VALID_STAGES <- c("dataset", "analysis", "reports", "ai", "charts", "enriched_embeds")
 
 STAGE_SCRIPTS <- c(
-  dataset  = "scripts/dataset_only.R",
-  analysis = "scripts/analysis_only.R",
-  reports  = "scripts/reports_only.R",
-  ai       = "scripts/ai_only.R",
-  charts   = "scripts/charts_only.R"
+  dataset        = "scripts/dataset_only.R",
+  analysis       = "scripts/analysis_only.R",
+  reports        = "scripts/reports_only.R",
+  ai             = "scripts/ai_only.R",
+  charts         = "scripts/charts_only.R",
+  enriched_embeds = "scripts/enriched_embeds_only.R"
 )
 
 run_pipeline <- function(stages) {
