@@ -16,9 +16,9 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q346_hydrogen_d3"
+  project_folder: "Q347_hydrogen_d4"
   filtered_folder: "f01"
-  analysis_id: "a01_cn__f01_dc__c01_lv_v2"
+  analysis_id: "a01_cn__f01_dc__c01_lv_v1"
 
 
 # ==============================================================================
@@ -50,6 +50,9 @@ citation_network:
   # Clustering algorithm
   clustering:
     algorithm: "louvain"                # louvain | newman | infomap
+
+  # Network chart layout algorithm
+  layout: "drl"                         # drl | kk (Kamada-Kawai)
 
   # Thresholding — controls recursive clustering and small-cluster aggregation
   thresholding:
@@ -86,7 +89,7 @@ addons:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Hydrogen Economy"
+  theme: "Hydrogen Utilization"
   description: "a proposed energy system that uses hydrogen as a clean, versatile fuel source to replace fossil fuels, producing only water vapor upon combustion"
   top_papers: 5                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls

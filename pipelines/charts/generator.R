@@ -81,6 +81,11 @@ for (level_report_iteration in available_levels) {
     source(file.path(getwd(), "pipelines", "charts", script))
   }
 
+  # ── Network chart (level 0 only) ──────────────────────────────────────
+  if (level_report == 0) {
+    source(file.path(getwd(), "pipelines", "charts", "network_chart.R"))
+  }
+
   # ── UMAP scatter plot (Python — requires embeddings) ───────────────────
   embeds_folder <- settings$topic_model$embeds_folder
   if (is.null(embeds_folder)) embeds_folder <- "e01"
