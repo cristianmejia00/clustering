@@ -1,5 +1,7 @@
 library(readr)
 
+# Hydrogen SOCIETY (dataset 1)
+
 # Load required environment and dataset
 load("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q344 - hydrogen economy/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level1/env_llm.rdata")
 cluster_summary_short_dc <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q344 - hydrogen economy/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level1/cluster_summary_short_dc.csv")
