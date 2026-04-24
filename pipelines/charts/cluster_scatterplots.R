@@ -1,4 +1,4 @@
-print("###################### cluster_labeled.R")
+print("###################### cluster_scatterplots.R")
 
 # RE-RUNNABLE: Re-execute this script after cluster naming to get labeled charts.
 #
@@ -153,65 +153,3 @@ for (spec in scatter_specs) {
                    glue("{spec[[6]]}.{extension}")))
 }
 
-
-# ===========================================================================
-# PART 2: LDA-style bubble chart
-# ===========================================================================
-
-#' Bubble chart of cluster positions (from LDAvis coordinates)
-plot_lda_bubbles <- function(rcs_data,
-                             color_col = "PY_Mean",
-                             color_label = "PY_Mean",
-                             size_label = "Documents",
-                             gradient_limits = range(rcs_data[[color_col]], na.rm = TRUE),
-                             gradient_colors = c("red", "grey", "green")) {
-  ggplot(rcs_data, aes(x = x, y = y, color = .data[[color_col]], size = documents), stroke = NA) +
-    geom_vline(xintercept = mean(range(rcs_data$x)), color = "gray") +
-    geom_hline(yintercept = mean(range(rcs_data$y)), color = "gray") +
-    geom_point() +
-    scale_size(name = size_label, range = c(2, 20)) +
-    scale_color_gradientn(name = color_label,
-                          colors = gradient_colors,
-                          limits = gradient_limits) +
-    geom_text_repel(aes(label = clean_cluster_code(X_C_name)),
-                    size = 3, color = "black") +
-    theme(panel.background = element_blank(),
-          axis.title = element_blank(),
-          axis.text  = element_blank(),
-          axis.ticks = element_blank())
-}
-
-lda_json_path <- file.path(output_folder_level, "keyword_explorer", "lda.json")
-
-if (file.exists(lda_json_path)) {
-  print("-- Creating Static LDA-like viz")
-  coords <- fromJSON(txt = lda_json_path)
-  coords <- data.frame(
-    cluster = coords$mdsDat$topics,
-    x       = coords$mdsDat$x,
-    y       = coords$mdsDat$y
-  )
-
-  lda_rcs <- rcs_plot %>%
-    inner_join(coords, by = "cluster")
-
-  # Remove cluster 99 if present and small dataset
-  if (nrow(lda_rcs) <= 99 && 99 %in% lda_rcs$cluster_code) {
-    lda_rcs <- filter(lda_rcs, cluster_code != 99)
-  }
-
-  # Years gradient
-  plot_lda_bubbles(lda_rcs)
-  ggsave(file.path(output_folder_level, subfolder_clusters,
-                   glue("clusters_lda_years.{extension}")))
-
-  # Sentiment gradient (conditional)
-  if ("sentiment_Mean" %in% colnames(lda_rcs)) {
-    plot_lda_bubbles(lda_rcs,
-                     color_col = "sentiment_Mean",
-                     color_label = "Sentiment",
-                     gradient_limits = c(-1, 1))
-    ggsave(file.path(output_folder_level, subfolder_clusters,
-                     glue("clusters_lda_sentiment.{extension}")))
-  }
-}

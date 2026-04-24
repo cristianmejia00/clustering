@@ -1,5 +1,5 @@
 # chart_utils.R — Shared utilities for chart scripts
-# Loaded by: dataset_bars.R, dataset_trends.R, cluster_stats.R, cluster_labeled.R, overlays.R
+# Loaded by: dataset_bars.R, dataset_trends.R, cluster_stats.R, cluster_scatterplots.R, overlays.R
 
 library(ggplot2)
 library(glue)

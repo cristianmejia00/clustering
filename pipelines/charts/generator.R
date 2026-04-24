@@ -75,7 +75,7 @@ for (level_report_iteration in available_levels) {
     #"dataset_bars.R",
     #"dataset_trends.R",
     #"cluster_stats.R",
-    "cluster_labeled.R"
+    "cluster_scatterplots.R"
   )
   for (script in chart_scripts) {
     source(file.path(getwd(), "pipelines", "charts", script))
