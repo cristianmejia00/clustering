@@ -74,7 +74,7 @@ for (level_report_iteration in available_levels) {
   chart_scripts <- c(
     #"dataset_bars.R",
     #"dataset_trends.R",
-    #"cluster_stats.R",
+    "cluster_stats.R",
     "cluster_scatterplots.R"
   )
   for (script in chart_scripts) {

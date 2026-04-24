@@ -150,6 +150,7 @@ if ("sentiment_Mean" %in% colnames(rcs_merged)) {
 for (spec in scatter_specs) {
   plot_scatter(rcs_plot, spec[[1]], spec[[2]], spec[[3]], spec[[4]], spec[[5]], spec[[7]])
   ggsave(file.path(output_folder_level, subfolder_clusters,
-                   glue("{spec[[6]]}.{extension}")))
+                   glue("{spec[[6]]}.{extension}")),
+         width = 12, height = 6, units = "in")
 }
 

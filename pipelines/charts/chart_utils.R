@@ -69,17 +69,28 @@ assign_cluster_colors <- function(main_clusters, palette) {
 #' @return Named list with $dataset and $rcs_merged, both with X_C_name set
 resolve_cluster_labels <- function(rcs_merged, dataset, unit_of_analysis) {
   is_cluster_or_topic <- tolower(unit_of_analysis) %in% c("topic", "topics", "cluster", "clusters")
-  has_names <- is_cluster_or_topic && !all(rcs_merged$cluster_name == "")
+  has_global <- is_cluster_or_topic &&
+    "global_name" %in% colnames(rcs_merged) &&
+    !all(is.na(rcs_merged$global_name) | trimws(rcs_merged$global_name) == "" | tolower(trimws(rcs_merged$global_name)) == "nan")
+  has_names  <- is_cluster_or_topic && !all(rcs_merged$cluster_name == "")
 
   if (is_cluster_or_topic && !has_names) {
     # Option 1: unnamed clusters — use cluster code as label
     dataset$X_C_name <- as.character(dataset$X_C)
     rcs_merged$X_C_name <- clean_cluster_code(as.character(rcs_merged$cluster_code))
   } else if (is_cluster_or_topic && has_names) {
-    # Option 2: named clusters — "code. name" (truncated to 27 chars)
-    dataset$X_C_name <- rcs_merged$cluster_name[match(dataset$X_C, rcs_merged$X_C)]
+    # Option 2: named clusters — prefer global_name over cluster_name
+    # Per-row: use global_name if non-empty, otherwise cluster_name
     code_clean <- clean_cluster_code(rcs_merged$cluster_code)
-    rcs_merged$X_C_name <- substr(paste0(code_clean, ". ", rcs_merged$cluster_name), 1, 27)
+    pick_name <- function(gn, cn) {
+      gn <- trimws(as.character(gn))
+      cn <- trimws(as.character(cn))
+      if (!is.na(gn) && nzchar(gn) && tolower(gn) != "nan") gn else cn
+    }
+    gn_col <- if (has_global) rcs_merged$global_name else rep("", nrow(rcs_merged))
+    chosen  <- mapply(pick_name, gn_col, rcs_merged$cluster_name)
+    rcs_merged$X_C_name <- substr(paste0(code_clean, ". ", chosen), 1, 35)
+    dataset$X_C_name <- chosen[match(dataset$X_C, rcs_merged$X_C)]
   } else {
     # Option 3: facet analysis — names come from dataset
     topic_names <- dataset[!duplicated(dataset$X_C), c("X_C", "X_C_name")]
