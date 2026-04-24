@@ -48,44 +48,29 @@ filtering:
 
     columns_filter:
       columns_selected:
-        # --- Standard WoS fields ---
-        - PT
-        - AU
+        # Mandatory WoS fields
+        - UT
+        - PY
         - TI
-        - SO
-        - LA
+        - AB
+        - AU
+        - Z9
+        - C1
         - DT
         - DE
         - ID
-        - AB
-        - C1
-        - OI
-        - AF
-        - OA
-        - RP
-        - FU
-        - FX
         - CR
-        - NR
-        - TC
-        - Z9
-        - U1
-        - U2
-        - PU
-        - SN
-        - J9
-        - JI
-        - PY
-        - VL
-        - IS
-        - BP
-        - EP
-        - AR
         - DI
-        - PG
+        - SO
         - WC
-        - SC
-        - UT
+        - RP
+        - J9
+        - VL
+        - BP
+        # Other WoS fields
+        - LA
+        - IS
+        - EP
         # --- Custom / LLM-enriched columns ---
         - is_science_diplomacy
         - is_bibliometrics
