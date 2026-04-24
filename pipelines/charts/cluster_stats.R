@@ -24,6 +24,7 @@ default_pal   <- chart_palette$full
 
 # Derive main_cluster for coloring boxplots
 rcs_merged$main_cluster <- extract_main_cluster(rcs_merged$cluster_code)
+rcs_merged$color_hex    <- assign_cluster_colors(rcs_merged$main_cluster, default_pal)
 
 # Ensure last main cluster gets grey
 default_pal_bp <- default_pal
@@ -39,26 +40,62 @@ dir.create(file.path(output_folder_level, subfolder_clusters, "by_clusters"), re
 # ===========================================================================
 # PART 1: Cluster size bar charts
 # ===========================================================================
-stats_size <- dataset %>%
-  count(X_C, name = "Documents") %>%
-  mutate(Cluster = as.character(X_C)) %>%
-  select(Cluster, Documents)
+stats_size <- rcs_merged %>%
+  filter(!grepl("-99", cluster_code), !grepl("^99$", clean_cluster_code(as.character(cluster_code)))) %>%
+  transmute(
+    Cluster = clean_cluster_code(as.character(cluster_code)),
+    Documents = documents,
+    main_cluster = main_cluster,
+    color_hex = color_hex
+  ) %>%
+  arrange(main_cluster, desc(Documents)) %>%
+  mutate(Cluster = factor(Cluster, levels = rev(Cluster)))
+
+bar_palette <- stats_size %>%
+  distinct(main_cluster, color_hex) %>%
+  arrange(main_cluster)
+bar_palette <- setNames(bar_palette$color_hex, as.character(bar_palette$main_cluster))
 
 if (extension != "svg") {
-  write.csv(stats_size, row.names = FALSE,
+  write.csv(stats_size %>% select(Cluster, Documents), row.names = FALSE,
             file = file.path(output_folder_level, subfolder_clusters, "data_cluster_size.csv"))
 }
 
-ggplot(stats_size, aes(x = Cluster, y = Documents)) +
-  geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
-  coord_flip() +
-  scale_x_discrete(limits = rev) +
-  theme_chart()
+ggplot(stats_size, aes(x = Documents, y = Cluster, fill = main_cluster)) +
+  geom_bar(stat = "identity", alpha = 0.85) +
+  scale_fill_manual(values = bar_palette) +
+  labs(
+    x     = "Number of Documents",
+    y     = NULL,
+    fill  = "Main Cluster",
+    title = "Documents per Cluster"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position    = "right",
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank()
+  )
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_cluster_size_h.{extension}")))
 
-ggplot(stats_size, aes(x = Cluster, y = Documents)) +
-  geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
-  theme_chart()
+stats_size_v <- stats_size %>%
+  mutate(Cluster = factor(as.character(Cluster), levels = rev(levels(Cluster))))
+
+ggplot(stats_size_v, aes(x = Cluster, y = Documents, fill = main_cluster)) +
+  geom_bar(stat = "identity", alpha = 0.85) +
+  scale_fill_manual(values = bar_palette) +
+  labs(
+    x     = "Cluster",
+    y     = "Number of Documents",
+    fill  = "Main Cluster",
+    title = "Documents per Cluster"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position  = "right",
+    panel.grid.minor = element_blank(),
+    axis.text.x      = element_text(angle = 90, vjust = 0.5, hjust = 1)
+  )
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_cluster_size_v.{extension}")))
 
 
