@@ -190,7 +190,7 @@ def main() -> None:
         prompt_cfg = yaml.safe_load(f)
     base_max_tokens = prompt_cfg.get("settings", {}).get("max_tokens", 4096)
     # ~30 tokens per cluster for the JSON response
-    max_tokens = max(base_max_tokens, n_topics * 30 + 200)
+    max_tokens = max(base_max_tokens, n_topics * 50 + 200)
 
     # ── Call LLM with function calling ───────────────────────────────────
     print("[global_naming] Calling LLM for global renaming...")

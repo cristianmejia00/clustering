@@ -53,8 +53,9 @@ def get_cluster_papers(
 
     selected = selected.copy()
     ti = selected["TI"].fillna("")
-    ab = selected["AB"].fillna("")
-    selected["text"] = ti.str.cat(ab, sep=" ")
+    #ab = selected["AB"].fillna("")
+    selected["text"] = ti
+    #selected["text"] = ti.str.cat(ab, sep=" ")
 
     return selected
 

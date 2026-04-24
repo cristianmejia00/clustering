@@ -16,7 +16,7 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q347_hydrogen_d4"
+  project_folder: "Q349_chemical_looping"
   filtered_folder: "f01"
   analysis_id: "a01_cn__f01_dc__c01_lv_v1"
 
@@ -89,9 +89,9 @@ addons:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Hydrogen Utilization"
-  description: "a proposed energy system that uses hydrogen as a clean, versatile fuel source to replace fossil fuels, producing only water vapor upon combustion"
-  top_papers: 5                         # Representative papers per criterion per cluster
+  theme: "Chemical Looping"
+  description: "Chemical looping is a high-temperature () process utilizing solid metal oxide 'oxygen carriers' to transport oxygen from air to fuel, enabling efficient combustion or gasification with inherent capture. The technique eliminates direct fuel-air mixing, producing a nearly pure stream for sequestration or utilization, while simultaneously generating heat, power, or hydrogen."
+  top_papers: 70                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:
     # - representative_docs_summaries   # Uncomment to summarize each paper via LLM before clustering (slow/costly)
