@@ -4,7 +4,7 @@
 # Expects: AI enrichment has been run (rcs_merged.csv at level0 and level1
 # must contain a populated 'global_name' column).
 #
-# Produces: e01_enriched/ embeddings + fig_umap_scatter_enriched.svg
+# Produces: e01_enriched/ embeddings + fig_umap_scatter_enriched.png
 
 if (!file.exists("pipelines/dataset/build_enriched_embeddings.py")) {
   stop("Run this script from repository root.")
@@ -150,8 +150,8 @@ for (level_report in available_levels) {
   )
 
   rcs_path   <- file.path(output_folder_level, "rcs_merged.csv")
-  output_svg <- file.path(output_folder_level, subfolder_clusters,
-                          "fig_umap_scatter_enriched.svg")
+  output_png <- file.path(output_folder_level, subfolder_clusters,
+                          "fig_umap_scatter_enriched.png")
 
   umap_status <- system2(
     py_exec,
@@ -161,7 +161,7 @@ for (level_report in available_levels) {
       "--doc-clusters",   shQuote(doc_clusters_path),
       "--rcs",            shQuote(rcs_path),
       "--palette",        shQuote(palette_path),
-      "--output",         shQuote(output_svg),
+      "--output",         shQuote(output_png),
       "--seed",           as.character(seed_val),
       "--label-min",      "20",
       "--title",          shQuote(paste("Enriched Cluster Map - Level", level_report)),
@@ -173,7 +173,7 @@ for (level_report in available_levels) {
   if (umap_status != 0) {
     warning("UMAP scatter plot exited with status ", umap_status, " for level ", level_report)
   } else {
-    message("Enriched UMAP saved: ", output_svg)
+    message("Enriched UMAP saved: ", output_png)
   }
 }
 
