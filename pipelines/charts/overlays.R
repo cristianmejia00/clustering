@@ -2,14 +2,15 @@ print("###################### overlays.R")
 
 # Create overlay maps in the style of VosViewer.
 # Based on the approach from Leydesdorff: https://www.leydesdorff.net/wc15/index.htm
-# Input: overlay_master (from assets/) and WC_per_cluster_counts (report CSV)
+# Input: overlay_master.json (from assets/) and WC_per_cluster_counts (report CSV)
 
 library(tools)
 library(ggrepel)
 library(ggplot2)
 library(glue)
+library(jsonlite)
 
-load(file.path(getwd(), "assets", "overlay_master.rdata"))
+overlay_master <- fromJSON(file.path(getwd(), "assets", "overlay_master.json"))
 WC_per_cluster_counts <- read.csv(
   file.path(output_folder_level, "report_WC_frequencies.csv"),
   check.names = FALSE
