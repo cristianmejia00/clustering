@@ -16,7 +16,7 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q349_chemical_looping"
+  project_folder: "Q353_perovskite_derwent"
   filtered_folder: "f01"
   analysis_id: "a01_cn__f01_dc__c01_lv_v1"
 
@@ -81,8 +81,8 @@ topic_model:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Chemical Looping"
-  description: "Chemical looping is a high-temperature () process utilizing solid metal oxide 'oxygen carriers' to transport oxygen from air to fuel, enabling efficient combustion or gasification with inherent capture. The technique eliminates direct fuel-air mixing, producing a nearly pure stream for sequestration or utilization, while simultaneously generating heat, power, or hydrogen."
+  theme: "Perovskite"  # Used as context for LLM summarization and naming
+  description: "Perovskite refers to any material with the same crystal structure as calcium titanium oxide, characterized by the formula. They are highly efficient, flexible, and lightweight, making them a revolutionary material for next-generation solar cells, LEDs, and sensors. While traditionally a mineral found in Earth's mantle, synthetic perovskites are rapidly advancing as low-cost alternatives to silicon in photovoltaics."
   top_papers: 70                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:

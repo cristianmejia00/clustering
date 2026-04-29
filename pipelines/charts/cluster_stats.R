@@ -174,11 +174,17 @@ plot_boxplots <- function(df, value_column, category_column,
       main_cluster = extract_main_cluster(as.character(category))
     )
 
+  fill_levels <- levels(droplevels(long$main_cluster))
+  fill_palette <- setNames(
+    recycle_palette(default_pal_bp, length(fill_levels), set_last_grey = TRUE),
+    fill_levels
+  )
+
   bp <- ggplot(long, aes(x = category, y = values, fill = main_cluster)) +
     geom_boxplot(width = 0.7) +
     xlab(category_label) +
     ylab(value_label) +
-    scale_fill_manual(values = default_pal_bp) +
+    scale_fill_manual(values = fill_palette) +
     theme_chart()
 
   K <- n_distinct(df[[category_column]])

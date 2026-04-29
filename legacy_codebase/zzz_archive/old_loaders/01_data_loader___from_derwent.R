@@ -15,14 +15,15 @@ library(tm)
 # OPTIONS
 ###########################################################################################
 # Open a window to select the directory with the files to merge
-dir_path = "../.."
-paths_to_files = list.files(path = file.path(dir_path, "test"), full.names= TRUE, pattern = "*.csv", recursive = TRUE)
+dir_path =  "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads"
+dataset_folder <- "Q353_perovskite_derwent"
+paths_to_files = list.files(path = file.path(dir_path, dataset_folder), full.names= TRUE, pattern = "*.csv", recursive = TRUE)
 paths_to_files = paths_to_files[grepl('.csv$', paths_to_files)]
 
 ###########################################################################################
 ## Path to `/inputs`
 
-dir.create(file.path(dir_path, "test", 'converted_to_wos'), showWarnings = TRUE)
+dir.create(file.path(dir_path, dataset_folder, 'converted_to_wos'), showWarnings = TRUE)
 
 
 # Read each file and store them in a vector
@@ -107,6 +108,10 @@ new_names <- c(
 
 dataset <- dataset %>% rename(all_of(new_names))
 
+# Add family members as citations
+dataset$CR <- paste(dataset$CR, dataset$`DWPI Family Members`, sep = '; ')
+dataset$CR <- gsub("^NA; ", "", dataset$CR)
+
 # Add document identifier (for citation network)
 dataset$DI <- dataset$UT
 
@@ -169,11 +174,11 @@ dataset$Z9[is.na(dataset$Z9)] <- 0
 
 # Remove duplicated files
 dataset = dataset %>% filter(!duplicated(UT))
-
+colnames(dataset)
 #################################################
 # Save and FINISH!
 #################################################
 write.table(dataset, 
           sep = '\t',
           row.names = FALSE,
-          file.path(dir_path, "test", 'converted_to_wos', "dataset.txt"))
+          file.path(dir_path, dataset_folder, 'converted_to_wos', "dataset.txt"))

@@ -14,7 +14,7 @@
 #   AI + charts only:  c("ai", "charts")
 
 run_pipeline <- function(stages) {
-  VALID_STAGES <- c("dataset", "analysis", "reports", "ai", "charts", "enriched_embeds")
+  VALID_STAGES <- c("dataset", "analysis", "reports", "ai", "enriched_embeds", "charts")
 
   STAGE_SCRIPTS <- c(
     dataset        = "scripts/dataset_only.R",

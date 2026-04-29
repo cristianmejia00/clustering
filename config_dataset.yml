@@ -15,24 +15,24 @@
 metadata:
   # --- Raw input (WoS export files as downloaded) ---
   raw_input_directory: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads"
-  raw_input_folder_name: "Q349_chemical_looping"
+  raw_input_folder_name: "Q353_perovskite_derwent"
 
   # --- Output directory (Google Drive / Bibliometrics) ---
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q349_chemical_looping"
+  project_folder: "Q353_perovskite_derwent"
 
   # --- Query and data source ---
-  date_id: "2026-04-13"                # Analysis date label
-  query: "Q349_chemical_looping"
+  date_id: "2026-04-28"                # Analysis date label
+  query: "Q353_perovskite_derwent"
   type_of_dataset: "papers"             # papers | patents | news
   dataset_source: "wos"                 # wos | derwent | factiva
 
   # --- Project metadata ---
-  dataset_name: "Q349_chemical_looping"
-  dataset_file_name_suffix: "Q348"     # Used in output file names
+  dataset_name: "Q353_perovskite_derwent"
+  dataset_file_name_suffix: "Q352"     # Used in output file names
   dataset_description: ""
   created_by: "cristianmejia00@gmail.com"
-  notes: "Project texts from Mitsubishi Datasets"
+  notes: "Project texts from BRIDGE"
 
 
 # ==============================================================================

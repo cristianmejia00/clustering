@@ -18,6 +18,18 @@ load_chart_palette <- function() {
   pal
 }
 
+#' Recycle a color palette to the requested size
+#' @param palette Character vector of hex colors
+#' @param n Integer target size
+#' @param set_last_grey Logical; force last color to light grey
+#' @return Character vector of length n
+recycle_palette <- function(palette, n, set_last_grey = FALSE) {
+  if (is.null(palette) || length(palette) == 0 || n <= 0) return(character(0))
+  pal <- rep_len(palette, n)
+  if (set_last_grey && n > 0) pal[n] <- "#d3d3d3"
+  pal
+}
+
 # ---------------------------------------------------------------------------
 # Cluster code helpers
 # ---------------------------------------------------------------------------
@@ -44,12 +56,9 @@ extract_main_cluster <- function(cluster_codes) {
 #' @param palette Character vector of hex colors (length >= number of levels)
 #' @return Character vector of hex colors, with NA → grey
 assign_cluster_colors <- function(main_clusters, palette) {
-  # Ensure last cluster gets grey
   n_levels <- nlevels(main_clusters)
-  if (n_levels > 0 && n_levels <= length(palette)) {
-    palette[n_levels] <- "#d3d3d3"
-  }
-  colors <- palette[as.integer(main_clusters)]
+  palette_use <- recycle_palette(palette, n_levels, set_last_grey = TRUE)
+  colors <- palette_use[as.integer(main_clusters)]
   colors[is.na(colors)] <- "#d3d3d3"
   colors
 }
