@@ -86,12 +86,16 @@ stats_size <- rcs_merged %>%
   filter(!grepl("-99", cluster_code), !grepl("^99$", clean_cluster_code(as.character(cluster_code)))) %>%
   transmute(
     ClusterCode = clean_cluster_code(as.character(cluster_code)),
-    ClusterLabel = mapply(compose_cluster_label, cluster_code,
-                          if ("global_name" %in% colnames(rcs_merged)) global_name else "",
-                          if ("cluster_name" %in% colnames(rcs_merged)) cluster_name else ""),
+    ClusterLabelRaw = mapply(compose_cluster_label, cluster_code,
+                             if ("global_name" %in% colnames(rcs_merged)) global_name else "",
+                             if ("cluster_name" %in% colnames(rcs_merged)) cluster_name else ""),
     Documents = documents,
     main_cluster = main_cluster,
     color_hex = color_hex
+  ) %>%
+  mutate(
+    # Keep labels readable when global names are long
+    ClusterLabel = stringr::str_trunc(ClusterLabelRaw, width = 70, side = "right")
   ) %>%
   arrange(main_cluster, desc(Documents)) %>%
   mutate(ClusterLabel = factor(ClusterLabel, levels = rev(ClusterLabel)))
@@ -119,13 +123,16 @@ p_h <- ggplot(stats_size, aes(x = Documents, y = ClusterLabel, fill = main_clust
   theme(
     legend.position    = "right",
     panel.grid.minor   = element_blank(),
-    panel.grid.major.y = element_blank()
+    panel.grid.major.y = element_blank(),
+    axis.text.y        = element_text(size = if (nrow(stats_size) > 180) 4 else if (nrow(stats_size) > 120) 5 else if (nrow(stats_size) > 80) 6 else 7)
   )
 
-# Dynamic height so every label remains legible
-height_h <- max(6, nrow(stats_size) * 0.32 + 1.8)
+# Dynamic sizing with sensible limits so labels remain legible without creating oversized files
+label_chars <- max(nchar(as.character(stats_size$ClusterLabel)), na.rm = TRUE)
+width_h <- min(16, max(11, 10 + label_chars * 0.08))
+height_h <- min(36, max(7, nrow(stats_size) * 0.20 + 2.0))
 ggsave(file.path(output_folder_level, subfolder_clusters, glue("fig_cluster_size_h.{extension}")),
-       plot = p_h, width = 12, height = height_h, units = "in")
+  plot = p_h, width = width_h, height = height_h, units = "in")
 
 stats_size_v <- stats_size %>%
   arrange(desc(Documents)) %>%

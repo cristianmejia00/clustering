@@ -38,6 +38,30 @@ from providers import call_llm_with_tools, init_provider
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 
+def _fixed_max_tokens_for_model(model: str, fallback: int = 4096) -> int:
+    """Return a fixed max_tokens value per model family (no dynamic scaling)."""
+    m = (model or "").lower()
+
+    # OpenAI GPT-4.1 family supports long context and high output limits.
+    # Keep a fixed cap for global naming to avoid truncating tool-call JSON.
+    if m.startswith("gpt-4.1"):
+        return 32768
+
+    # GPT-5 family supports higher output limits.
+    if m.startswith("gpt-5"):
+        return 128000
+
+    # Anthropic Claude 3/3.5/3.7/4 families commonly support up to 8192 output.
+    if "claude" in m:
+        return 8192
+
+    # Gemini models typically support at least 8192 output.
+    if "gemini" in m:
+        return 8192
+
+    return fallback
+
+
 def _load_system_prompt(topic: str, topic_description: str) -> str:
     """Load and fill the global_naming system prompt."""
     path = _PROMPTS_DIR / "global_naming.yml"
@@ -159,9 +183,9 @@ def main() -> None:
     output_dir = Path(args.output_dir)
     rcs = pd.read_csv(rcs_path, dtype={"cluster_code": str})
 
-    # Filter to clusters that have a name and description
-    has_content = rcs["cluster_name"].fillna("").str.strip().ne("") & \
-                  rcs["description"].fillna("").str.strip().ne("")
+    # Include clusters that have at least a current name.
+    # (Descriptions can be empty for some subclusters.)
+    has_content = rcs["cluster_name"].fillna("").str.strip().ne("")
     clusters_to_rename = rcs.loc[has_content].copy()
 
     n_topics = len(clusters_to_rename)
@@ -184,13 +208,15 @@ def main() -> None:
     user_message = _build_user_message(clusters_to_rename, subcluster_summary)
     tool = _build_rename_tool(n_topics)
 
-    # Scale max_tokens for large cluster counts
+    # Fixed max_tokens (no dynamic scaling by number of clusters)
     prompt_settings_path = _PROMPTS_DIR / "global_naming.yml"
     with prompt_settings_path.open("r", encoding="utf-8") as f:
         prompt_cfg = yaml.safe_load(f)
-    base_max_tokens = prompt_cfg.get("settings", {}).get("max_tokens", 4096)
-    # ~30 tokens per cluster for the JSON response
-    max_tokens = max(base_max_tokens, n_topics * 50 + 200)
+    max_tokens = _fixed_max_tokens_for_model(
+        model,
+        fallback=prompt_cfg.get("settings", {}).get("max_tokens", 4096),
+    )
+    print(f"[global_naming] max_tokens (fixed): {max_tokens}")
 
     # ── Call LLM with function calling ───────────────────────────────────
     print("[global_naming] Calling LLM for global renaming...")
