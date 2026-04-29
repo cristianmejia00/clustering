@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -30,6 +31,31 @@ import yaml
 sys.path.insert(0, str(Path(__file__).parent))
 
 from providers import call_llm_with_tools, init_provider
+
+# ---------------------------------------------------------------------------
+# ID normalisation
+# ---------------------------------------------------------------------------
+
+
+def _normalize_id(s: str) -> str:
+    """Normalise a topic/cluster ID so LLM-reformatted IDs still match.
+
+    Handles cases such as:
+      "Topic 9-1"  -> "9-1"
+      "cluster_9-1" -> "9-1"
+      "9_1"         -> "9-1"
+      "9-1-"        -> "9-1"
+    """
+    s = str(s).strip()
+    # Strip common word prefixes the LLM tends to add
+    s = re.sub(r'^(?:topic|cluster|subcluster|group)[\s_\-]*', '', s, flags=re.IGNORECASE)
+    s = s.strip()
+    # Collapse whitespace/underscores to dash
+    s = re.sub(r'[\s_]+', '-', s)
+    # Strip leading/trailing dashes
+    s = s.strip('-')
+    return s.lower()
+
 
 # ---------------------------------------------------------------------------
 # Prompt helpers
@@ -102,6 +128,73 @@ def _build_user_message(
         lines.append("")
 
     return "\n".join(lines)
+
+
+def _fix_duplicates(
+    renamed: dict[str, str],
+    clusters_to_rename: pd.DataFrame,
+    system_prompt: str,
+    model: str,
+    temperature: float,
+    max_tokens: int,
+) -> dict[str, str]:
+    """Second LLM pass: disambiguate any clusters that still share a name."""
+    from collections import Counter
+
+    name_counts = Counter(renamed.values())
+    dup_names = {n for n, c in name_counts.items() if c > 1}
+    if not dup_names:
+        return renamed
+
+    dup_codes = [code for code, name in renamed.items() if name in dup_names]
+    print(f"[global_naming] Dedup pass: {len(dup_codes)} clusters share "
+          f"{len(dup_names)} duplicate name(s)")
+
+    dup_df = clusters_to_rename[
+        clusters_to_rename["cluster_code"].astype(str).isin(dup_codes)
+    ].copy()
+
+    already_taken = sorted(set(renamed.values()) - dup_names)
+    lines: list[str] = [
+        "The following clusters currently share a name with at least one other cluster. "
+        "Assign a NEW, unique name to each one.\n",
+        "Names already used by OTHER clusters (do NOT reuse any of these):",
+    ]
+    for nm in already_taken:
+        lines.append(f"  - {nm}")
+    lines.append("\nClusters that need a unique replacement name:\n")
+    for _, row in dup_df.iterrows():
+        code = str(row["cluster_code"]).rstrip("-")
+        name = row.get("cluster_name", "")
+        desc = row.get("description", "")
+        current_dup = renamed.get(str(row["cluster_code"]), "")
+        lines.append(f"Topic {code}:")
+        lines.append(f"  Duplicate name to replace: {current_dup}")
+        lines.append(f"  Original cluster name: {name}")
+        lines.append(f"  Description: {desc}")
+        lines.append("")
+
+    tool = _build_rename_tool(len(dup_df))
+    result2 = call_llm_with_tools(
+        system_prompt=system_prompt,
+        user_prompt="\n".join(lines),
+        model=model,
+        tools=[tool],
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+
+    orig_codes_dup = dup_df["cluster_code"].astype(str).tolist()
+    norm_to_orig_dup: dict[str, str] = {_normalize_id(c): c for c in orig_codes_dup}
+    matched_dedup = 0
+    for item in result2.get("topics", []):
+        raw_id = str(item.get("topic_id", ""))
+        orig_code = norm_to_orig_dup.get(_normalize_id(raw_id))
+        if orig_code:
+            renamed[orig_code] = item["name"]
+            matched_dedup += 1
+    print(f"[global_naming] Dedup pass applied {matched_dedup} / {len(dup_codes)} fixes")
+    return renamed
 
 
 def _build_rename_tool(n_topics: int) -> dict:
@@ -229,48 +322,119 @@ def main() -> None:
         max_tokens=max_tokens,
     )
 
+    # ── Save raw API response for debugging ──────────────────────────────
+    output_dir.mkdir(parents=True, exist_ok=True)
+    api_response_path = output_dir / "global_naming_response.json"
+    with api_response_path.open("w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+    print(f"[global_naming] Saved raw API response → {api_response_path}")
+
     # ── Parse and apply ──────────────────────────────────────────────────
-    # Normalise topic_ids from LLM (strip trailing dashes if any)
-    renamed = {
-        str(item["topic_id"]).rstrip("-"): item["name"]
-        for item in result.get("topics", [])
-    }
-    print(f"[global_naming] Received {len(renamed)} renamed topics")
+    raw_topics = result.get("topics", [])
+    print(f"[global_naming] Received {len(raw_topics)} renamed topics from LLM")
 
-    # Build a lookup from clean code → original code for matching
-    clean_to_orig = {
-        c.rstrip("-"): c
-        for c in clusters_to_rename["cluster_code"].astype(str)
-    }
+    # Log the first few returned topic_ids to aid debugging
+    if raw_topics:
+        sample = [str(t.get("topic_id", "")) for t in raw_topics[:5]]
+        print(f"[global_naming] Sample returned topic_ids: {sample}")
 
-    # Validate
-    missing = set(clean_to_orig.keys()) - set(renamed.keys())
-    if missing:
-        print(f"[global_naming] WARNING: Missing names for clusters: {missing}")
+    # Build normalised lookup: norm_code -> original cluster_code
+    # Warn if two codes normalise to the same key (would cause silent collisions)
+    orig_codes: list[str] = clusters_to_rename["cluster_code"].astype(str).tolist()
+    norm_to_orig: dict[str, str] = {}
+    for c in orig_codes:
+        nk = _normalize_id(c)
+        if nk in norm_to_orig:
+            print(f"[global_naming] WARNING: norm_to_orig collision: "
+                  f"{norm_to_orig[nk]!r} and {c!r} both normalise to {nk!r}")
+        norm_to_orig[nk] = c
+
+    # Match LLM results via normalised IDs (first match wins)
+    renamed: dict[str, str] = {}          # original_code -> name
+    unmatched_llm: list[dict] = []        # LLM items that couldn't be matched by ID
+    for item in raw_topics:
+        raw_id = str(item.get("topic_id", ""))
+        norm_id = _normalize_id(raw_id)
+        orig_code = norm_to_orig.get(norm_id)
+        if orig_code and orig_code not in renamed:
+            renamed[orig_code] = item["name"]
+        elif orig_code is None:
+            unmatched_llm.append(item)
+        # If orig_code already matched, it's a genuine LLM duplicate — skip
+
+    print(f"[global_naming] Matched by ID: {len(renamed)} / {n_topics}")
+    if unmatched_llm:
+        sample_ids = [str(t.get("topic_id", "")) for t in unmatched_llm[:5]]
+        print(f"[global_naming] Unmatched LLM items (sample IDs): {sample_ids}")
+
+    # ── Positional fallback for clusters that still have no name ─────────
+    # Pair remaining clusters in prompt-order with remaining LLM items.
+    # Skip LLM items whose name is already assigned (avoids duplicate cascade).
+    unmatched_orig = [c for c in orig_codes if c not in renamed]
+    if unmatched_orig and unmatched_llm:
+        print(f"[global_naming] Positional fallback: "
+              f"{len(unmatched_llm)} LLM items → {len(unmatched_orig)} unmatched clusters")
+        used_names: set[str] = set(renamed.values())
+        fallback_assigned = 0
+        llm_iter = iter(unmatched_llm)
+        for orig_code in unmatched_orig:
+            # Advance past LLM items whose name is already taken
+            assigned = False
+            for item in llm_iter:
+                candidate_name = item["name"]
+                if candidate_name not in used_names:
+                    renamed[orig_code] = candidate_name
+                    used_names.add(candidate_name)
+                    fallback_assigned += 1
+                    assigned = True
+                    break
+            if not assigned:
+                break  # no more usable LLM items
+        print(f"[global_naming] After fallback: {len(renamed)} / {n_topics} named")
+
+    # ── Validate ─────────────────────────────────────────────────────────
+    still_missing = set(orig_codes) - set(renamed.keys())
+    if still_missing:
+        print(f"[global_naming] WARNING: Missing names for clusters: {still_missing}")
 
     names_list = list(renamed.values())
-    duplicates = [n for n in names_list if names_list.count(n) > 1]
-    if duplicates:
-        print(f"[global_naming] WARNING: Duplicate names detected: {set(duplicates)}")
+    dup_names = {n for n in set(names_list) if names_list.count(n) > 1}
+    if dup_names:
+        print(f"[global_naming] WARNING: {len(dup_names)} duplicate name(s) — running dedup pass")
+        renamed = _fix_duplicates(
+            renamed,
+            clusters_to_rename,
+            system_prompt,
+            model,
+            prompt_cfg.get("settings", {}).get("temperature", 0.2),
+            max_tokens,
+        )
+
+    # Final check
+    names_final = list(renamed.values())
+    final_dups = {n for n in set(names_final) if names_final.count(n) > 1}
+    if final_dups:
+        print(f"[global_naming] WARNING: {len(final_dups)} duplicate(s) remain after dedup: "
+              f"{final_dups}")
+    else:
+        print(f"[global_naming] All {len(renamed)} names are unique.")
 
     # Apply global_name to rcs (ensure string dtype — column may be float if all NaN)
     if "global_name" not in rcs.columns:
         rcs["global_name"] = ""
     else:
         rcs["global_name"] = rcs["global_name"].fillna("").astype(str)
-    for clean_code, name in renamed.items():
-        orig_code = clean_to_orig.get(clean_code, clean_code)
+    for orig_code, name in renamed.items():
         mask = rcs["cluster_code"].astype(str) == orig_code
         rcs.loc[mask, "global_name"] = name
 
     # Print summary
-    for clean_code, name in sorted(renamed.items()):
-        orig_code = clean_to_orig.get(clean_code, clean_code)
+    for orig_code, name in sorted(renamed.items()):
         old = clusters_to_rename.loc[
             clusters_to_rename["cluster_code"].astype(str) == orig_code, "cluster_name"
         ]
         old_name = old.iloc[0] if not old.empty else "?"
-        print(f"  {clean_code}: {old_name} → {name}")
+        print(f"  {orig_code}: {old_name} → {name}")
 
     # ── Save ─────────────────────────────────────────────────────────────
     rcs.to_csv(rcs_path, index=False)

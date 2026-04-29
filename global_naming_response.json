@@ -1,0 +1,156 @@
+{
+  "topics": [
+    {
+      "topic_id": "1",
+      "name": "Perovskite Solar Cell Engineering"
+    },
+    {
+      "topic_id": "2",
+      "name": "Perovskite Optoelectronic Device Development"
+    },
+    {
+      "topic_id": "3",
+      "name": "Perovskite Catalysis and Electronic Applications"
+    },
+    {
+      "topic_id": "4",
+      "name": "Perovskite Optoelectronic Materials & Devices"
+    },
+    {
+      "topic_id": "5",
+      "name": "Perovskite Energy & Electronic Materials"
+    },
+    {
+      "topic_id": "6",
+      "name": "Perovskite Fuel Cell & Electrochemical Materials"
+    },
+    {
+      "topic_id": "7",
+      "name": "Perovskite Piezoelectric Devices"
+    },
+    {
+      "topic_id": "8",
+      "name": "Perovskite Solar Cell Technologies"
+    },
+    {
+      "topic_id": "9",
+      "name": "Perovskite Tandem Solar Cells"
+    },
+    {
+      "topic_id": "10",
+      "name": "Perovskite Material Development for Optoelectronics"
+    },
+    {
+      "topic_id": "11",
+      "name": "Perovskite Optoelectronic Devices"
+    },
+    {
+      "topic_id": "12",
+      "name": "Perovskite Nanomaterials & Applications"
+    },
+    {
+      "topic_id": "13",
+      "name": "Perovskite Electronic & Energy Devices"
+    },
+    {
+      "topic_id": "14",
+      "name": "Perovskite Advanced Optoelectronic Devices"
+    },
+    {
+      "topic_id": "15",
+      "name": "Perovskite Layered Ceramic Components"
+    },
+    {
+      "topic_id": "16",
+      "name": "Perovskite Structural & Energy Materials"
+    },
+    {
+      "topic_id": "17",
+      "name": "Perovskite Photovoltaic & Optoelectronic Devices"
+    },
+    {
+      "topic_id": "18",
+      "name": "Perovskite Oxide Electronic & Energy Devices"
+    },
+    {
+      "topic_id": "19",
+      "name": "Electrochemical Energy Materials"
+    },
+    {
+      "topic_id": "20",
+      "name": "Perovskite Optoelectronic Device Engineering"
+    },
+    {
+      "topic_id": "21",
+      "name": "Perovskite Solar Cell Material & Device Optimization"
+    },
+    {
+      "topic_id": "22",
+      "name": "Perovskite Electronic & Energy Materials"
+    },
+    {
+      "topic_id": "23",
+      "name": "Perovskite Photovoltaic & Device Fabrication"
+    },
+    {
+      "topic_id": "24",
+      "name": "Perovskite Photonic & Electronic Materials"
+    },
+    {
+      "topic_id": "25",
+      "name": "Perovskite Energy & Electronic Materials"
+    },
+    {
+      "topic_id": "26",
+      "name": "Perovskite Piezoelectric & Ferroelectric Ceramics"
+    },
+    {
+      "topic_id": "27",
+      "name": "Perovskite Nanomaterials in Optoelectronics"
+    },
+    {
+      "topic_id": "28",
+      "name": "Perovskite Functional Materials & Devices"
+    },
+    {
+      "topic_id": "29",
+      "name": "Perovskite Electronic & Energy Materials"
+    },
+    {
+      "topic_id": "30",
+      "name": "Perovskite Energy Storage & Conversion"
+    },
+    {
+      "topic_id": "31",
+      "name": "Perovskite Luminescent & Optoelectronic Materials"
+    },
+    {
+      "topic_id": "32",
+      "name": "Perovskite Solar Cell Fabrication & Engineering"
+    },
+    {
+      "topic_id": "33",
+      "name": "Perovskite Solar Cell Development"
+    },
+    {
+      "topic_id": "34",
+      "name": "Perovskite Solar Cell Material & Device Engineering"
+    },
+    {
+      "topic_id": "35",
+      "name": "Perovskite Conductive & Functional Materials"
+    },
+    {
+      "topic_id": "36",
+      "name": "Perovskite Energy Storage & Conversion Technologies"
+    },
+    {
+      "topic_id": "37",
+      "name": "Perovskite Electronic Materials & Devices"
+    },
+    {
+      "topic_id": "99",
+      "name": "Perovskite Multifunctional Materials"
+    }
+  ]
+}
