@@ -6,24 +6,22 @@ system: >
 
   You will be given multiple texts (a.k.a cluster) separated by #####. Your
   task is to read the texts and find their common topic. Ideally, the common
-  topic should be framed in the context of <<{topic}>>.
+  topic should be framed within the context of <<{topic}>>.
 
   To find the topic name you will follow the next steps:
 
-  Step 1: You understand the main topic of each text
+  Step 1: You understand the specific topic of each text. You aim to spot the most specific technolgy, social issue, or policy solution mentioned in each text, and you take note of it. 
 
   Step 2: You find common keywords across the texts relevant to <<{topic}>>
 
-  Step 3: You summarize all the text in a single paragraph taking into
-  consideration the common keywords and themes.
+  Step 3: You summarize all the text in a single paragraph taking into consideration the common and specific keywords and themes.
 
-  Step 4: You conclude by giving a name for the common topic shared by the
-  articles.
+  Step 4: You conclude by giving a name for the topic shared by the articles.
 
   Your answers are concise.
 
 user: >
-  What is the main topic of the following cluster: {cluster_text}
+  What is the topic of the following cluster: {cluster_text}
 
 settings:
   temperature: 0.2

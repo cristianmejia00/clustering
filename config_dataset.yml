@@ -15,24 +15,24 @@
 metadata:
   # --- Raw input (WoS export files as downloaded) ---
   raw_input_directory: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads"
-  raw_input_folder_name: "Q353_perovskite_derwent"
+  raw_input_folder_name: "Q354_defi_blockchain"
 
   # --- Output directory (Google Drive / Bibliometrics) ---
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q353_perovskite_derwent"
+  project_folder: "Q354_defi_blockchain"
 
   # --- Query and data source ---
-  date_id: "2026-04-28"                # Analysis date label
-  query: "Q353_perovskite_derwent"
+  date_id: "2026-05-22"                # Analysis date label
+  query: "Q354_defi_blockchain"
   type_of_dataset: "papers"             # papers | patents | news
   dataset_source: "wos"                 # wos | derwent | factiva
 
   # --- Project metadata ---
-  dataset_name: "Q353_perovskite_derwent"
-  dataset_file_name_suffix: "Q352"     # Used in output file names
+  dataset_name: "Q354_defi_blockchain"
+  dataset_file_name_suffix: "Q354"     # Used in output file names
   dataset_description: ""
   created_by: "cristianmejia00@gmail.com"
-  notes: "Project texts from BRIDGE"
+  notes: "Project texts from MITSUBISI"
 
 
 # ==============================================================================
@@ -76,28 +76,7 @@ filtering:
         - is_bibliometrics
         - policy_dimension
         - policy_dimension_reasoning
-        - framework_2025_categories_main
-        - framework_2025_categories_detailed
-        - framework_2025_reasoning
-        - article_type
-        - article_type_reasoning
-        - main_domain
-        - geographic_focus
-        - geographic_focus_reasoning
-        - power_dynamic
-        - power_dynamic_reasoning
-        - diplomacy_goal
-        - diplomacy_goal_reasoning
-        - key_actors
-        - key_actors_reasoning
-        - global_commons
-        - global_commons_reasoning
-        - geopolitical_context
-        - geopolitical_context_reasoning
-        - outcome
-        - technology_type
-        - notes
-        - model
+
 
 
 # ==============================================================================

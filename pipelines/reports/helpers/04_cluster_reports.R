@@ -49,6 +49,51 @@ is_effectively_empty <- function(x) {
   all(is.na(x))
 }
 
+#' Expand a multi-value column (split by ";") and compute per-term ave_PY / ave_Z9
+#' for the papers in a given cluster data frame.
+#' Returns a tibble: term (UPPERCASE), ave_PY, ave_Z9.
+compute_term_stats <- function(cluster_data, a_column) {
+  if (nrow(cluster_data) == 0 || !a_column %in% colnames(cluster_data)) {
+    return(dplyr::tibble(term = character(), ave_PY = numeric(), ave_Z9 = numeric()))
+  }
+
+  raw_vals <- as.character(dplyr::coalesce(cluster_data[[a_column]], ""))
+  py_vals  <- suppressWarnings(as.numeric(cluster_data$PY))
+  z9_vals  <- suppressWarnings(as.numeric(cluster_data$Z9))
+
+  split_terms <- strsplit(tolower(raw_vals), ";\\s*")
+  row_idx     <- rep(seq_along(split_terms), lengths(split_terms))
+  terms_flat  <- trimws(unlist(split_terms))
+
+  valid       <- terms_flat != "" & !is.na(terms_flat)
+  terms_flat  <- terms_flat[valid]
+  row_idx     <- row_idx[valid]
+
+  if (length(terms_flat) == 0) {
+    return(dplyr::tibble(term = character(), ave_PY = numeric(), ave_Z9 = numeric()))
+  }
+
+  # Mirror TopSomething title-case for certain columns
+  if (a_column %in% c("Countries", "Institutions", "AU", "SO")) {
+    terms_flat <- stringr::str_to_title(terms_flat)
+  }
+  terms_flat <- toupper(terms_flat)   # match to_long_summary uppercase
+
+  expanded <- dplyr::tibble(
+    term = terms_flat,
+    PY   = py_vals[row_idx],
+    Z9   = z9_vals[row_idx]
+  )
+
+  expanded %>%
+    dplyr::group_by(term) %>%
+    dplyr::summarise(
+      ave_PY = round(mean(PY, na.rm = TRUE), 1),
+      ave_Z9 = round(mean(Z9, na.rm = TRUE), 2),
+      .groups = "drop"
+    )
+}
+
 to_long_summary <- function(a_table, a_cluster, top) {
   if (is.null(a_table) || length(a_table) == 0) {
     return(NULL)
@@ -88,14 +133,27 @@ to_long_summary <- function(a_table, a_cluster, top) {
 #' @param df DATAFRAME. Usually `myDataCorrect`.
 #' @param a_column STRING. the name of the column to summarize
 #' @param clusters LIST[INTEGERS]. a list of clusters to include in the summary
-#' @param top INTEGER. the number of results to include in the report
+#' @param top INTEGER. the number of results to include in the report (max 100)
 #' @param with_all BOOL. if the summary including all data should be include as `Cluster 0`
 #' @returns Nothing. --> It writes a .csv with the report.
 generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
+  # Build cluster_code lookup (X_C -> cluster_code) from df if available
+  if ("cluster_code" %in% colnames(df)) {
+    code_lookup <- df %>%
+      dplyr::distinct(X_C, cluster_code) %>%
+      dplyr::mutate(X_C_char = as.character(X_C))
+  } else {
+    code_lookup <- dplyr::tibble(X_C_char = character(), cluster_code = character())
+  }
+
   cluster_results <- lapply(clusters, function(cluster_id) {
     cluster_data <- dplyr::filter(df, X_C == cluster_id)
     cluster_tops <- TopSomething(cluster_data, coll = a_column, top = top)
-    to_long_summary(cluster_tops, a_cluster = cluster_id, top = top)
+    res <- to_long_summary(cluster_tops, a_cluster = cluster_id, top = top)
+    if (is.null(res)) return(NULL)
+
+    avgs <- compute_term_stats(cluster_data, a_column)
+    dplyr::left_join(res, avgs, by = "term")
   })
 
   result_list <- dplyr::bind_rows(cluster_results)
@@ -103,6 +161,10 @@ generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
   if (with_all && a_column != "AU") {
     cluster_zero <- TopSomething(df, coll = a_column, top = top) %>%
       to_long_summary(a_cluster = 0, top = top)
+    if (!is.null(cluster_zero)) {
+      avgs_all <- compute_term_stats(df, a_column)
+      cluster_zero <- dplyr::left_join(cluster_zero, avgs_all, by = "term")
+    }
     result_list <- dplyr::bind_rows(cluster_zero, result_list)
   }
 
@@ -110,8 +172,20 @@ generate_long_report <- function(df, a_column, clusters, top, with_all = TRUE) {
     return(invisible(NULL))
   }
 
+  # Attach cluster_code; synthetic "all" cluster (0) gets code "ALL"
   result_list <- result_list %>%
-    dplyr::rename(!!a_column := term)
+    dplyr::mutate(
+      cluster_code = {
+        looked_up <- code_lookup$cluster_code[
+          match(as.character(Cluster), code_lookup$X_C_char)
+        ]
+        dplyr::coalesce(looked_up, ifelse(Cluster == 0, "ALL", as.character(Cluster)))
+      }
+    )
+
+  result_list <- result_list %>%
+    dplyr::rename(!!a_column := term) %>%
+    dplyr::select(Cluster, cluster_code, dplyr::all_of(a_column), Freq, ave_PY, ave_Z9)
 
   write.csv(
     result_list,
@@ -282,7 +356,7 @@ generate_numerical_report <- function(df, a_column, clusters, with_all = TRUE) {
 ## Write reports
 for (cc in categorical_long_reports) {
   if (cc != "is_japanese" && !is_effectively_empty(myDataCorrect[[cc]])) {
-    generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = settings$rp$top_items)
+    generate_long_report(df = myDataCorrect, a_column = cc, clusters = list_of_clusters, top = 100)
   } else {
     print(glue("{cc} is totally empty. Report not created"))
   }
