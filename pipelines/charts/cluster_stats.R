@@ -240,6 +240,9 @@ plot_cluster_data <- function(plot_data, cluster_number,
                               col_position = 2,
                               item_label = "Item",
                               document_label = "Documents") {
+  value_col <- names(plot_data)[col_position]
+  plot_data[[value_col]] <- suppressWarnings(as.numeric(plot_data[[value_col]]))
+
   cluster_data <- plot_data %>%
     filter(Cluster == cluster_number) %>%
     filter(!is.na(.data[[names(.)[1]]]),
@@ -259,10 +262,16 @@ plot_cluster_data <- function(plot_data, cluster_number,
   labels <- ifelse(nchar(lvls) >= 20, paste0(lvls, "..."), lvls)
   cluster_data[[col1]] <- factor(cluster_data[[col1]], levels = lvls, labels = labels)
 
-  plot_rows <- cluster_data %>% slice_head(n = 5)
-  y_max <- max(plot_data[[col_position]], na.rm = TRUE)
+  plot_rows <- cluster_data %>%
+    filter(!is.na(.data[[value_col]])) %>%
+    slice_head(n = 5)
 
-  ggplot(plot_rows, aes(x = .data[[col1]], y = .data[[names(plot_rows)[col_position]]])) +
+  y_max <- max(plot_data[[value_col]], na.rm = TRUE)
+  if (!is.finite(y_max)) {
+    y_max <- 0
+  }
+
+  ggplot(plot_rows, aes(x = .data[[col1]], y = .data[[value_col]])) +
     geom_bar(stat = "identity", width = 0.7, fill = "deepskyblue3") +
     scale_y_continuous(name = document_label, limits = c(0, y_max)) +
     scale_x_discrete(name = item_label) +

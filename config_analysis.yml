@@ -41,6 +41,12 @@ citation_network:
   using_mission_pairs_from_fukan: false
   using_initial_column_C_from_fukan: false
   network_type: "direct_citation"
+  # Canonical source for X_E in AI representative-paper selection.
+  # Options:
+  #   global_in_degree | global_page_rank | global_degree |
+  #   level_in_degree  | level_page_rank  | level_degree
+  # For recursive levels, level_* maps levelN selections to level(N-1)_* metrics.
+  x_e_metric: "level_in_degree"
 
   # Component selection — which connected component(s) to analyze
   component:
