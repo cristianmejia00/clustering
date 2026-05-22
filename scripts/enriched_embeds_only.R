@@ -103,9 +103,9 @@ enriched_dir <- file.path(
 )
 
 subfolder_clusters <- if (settings$params$type_of_analysis == "citation_network") {
-  "clusters"
+  "index_files/charts"
 } else {
-  "topics"
+  "index_files/charts"
 }
 
 seed_val <- if (!is.null(settings$params$seed)) settings$params$seed else 100
