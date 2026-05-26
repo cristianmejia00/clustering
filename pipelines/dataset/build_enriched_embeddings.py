@@ -1,7 +1,8 @@
 """Build enriched embeddings by prepending cluster/subcluster names to text.
 
-Reads rcs_merged.csv at level 0 and level 1 to obtain global_name for each
-cluster, then prepends those names to the original TI+AB text before encoding.
+Reads rcs_merged.csv at level 0 (and optionally at subcluster level) to obtain
+global_name for each cluster, then prepends those names to the original TI+AB
+text before encoding.
 The result is a new embedding set saved to ``e01_enriched/`` alongside the
 original ``e01/``.
 
@@ -58,7 +59,7 @@ def main() -> None:
     p.add_argument("--config-analysis", required=True)
     p.add_argument("--config-dataset", required=True)
     p.add_argument("--level", type=int, default=1,
-                   help="Subcluster level to enrich (default: 1)")
+                   help="Subcluster level to enrich (0 = level0-only; default: 1)")
     p.add_argument("--force", action="store_true",
                    help="Recompute even if embeddings already exist")
     args = p.parse_args()
@@ -83,32 +84,42 @@ def main() -> None:
         print("Use --force to recompute.")
         return
 
-    # Citation-network path components
-    cn = cfg_a.get("citation_network", {})
-    algorithm = cn.get("clustering", {}).get("algorithm", "louvain")
-    threshold = str(cn.get("thresholding", {}).get("threshold", "0.9"))
+    analysis_type = cfg_a.get("params", {}).get("type_of_analysis", "citation_network")
 
-    analysis_root = bib_dir / project / analysis_id / algorithm / threshold
+    # Citation-network analysis stores reports under <analysis_id>/<algorithm>/<threshold>
+    # while topic-model analysis stores them under <analysis_id>.
+    if analysis_type == "citation_network":
+        cn = cfg_a.get("citation_network", {})
+        algorithm = cn.get("clustering", {}).get("algorithm", "louvain")
+        threshold = str(cn.get("thresholding", {}).get("threshold", "0.9"))
+        analysis_root = bib_dir / project / analysis_id / algorithm / threshold
+    else:
+        analysis_root = bib_dir / project / analysis_id
 
     # ── Load global-name lookups ──────────────────────────────────────────
     rcs_level0 = analysis_root / "level0" / "rcs_merged.csv"
-    rcs_level1 = analysis_root / f"level{args.level}" / "rcs_merged.csv"
+    rcs_leveln = analysis_root / f"level{args.level}" / "rcs_merged.csv"
 
     if not rcs_level0.exists():
         raise FileNotFoundError(f"rcs_merged.csv not found at level0: {rcs_level0}")
-    if not rcs_level1.exists():
-        raise FileNotFoundError(f"rcs_merged.csv not found at level{args.level}: {rcs_level1}")
 
     names_l0 = _load_global_names(rcs_level0)
-    names_l1 = _load_global_names(rcs_level1)
+    names_ln: dict[str, str] = {}
+    if args.level > 0:
+        if not rcs_leveln.exists():
+            raise FileNotFoundError(f"rcs_merged.csv not found at level{args.level}: {rcs_leveln}")
+        names_ln = _load_global_names(rcs_leveln)
 
     if not names_l0:
         raise ValueError("No global_name values found in level0 rcs_merged.csv — run AI naming first")
-    if not names_l1:
+    if args.level > 0 and not names_ln:
         raise ValueError(f"No global_name values found in level{args.level} rcs_merged.csv — run AI naming first")
 
     print(f"Level 0 names: {len(names_l0)} clusters")
-    print(f"Level {args.level} names: {len(names_l1)} subclusters")
+    if args.level > 0:
+        print(f"Level {args.level} names: {len(names_ln)} subclusters")
+    else:
+        print("Level 0-only enrichment mode")
 
     # ── Load datasets ─────────────────────────────────────────────────────
     minimal_path = analysis_root / "dataset_minimal.csv"
@@ -123,14 +134,17 @@ def main() -> None:
     dr = pd.read_csv(raw_path, encoding="latin-1")
 
     # Identify columns
-    sub_col = f"subcluster_label{args.level}"
-    if sub_col not in dm.columns:
-        raise ValueError(f"Column '{sub_col}' not found in dataset_minimal.csv")
+    sub_col = None
+    if args.level > 0:
+        sub_col = f"subcluster_label{args.level}"
+        if sub_col not in dm.columns:
+            raise ValueError(f"Column '{sub_col}' not found in dataset_minimal.csv")
     if "level0" not in dm.columns:
         raise ValueError("Column 'level0' not found in dataset_minimal.csv")
 
     # Merge on UT
-    merged = dm[["UT", "level0", sub_col]].merge(
+    select_cols = ["UT", "level0"] + ([sub_col] if sub_col else [])
+    merged = dm[select_cols].merge(
         dr[["UT", "TI", "AB"]], on="UT", how="inner"
     )
     print(f"Documents after merge: {len(merged)}")
@@ -142,13 +156,13 @@ def main() -> None:
     rows = []
     for _, row in merged.iterrows():
         parent_code = str(int(row["level0"])) if pd.notna(row["level0"]) else ""
-        sub_code = _as_str(row[sub_col]).strip()
+        sub_code = _as_str(row[sub_col]).strip() if sub_col else ""
 
         parent_name = names_l0.get(parent_code, "")
-        sub_name = names_l1.get(sub_code, "")
+        sub_name = names_ln.get(sub_code, "") if sub_col else ""
 
-        # Skip docs without subcluster assignment
-        if not sub_code or not sub_name:
+        # For subcluster enrichment, skip docs without valid subcluster mapping.
+        if sub_col and (not sub_code or not sub_name):
             continue
 
         ti = _as_str(row["TI"])

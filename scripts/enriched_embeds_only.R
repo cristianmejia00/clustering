@@ -1,8 +1,9 @@
 # Enriched embeddings pipeline — re-encodes documents with cluster names prepended
 # for improved subcluster spatial separation in UMAP.
 #
-# Expects: AI enrichment has been run (rcs_merged.csv at level0 and level1
-# must contain a populated 'global_name' column).
+# Expects: AI enrichment has been run. For citation-network analysis,
+# rcs_merged.csv at level0 and target recursive level must exist and include
+# global_name. For topic_model, level0 is enough when level1 is unavailable.
 #
 # Produces: e01_enriched/ embeddings + fig_umap_scatter_enriched.png
 
@@ -22,9 +23,11 @@ settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 
 # ── Validate preconditions ──────────────────────────────────────────────────
 recursive_level <- settings$params$recursive_level
-if (is.null(recursive_level) || recursive_level < 1) {
-  stop("enriched_embeds requires recursive_level >= 1 (current: ", recursive_level, ")")
+if (is.null(recursive_level) || recursive_level < 0) {
+  stop("enriched_embeds requires recursive_level >= 0 (current: ", recursive_level, ")")
 }
+
+analysis_type <- settings$params$type_of_analysis
 
 # Build analysis root (citation_network path)
 output_folder_reports <- if (settings$params$type_of_analysis == "citation_network") {
@@ -43,8 +46,25 @@ output_folder_reports <- if (settings$params$type_of_analysis == "citation_netwo
   )
 }
 
-# Check rcs_merged.csv at both levels
-for (lvl in c(0, recursive_level)) {
+# Determine which level(s) are required.
+target_enrichment_level <- recursive_level
+
+level0_rcs_path <- file.path(output_folder_reports, "level0", "rcs_merged.csv")
+if (!file.exists(level0_rcs_path)) {
+  stop("rcs_merged.csv not found at level 0: ", level0_rcs_path,
+       "\n  Run the reports + AI pipeline first.")
+}
+
+level_target_rcs_path <- file.path(output_folder_reports, paste0("level", recursive_level), "rcs_merged.csv")
+
+if (analysis_type == "topic_model" && recursive_level >= 1 && !file.exists(level_target_rcs_path)) {
+  message("Topic-model run without level", recursive_level, " rcs_merged.csv; falling back to level0-only enriched embeddings.")
+  target_enrichment_level <- 0
+}
+
+required_levels <- unique(c(0, target_enrichment_level))
+
+for (lvl in required_levels) {
   rcs_path <- file.path(output_folder_reports, paste0("level", lvl), "rcs_merged.csv")
   if (!file.exists(rcs_path)) {
     stop("rcs_merged.csv not found at level ", lvl, ": ", rcs_path,
@@ -76,13 +96,13 @@ cli_args <- commandArgs(trailingOnly = TRUE)
 force_recompute <- "--force" %in% cli_args
 
 # ── Step 1: Build enriched embeddings ────────────────────────────────────────
-message("=== Building enriched embeddings (level ", recursive_level, ") ===")
+message("=== Building enriched embeddings (level ", target_enrichment_level, ") ===")
 
 embed_args <- c(
   "pipelines/dataset/build_enriched_embeddings.py",
   "--config-analysis", shQuote("config_analysis.yml"),
   "--config-dataset",  shQuote("config_dataset.yml"),
-  "--level",           as.character(recursive_level)
+  "--level",           as.character(target_enrichment_level)
 )
 if (force_recompute) embed_args <- c(embed_args, "--force")
 
@@ -111,7 +131,7 @@ subfolder_clusters <- if (settings$params$type_of_analysis == "citation_network"
 seed_val <- if (!is.null(settings$params$seed)) settings$params$seed else 100
 palette_path <- file.path(getwd(), "assets", "fukan_colors.json")
 
-available_levels <- 0:recursive_level
+available_levels <- if (target_enrichment_level <= 0) 0 else 0:target_enrichment_level
 
 for (level_report in available_levels) {
   message("=== Generating enriched UMAP scatter: level ", level_report, " ===")
