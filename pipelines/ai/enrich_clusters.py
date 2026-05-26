@@ -128,7 +128,11 @@ def enrich_cluster(
     mask = rcs["cluster_code"].astype(str) == str(cluster_code)
 
     # ── Select representative papers ──────────────────────────────────────
-    papers = get_cluster_papers(dataset, cluster_code, top=top_papers)
+    papers = get_cluster_papers(
+        dataset,
+        cluster_code,
+        top=top_papers,
+    )
     if papers.empty:
         print(f"  [skip] No papers found for cluster {cluster_code}")
         return

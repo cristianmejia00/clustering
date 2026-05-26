@@ -16,9 +16,9 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q346_hydrogen_d3"
+  project_folder: "Q343_science_diplomacy_merged"
   filtered_folder: "f01"
-  analysis_id: "a01_cn__f01_dc__c01_lv_v2"
+  analysis_id: "a01_tm__f01_hdbscan__v1"
 
 
 # ==============================================================================
@@ -28,7 +28,7 @@ params:
   recursive_level: 1                    # 0 = clusters only, 1+ = subclusters
   dataset_source: "wos"                 # wos | derwent | factiva
   unit_of_analysis: "cluster"           # cluster | topic | facet | firm | country | etc.
-  type_of_analysis: "citation_network"  # citation_network | topic_model | both
+  type_of_analysis: "topic_model"       # citation_network | topic_model | both
   seed: 100                             # For reproducibility
 
 
@@ -41,6 +41,12 @@ citation_network:
   using_mission_pairs_from_fukan: false
   using_initial_column_C_from_fukan: false
   network_type: "direct_citation"
+  # Canonical source for X_E in AI representative-paper selection.
+  # Options:
+  #   global_in_degree | global_page_rank | global_degree |
+  #   level_in_degree  | level_page_rank  | level_degree
+  # For recursive levels, level_* maps levelN selections to level(N-1)_* metrics.
+  x_e_metric: "level_in_degree"
 
   # Component selection — which connected component(s) to analyze
   component:
@@ -50,6 +56,9 @@ citation_network:
   # Clustering algorithm
   clustering:
     algorithm: "louvain"                # louvain | newman | infomap
+
+  # Network chart layout algorithm
+  layout: "drl"                         # drl | kk (Kamada-Kawai)
 
   # Thresholding — controls recursive clustering and small-cluster aggregation
   thresholding:
@@ -71,6 +80,25 @@ topic_model:
   year_column: "PY"
   n_topics: 0                           # 0 = auto-detect via HDBScan
   min_topic_size: 10
+  others_threshold: 0.99                # Keep topics covering this cumulative share; others -> level0=99999
+
+
+# ==============================================================================
+# LLM Integration
+# ==============================================================================
+llm:
+  provider: "openai"                    # openai | anthropic | google
+  theme: "Science Diplomacy"  # Used as context for LLM summarization and naming
+  description: "Science Diplomacy involves the use of scientific collaborations among nations to address common challenges and build constructive international partnerships."
+  top_papers: 7                         # Representative papers per criterion per cluster
+  rate_limit_delay: 2                   # Seconds between API calls
+  compute:
+    # - representative_docs_summaries   # Uncomment to summarize each paper via LLM before clustering (slow/costly)
+    - cluster_title
+    - cluster_description
+    - cluster_enhanced_description
+    - global_naming                     # Rename all clusters at once for distinctive, non-overlapping names
+
 
 
 # ==============================================================================
@@ -79,23 +107,6 @@ topic_model:
 addons:
   include_orphans: "NO"                 # NO | 99 | 999
   sentiment_analysis: false
-
-
-# ==============================================================================
-# LLM Integration
-# ==============================================================================
-llm:
-  provider: "openai"                    # openai | anthropic | google
-  theme: "Hydrogen Economy"
-  description: "a proposed energy system that uses hydrogen as a clean, versatile fuel source to replace fossil fuels, producing only water vapor upon combustion"
-  top_papers: 5                         # Representative papers per criterion per cluster
-  rate_limit_delay: 2                   # Seconds between API calls
-  compute:
-    # - representative_docs_summaries   # Uncomment to summarize each paper via LLM before clustering (slow/costly)
-    - cluster_title
-    - cluster_description
-    - cluster_enhanced_description
-    - global_naming                     # Rename all clusters at once for distinctive, non-overlapping names
 
 
 # ==============================================================================
@@ -135,6 +146,19 @@ reporting:
     - DE
     - sentiment_factor
     - ID
+    - is_bibliometrics
+    - policy_dimension
+    - framework_2025_categories_main
+    - framework_2025_categories_detailed
+    - article_type
+    - main_domain
+    - geographic_focus
+    - power_dynamic
+    - diplomacy_goal
+    - key_actors
+    - global_commons
+    - geopolitical_context
+
 
 
   categorical_simple_wide_reports: [PY, sentiment_factor]

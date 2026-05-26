@@ -27,6 +27,7 @@ for (col in names(critical_cols)) {
 
 # --- Solvable: fill missing columns with defaults ----------------------------
 if (!("X_E" %in% available_columns) && "Z9" %in% available_columns) {
+  warning("X_E is missing; using Z9 as fallback. This is a robustness fallback, not canonical connectivity/score.")
   dataset$X_E <- dataset$Z9
 }
 if (!("PY" %in% available_columns)) {

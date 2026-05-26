@@ -15,24 +15,24 @@
 metadata:
   # --- Raw input (WoS export files as downloaded) ---
   raw_input_directory: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads"
-  raw_input_folder_name: "Q346_hydrogen_d3"
+  raw_input_folder_name: "Q343_science_diplomacy_merged"
 
   # --- Output directory (Google Drive / Bibliometrics) ---
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q346_hydrogen_d3"
+  project_folder: "Q343_science_diplomacy_merged"
 
   # --- Query and data source ---
-  date_id: "2026-04-03"                # Analysis date label
-  query: "Q346_hydrogen_d3"
+  date_id: "2026-05-22"                # Analysis date label
+  query: "Q343_science_diplomacy_merged"
   type_of_dataset: "papers"             # papers | patents | news
   dataset_source: "wos"                 # wos | derwent | factiva
 
   # --- Project metadata ---
-  dataset_name: "Q346_hydrogen_d3"
-  dataset_file_name_suffix: "Q346"     # Used in output file names
+  dataset_name: "Q343_science_diplomacy_merged"
+  dataset_file_name_suffix: "Q343"     # Used in output file names
   dataset_description: ""
   created_by: "cristianmejia00@gmail.com"
-  notes: "Project texts from Q346_hydrogen_d3"
+  notes: "Update to Science Diplomacy dataset merging WoS and Scopus."
 
 
 # ==============================================================================
@@ -48,44 +48,29 @@ filtering:
 
     columns_filter:
       columns_selected:
-        # --- Standard WoS fields ---
-        - PT
-        - AU
+        # Mandatory WoS fields
+        - UT
+        - PY
         - TI
-        - SO
-        - LA
+        - AB
+        - AU
+        - Z9
+        - C1
         - DT
         - DE
         - ID
-        - AB
-        - C1
-        - OI
-        - AF
-        - OA
-        - RP
-        - FU
-        - FX
         - CR
-        - NR
-        - TC
-        - Z9
-        - U1
-        - U2
-        - PU
-        - SN
-        - J9
-        - JI
-        - PY
-        - VL
-        - IS
-        - BP
-        - EP
-        - AR
         - DI
-        - PG
+        - SO
         - WC
-        - SC
-        - UT
+        - RP
+        - J9
+        - VL
+        - BP
+        # Other WoS fields
+        - LA
+        - IS
+        - EP
         # --- Custom / LLM-enriched columns ---
         - is_science_diplomacy
         - is_bibliometrics
@@ -108,11 +93,10 @@ filtering:
         - global_commons
         - global_commons_reasoning
         - geopolitical_context
-        - geopolitical_context_reasoning
+        - geopolitical_context_reasoning 
         - outcome
         - technology_type
-        - notes
-        - model
+
 
 
 # ==============================================================================

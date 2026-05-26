@@ -15,6 +15,68 @@ source("utils/load_config.R")
 
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 
+resolve_xe_candidates <- function(metric_name, level_report) {
+  level_idx <- max(level_report - 1, 0)
+  level_prefix <- paste0("level", level_idx)
+
+  if (metric_name == "global_in_degree") {
+    return(c("global_in_degree"))
+  }
+  if (metric_name == "global_page_rank") {
+    return(c("global_page_rank"))
+  }
+  if (metric_name == "global_degree") {
+    return(c("global_degree"))
+  }
+  if (metric_name == "level_page_rank") {
+    return(c(
+      paste0(level_prefix, "_page_rank"),
+      "global_page_rank",
+      paste0(level_prefix, "_in_degree"),
+      paste0(level_prefix, "_degree"),
+      "global_in_degree",
+      "global_degree"
+    ))
+  }
+  if (metric_name == "level_degree") {
+    return(c(
+      paste0(level_prefix, "_degree"),
+      "global_degree",
+      paste0(level_prefix, "_in_degree"),
+      "global_in_degree",
+      paste0(level_prefix, "_page_rank"),
+      "global_page_rank"
+    ))
+  }
+
+  # Default: level_in_degree
+  c(
+    paste0(level_prefix, "_in_degree"),
+    "global_in_degree",
+    paste0(level_prefix, "_degree"),
+    "global_degree",
+    paste0(level_prefix, "_page_rank"),
+    "global_page_rank"
+  )
+}
+
+normalize_distance_to_closeness <- function(x) {
+  xn <- suppressWarnings(as.numeric(x))
+  out <- rep(NA_real_, length(xn))
+  valid <- which(!is.na(xn))
+  if (length(valid) == 0) {
+    return(out)
+  }
+  xmin <- min(xn[valid])
+  xmax <- max(xn[valid])
+  if (xmax == xmin) {
+    out[valid] <- 1
+    return(out)
+  }
+  out[valid] <- 1 - ((xn[valid] - xmin) / (xmax - xmin))
+  out
+}
+
 # Build output_folder_level (same logic as 00_execute_and_reports.R)
 output_folder_reports <- if (settings$params$type_of_analysis == "citation_network") {
   file.path(
@@ -129,6 +191,80 @@ for (level_report in ordered_levels) {
   }
 
   # Write the minimal dataset CSV
+  if (settings$params$type_of_analysis == "citation_network") {
+    configured_metric <- settings$cno$x_e_metric
+    if (is.null(configured_metric) || !nzchar(configured_metric)) {
+      configured_metric <- "level_in_degree"
+    }
+    configured_metric <- tolower(as.character(configured_metric))
+
+    valid_metrics <- c(
+      "global_in_degree",
+      "global_page_rank",
+      "global_degree",
+      "level_in_degree",
+      "level_page_rank",
+      "level_degree"
+    )
+    if (!(configured_metric %in% valid_metrics)) {
+      warning(
+        "Invalid citation_network.x_e_metric='", configured_metric,
+        "'. Falling back to 'level_in_degree'."
+      )
+      configured_metric <- "level_in_degree"
+    }
+
+    candidates <- resolve_xe_candidates(configured_metric, level_report)
+    candidates <- candidates[candidates %in% colnames(level_dataset)]
+
+    if (length(candidates) > 0) {
+      chosen_col <- candidates[[1]]
+      level_dataset$X_E <- suppressWarnings(as.numeric(level_dataset[[chosen_col]]))
+      message(
+        "X_E source for level ", level_report,
+        ": ", chosen_col,
+        " (configured: ", configured_metric, ")"
+      )
+    } else if ("Z9" %in% colnames(level_dataset)) {
+      warning(
+        "Could not resolve X_E from configured metric '", configured_metric,
+        "' at level ", level_report,
+        ". Falling back to Z9 for AI selection."
+      )
+      level_dataset$X_E <- suppressWarnings(as.numeric(level_dataset$Z9))
+    } else {
+      warning(
+        "Could not resolve X_E and Z9 is missing at level ", level_report,
+        ". AI selection will run without X_E."
+      )
+    }
+  } else if (settings$params$type_of_analysis == "topic_model") {
+    score_candidates <- c("Score", "score", "X_E")
+    score_candidates <- score_candidates[score_candidates %in% colnames(level_dataset)]
+
+    if (length(score_candidates) > 0) {
+      source_col <- score_candidates[[1]]
+      level_dataset$X_E <- normalize_distance_to_closeness(level_dataset[[source_col]])
+      message(
+        "X_E source for topic_model level ", level_report,
+        ": normalized closeness from ", source_col,
+        " (0..1, 1=closest centroid)"
+      )
+    } else if ("Z9" %in% colnames(level_dataset)) {
+      warning(
+        "Topic-model score column (Score/score/X_E) not found at level ", level_report,
+        ". Falling back to Z9 for AI selection."
+      )
+      level_dataset$X_E <- suppressWarnings(as.numeric(level_dataset$Z9))
+    }
+  } else if (!("X_E" %in% colnames(level_dataset)) && ("Z9" %in% colnames(level_dataset))) {
+    warning(
+      "X_E is missing in non-citation analysis at level ", level_report,
+      ". Falling back to Z9 for AI selection."
+    )
+    level_dataset$X_E <- suppressWarnings(as.numeric(level_dataset$Z9))
+  }
+
   ai_dataset_path <- file.path(output_folder_level, "dataset_for_ai.csv")
   ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(level_dataset))
   readr::write_csv(level_dataset[, ai_cols], ai_dataset_path)

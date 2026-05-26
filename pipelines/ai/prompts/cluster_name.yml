@@ -5,7 +5,7 @@ system: >
   know about {topic_description}
 
   You will be given the description of a cluster of documents. Either extract
-  the cluster name given in the description, or give a short name based on what
+  the cluster name given in the description, or give a name based on what
   you read.
 
   Your answers are concise and include only the name of the cluster without any

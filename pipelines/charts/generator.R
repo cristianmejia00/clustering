@@ -74,12 +74,17 @@ for (level_report_iteration in available_levels) {
   chart_scripts <- c(
     #"dataset_bars.R",
     #"dataset_trends.R",
-    #"cluster_stats.R",
-    "cluster_labeled.R"
+    "cluster_stats.R",
+    "cluster_scatterplots.R"
   )
   for (script in chart_scripts) {
     source(file.path(getwd(), "pipelines", "charts", script))
   }
+
+  # ── Network chart (level 0 only) ──────────────────────────────────────
+  # if (level_report == 0) {
+  #   source(file.path(getwd(), "pipelines", "charts", "network_chart.R"))
+  # }
 
   # ── UMAP scatter plot (Python — requires embeddings) ───────────────────
   embeds_folder <- settings$topic_model$embeds_folder
@@ -108,8 +113,8 @@ for (level_report_iteration in available_levels) {
 
     rcs_path     <- file.path(output_folder_level, "rcs_merged.csv")
     palette_path <- file.path(getwd(), "assets", "fukan_colors.json")
-    output_svg   <- file.path(output_folder_level, subfolder_clusters,
-                              "fig_umap_scatter.svg")
+    output_png   <- file.path(output_folder_level, subfolder_clusters,
+                  "fig_umap_scatter.png")
 
     py_exec <- file.path("pipelines", "ai", ".venv", "bin", "python3")
     if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
@@ -125,7 +130,7 @@ for (level_report_iteration in available_levels) {
           "--doc-clusters",   shQuote(doc_clusters_path),
           "--rcs",            shQuote(rcs_path),
           "--palette",        shQuote(palette_path),
-          "--output",         shQuote(output_svg),
+          "--output",         shQuote(output_png),
           "--seed",           as.character(seed_val),
           "--label-min",      "20",
           "--title",          shQuote(paste("Cluster Map - Level", level_report))

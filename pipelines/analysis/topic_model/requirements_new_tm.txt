@@ -5,3 +5,4 @@ umap-learn
 hdbscan
 scikit-learn
 bertopic
+pyyaml

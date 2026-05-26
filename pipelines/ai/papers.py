@@ -13,7 +13,7 @@ def get_cluster_papers(
     """Select the most representative papers for a cluster.
 
     Picks the union of:
-      - top-N most connected papers (highest ``X_E``)
+            - top-N papers by ``X_E`` (highest)
       - top-N most cited papers (highest ``Z9``)
 
     Returns at most ``top * 2`` rows (fewer if there is overlap or if the
@@ -54,6 +54,7 @@ def get_cluster_papers(
     selected = selected.copy()
     ti = selected["TI"].fillna("")
     ab = selected["AB"].fillna("")
+    selected["text"] = ti
     selected["text"] = ti.str.cat(ab, sep=" ")
 
     return selected

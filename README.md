@@ -27,7 +27,7 @@ Unified launcher:
 - `run_pipeline(c("ai", "charts"))` — AI enrichment + charts only
 - `run_pipeline(c("charts"))` — charts only
 
-Valid stages: `dataset`, `analysis`, `reports`, `ai`, `charts`. Supply any subset in any order.
+Valid stages: `dataset`, `analysis`, `reports`, `ai`, `charts`, `enriched_embeds`. Supply any subset in any order.
 
 1. Dataset routine (mandatory embeddings included):
    Run `source("scripts/dataset_only.R")`.
@@ -40,6 +40,9 @@ Valid stages: `dataset`, `analysis`, `reports`, `ai`, `charts`. Supply any subse
    Run `source("scripts/ai_only.R")`.
 5. Charts:
    Run `source("scripts/charts_only.R")`.
+6. Enriched embeddings (experimental):
+   Run `source("scripts/enriched_embeds_only.R")`.
+   Re-encodes documents with cluster/subcluster names prepended to TI+AB for improved UMAP separation. Requires AI naming to have been run first.
 
 Embeddings are now part of the dataset pipeline for all datasets because they are also used later for optional cosine-similarity analyses, not only for topic modeling.
 

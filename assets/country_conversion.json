@@ -1,0 +1,1252 @@
+[
+  {
+    "ISO3166alpha3": "AFG",
+    "WIKI": "Afghanistan",
+    "WOS": "afghanistan"
+  },
+  {
+    "ISO3166alpha3": "ALA",
+    "WIKI": "Åland Islands",
+    "WOS": "aland islands"
+  },
+  {
+    "ISO3166alpha3": "ALB",
+    "WIKI": "Albania",
+    "WOS": "albania"
+  },
+  {
+    "ISO3166alpha3": "DZA",
+    "WIKI": "Algeria",
+    "WOS": "algeria"
+  },
+  {
+    "ISO3166alpha3": "ASM",
+    "WIKI": "American Samoa",
+    "WOS": "american samoa"
+  },
+  {
+    "ISO3166alpha3": "AND",
+    "WIKI": "Andorra",
+    "WOS": "andorra"
+  },
+  {
+    "ISO3166alpha3": "AGO",
+    "WIKI": "Angola",
+    "WOS": "angola"
+  },
+  {
+    "ISO3166alpha3": "AIA",
+    "WIKI": "Anguilla",
+    "WOS": "anguilla"
+  },
+  {
+    "ISO3166alpha3": "ATA",
+    "WIKI": "Antarctica",
+    "WOS": "antarctica"
+  },
+  {
+    "ISO3166alpha3": "ATG",
+    "WIKI": "Antigua and Barbuda",
+    "WOS": "antigua & barbu"
+  },
+  {
+    "ISO3166alpha3": "ARG",
+    "WIKI": "Argentina",
+    "WOS": "argentina"
+  },
+  {
+    "ISO3166alpha3": "ARM",
+    "WIKI": "Armenia",
+    "WOS": "armenia"
+  },
+  {
+    "ISO3166alpha3": "ABW",
+    "WIKI": "Aruba",
+    "WOS": "aruba"
+  },
+  {
+    "ISO3166alpha3": "AUS",
+    "WIKI": "Australia",
+    "WOS": "australia"
+  },
+  {
+    "ISO3166alpha3": "AUT",
+    "WIKI": "Austria",
+    "WOS": "austria"
+  },
+  {
+    "ISO3166alpha3": "AZE",
+    "WIKI": "Azerbaijan",
+    "WOS": "azerbaijan"
+  },
+  {
+    "ISO3166alpha3": "BHS",
+    "WIKI": "Bahamas",
+    "WOS": "bahamas"
+  },
+  {
+    "ISO3166alpha3": "BHR",
+    "WIKI": "Bahrain",
+    "WOS": "bahrain"
+  },
+  {
+    "ISO3166alpha3": "BGD",
+    "WIKI": "Bangladesh",
+    "WOS": "bangladesh"
+  },
+  {
+    "ISO3166alpha3": "BRB",
+    "WIKI": "Barbados",
+    "WOS": "barbados"
+  },
+  {
+    "ISO3166alpha3": "BLR",
+    "WIKI": "Belarus",
+    "WOS": "belarus"
+  },
+  {
+    "ISO3166alpha3": "BEL",
+    "WIKI": "Belgium",
+    "WOS": "belgium"
+  },
+  {
+    "ISO3166alpha3": "BLZ",
+    "WIKI": "Belize",
+    "WOS": "belize"
+  },
+  {
+    "ISO3166alpha3": "BEN",
+    "WIKI": "Benin",
+    "WOS": "benin"
+  },
+  {
+    "ISO3166alpha3": "BMU",
+    "WIKI": "Bermuda",
+    "WOS": "bermuda"
+  },
+  {
+    "ISO3166alpha3": "BTN",
+    "WIKI": "Bhutan",
+    "WOS": "bhutan"
+  },
+  {
+    "ISO3166alpha3": "BOL",
+    "WIKI": "Bolivia (Plurinational State of)",
+    "WOS": "bolivia"
+  },
+  {
+    "ISO3166alpha3": "BES",
+    "WIKI": "Bonaire, Sint Eustatius and Saba",
+    "WOS": "bonaire"
+  },
+  {
+    "ISO3166alpha3": "BIH",
+    "WIKI": "Bosnia and Herzegovina",
+    "WOS": "bosnia & herceg"
+  },
+  {
+    "ISO3166alpha3": "BWA",
+    "WIKI": "Botswana",
+    "WOS": "botswana"
+  },
+  {
+    "ISO3166alpha3": "BVT",
+    "WIKI": "Bouvet Island",
+    "WOS": "bouvet island"
+  },
+  {
+    "ISO3166alpha3": "BRA",
+    "WIKI": "Brazil",
+    "WOS": "brazil"
+  },
+  {
+    "ISO3166alpha3": "IOT",
+    "WIKI": "British Indian Ocean Territory",
+    "WOS": "british indian ocean territory"
+  },
+  {
+    "ISO3166alpha3": "BRN",
+    "WIKI": "Brunei Darussalam",
+    "WOS": "brunei"
+  },
+  {
+    "ISO3166alpha3": "BGR",
+    "WIKI": "Bulgaria",
+    "WOS": "bulgaria"
+  },
+  {
+    "ISO3166alpha3": "BFA",
+    "WIKI": "Burkina Faso",
+    "WOS": "burkina faso"
+  },
+  {
+    "ISO3166alpha3": "BDI",
+    "WIKI": "Burundi",
+    "WOS": "burundi"
+  },
+  {
+    "ISO3166alpha3": "CPV",
+    "WIKI": "Cabo Verde",
+    "WOS": "cabo verde"
+  },
+  {
+    "ISO3166alpha3": "KHM",
+    "WIKI": "Cambodia",
+    "WOS": "cambodia"
+  },
+  {
+    "ISO3166alpha3": "CMR",
+    "WIKI": "Cameroon",
+    "WOS": "cameroon"
+  },
+  {
+    "ISO3166alpha3": "CAN",
+    "WIKI": "Canada",
+    "WOS": "canada"
+  },
+  {
+    "ISO3166alpha3": "CYM",
+    "WIKI": "Cayman Islands",
+    "WOS": "cayman islands"
+  },
+  {
+    "ISO3166alpha3": "CAF",
+    "WIKI": "Central African Republic",
+    "WOS": "central african republic"
+  },
+  {
+    "ISO3166alpha3": "TCD",
+    "WIKI": "Chad",
+    "WOS": "chad"
+  },
+  {
+    "ISO3166alpha3": "CHL",
+    "WIKI": "Chile",
+    "WOS": "chile"
+  },
+  {
+    "ISO3166alpha3": "CHN",
+    "WIKI": "China",
+    "WOS": "peoples r china"
+  },
+  {
+    "ISO3166alpha3": "CXR",
+    "WIKI": "Christmas Island",
+    "WOS": "christmas island"
+  },
+  {
+    "ISO3166alpha3": "CCK",
+    "WIKI": "Cocos (Keeling) Islands",
+    "WOS": "cocos islands"
+  },
+  {
+    "ISO3166alpha3": "COL",
+    "WIKI": "Colombia",
+    "WOS": "colombia"
+  },
+  {
+    "ISO3166alpha3": "COM",
+    "WIKI": "Comoros",
+    "WOS": "comoros"
+  },
+  {
+    "ISO3166alpha3": "COG",
+    "WIKI": "Congo",
+    "WOS": "congo"
+  },
+  {
+    "ISO3166alpha3": "COD",
+    "WIKI": "Congo, Democratic Republic of the",
+    "WOS": "dem rep congo"
+  },
+  {
+    "ISO3166alpha3": "COK",
+    "WIKI": "Cook Islands",
+    "WOS": "cook islands"
+  },
+  {
+    "ISO3166alpha3": "CRI",
+    "WIKI": "Costa Rica",
+    "WOS": "costa rica"
+  },
+  {
+    "ISO3166alpha3": "CIV",
+    "WIKI": "Côte d'Ivoire",
+    "WOS": "cote ivoire"
+  },
+  {
+    "ISO3166alpha3": "HRV",
+    "WIKI": "Croatia",
+    "WOS": "croatia"
+  },
+  {
+    "ISO3166alpha3": "CUB",
+    "WIKI": "Cuba",
+    "WOS": "cuba"
+  },
+  {
+    "ISO3166alpha3": "CUW",
+    "WIKI": "Curaçao",
+    "WOS": "curacao"
+  },
+  {
+    "ISO3166alpha3": "CYP",
+    "WIKI": "Cyprus",
+    "WOS": "cyprus"
+  },
+  {
+    "ISO3166alpha3": "CZE",
+    "WIKI": "Czechia",
+    "WOS": "czech republic"
+  },
+  {
+    "ISO3166alpha3": "DNK",
+    "WIKI": "Denmark",
+    "WOS": "denmark"
+  },
+  {
+    "ISO3166alpha3": "DJI",
+    "WIKI": "Djibouti",
+    "WOS": "djibouti"
+  },
+  {
+    "ISO3166alpha3": "DMA",
+    "WIKI": "Dominica",
+    "WOS": "dominica"
+  },
+  {
+    "ISO3166alpha3": "DOM",
+    "WIKI": "Dominican Republic",
+    "WOS": "dominican republic"
+  },
+  {
+    "ISO3166alpha3": "ECU",
+    "WIKI": "Ecuador",
+    "WOS": "ecuador"
+  },
+  {
+    "ISO3166alpha3": "EGY",
+    "WIKI": "Egypt",
+    "WOS": "egypt"
+  },
+  {
+    "ISO3166alpha3": "SLV",
+    "WIKI": "El Salvador",
+    "WOS": "el salvador"
+  },
+  {
+    "ISO3166alpha3": "GNQ",
+    "WIKI": "Equatorial Guinea",
+    "WOS": "equatorial guinea"
+  },
+  {
+    "ISO3166alpha3": "ERI",
+    "WIKI": "Eritrea",
+    "WOS": "eritrea"
+  },
+  {
+    "ISO3166alpha3": "EST",
+    "WIKI": "Estonia",
+    "WOS": "estonia"
+  },
+  {
+    "ISO3166alpha3": "SWZ",
+    "WIKI": "Eswatini",
+    "WOS": "eswatini"
+  },
+  {
+    "ISO3166alpha3": "ETH",
+    "WIKI": "Ethiopia",
+    "WOS": "ethiopia"
+  },
+  {
+    "ISO3166alpha3": "FLK",
+    "WIKI": "Falkland Islands (Malvinas)",
+    "WOS": "falkland island"
+  },
+  {
+    "ISO3166alpha3": "FRO",
+    "WIKI": "Faroe Islands",
+    "WOS": "faroe islands"
+  },
+  {
+    "ISO3166alpha3": "FJI",
+    "WIKI": "Fiji",
+    "WOS": "fiji"
+  },
+  {
+    "ISO3166alpha3": "FIN",
+    "WIKI": "Finland",
+    "WOS": "finland"
+  },
+  {
+    "ISO3166alpha3": "FRA",
+    "WIKI": "France",
+    "WOS": "france"
+  },
+  {
+    "ISO3166alpha3": "GUF",
+    "WIKI": "French Guiana",
+    "WOS": "french guiana"
+  },
+  {
+    "ISO3166alpha3": "PYF",
+    "WIKI": "French Polynesia",
+    "WOS": "french polynesia"
+  },
+  {
+    "ISO3166alpha3": "ATF",
+    "WIKI": "French Southern Territories",
+    "WOS": "french southern territories"
+  },
+  {
+    "ISO3166alpha3": "GAB",
+    "WIKI": "Gabon",
+    "WOS": "gabon"
+  },
+  {
+    "ISO3166alpha3": "GMB",
+    "WIKI": "Gambia",
+    "WOS": "gambia"
+  },
+  {
+    "ISO3166alpha3": "GEO",
+    "WIKI": "Georgia",
+    "WOS": "georgia"
+  },
+  {
+    "ISO3166alpha3": "DEU",
+    "WIKI": "Germany",
+    "WOS": "germany"
+  },
+  {
+    "ISO3166alpha3": "GHA",
+    "WIKI": "Ghana",
+    "WOS": "ghana"
+  },
+  {
+    "ISO3166alpha3": "GIB",
+    "WIKI": "Gibraltar",
+    "WOS": "gibraltar"
+  },
+  {
+    "ISO3166alpha3": "GRC",
+    "WIKI": "Greece",
+    "WOS": "greece"
+  },
+  {
+    "ISO3166alpha3": "GRL",
+    "WIKI": "Greenland",
+    "WOS": "greenland"
+  },
+  {
+    "ISO3166alpha3": "GRD",
+    "WIKI": "Grenada",
+    "WOS": "grenada"
+  },
+  {
+    "ISO3166alpha3": "GLP",
+    "WIKI": "Guadeloupe",
+    "WOS": "guadeloupe"
+  },
+  {
+    "ISO3166alpha3": "GUM",
+    "WIKI": "Guam",
+    "WOS": "guam"
+  },
+  {
+    "ISO3166alpha3": "GTM",
+    "WIKI": "Guatemala",
+    "WOS": "guatemala"
+  },
+  {
+    "ISO3166alpha3": "GGY",
+    "WIKI": "Guernsey",
+    "WOS": "guernsey"
+  },
+  {
+    "ISO3166alpha3": "GIN",
+    "WIKI": "Guinea",
+    "WOS": "guinea"
+  },
+  {
+    "ISO3166alpha3": "GNB",
+    "WIKI": "Guinea-Bissau",
+    "WOS": "guinea-bissau"
+  },
+  {
+    "ISO3166alpha3": "GUY",
+    "WIKI": "Guyana",
+    "WOS": "guyana"
+  },
+  {
+    "ISO3166alpha3": "HTI",
+    "WIKI": "Haiti",
+    "WOS": "haiti"
+  },
+  {
+    "ISO3166alpha3": "HMD",
+    "WIKI": "Heard Island and McDonald Islands",
+    "WOS": "heard island and mcdonald islands"
+  },
+  {
+    "ISO3166alpha3": "VAT",
+    "WIKI": "Holy See",
+    "WOS": "vatican"
+  },
+  {
+    "ISO3166alpha3": "HND",
+    "WIKI": "Honduras",
+    "WOS": "honduras"
+  },
+  {
+    "ISO3166alpha3": "HKG",
+    "WIKI": "Hong Kong",
+    "WOS": "hong kong"
+  },
+  {
+    "ISO3166alpha3": "HUN",
+    "WIKI": "Hungary",
+    "WOS": "hungary"
+  },
+  {
+    "ISO3166alpha3": "ISL",
+    "WIKI": "Iceland",
+    "WOS": "iceland"
+  },
+  {
+    "ISO3166alpha3": "IND",
+    "WIKI": "India",
+    "WOS": "india"
+  },
+  {
+    "ISO3166alpha3": "IDN",
+    "WIKI": "Indonesia",
+    "WOS": "indonesia"
+  },
+  {
+    "ISO3166alpha3": "IRN",
+    "WIKI": "Iran (Islamic Republic of)",
+    "WOS": "iran"
+  },
+  {
+    "ISO3166alpha3": "IRQ",
+    "WIKI": "Iraq",
+    "WOS": "iraq"
+  },
+  {
+    "ISO3166alpha3": "IRL",
+    "WIKI": "Ireland",
+    "WOS": "ireland"
+  },
+  {
+    "ISO3166alpha3": "IMN",
+    "WIKI": "Isle of Man",
+    "WOS": "isle of man"
+  },
+  {
+    "ISO3166alpha3": "ISR",
+    "WIKI": "Israel",
+    "WOS": "israel"
+  },
+  {
+    "ISO3166alpha3": "ITA",
+    "WIKI": "Italy",
+    "WOS": "italy"
+  },
+  {
+    "ISO3166alpha3": "JAM",
+    "WIKI": "Jamaica",
+    "WOS": "jamaica"
+  },
+  {
+    "ISO3166alpha3": "JPN",
+    "WIKI": "Japan",
+    "WOS": "japan"
+  },
+  {
+    "ISO3166alpha3": "JEY",
+    "WIKI": "Jersey",
+    "WOS": "jersey"
+  },
+  {
+    "ISO3166alpha3": "JOR",
+    "WIKI": "Jordan",
+    "WOS": "jordan"
+  },
+  {
+    "ISO3166alpha3": "KAZ",
+    "WIKI": "Kazakhstan",
+    "WOS": "kazakhstan"
+  },
+  {
+    "ISO3166alpha3": "KEN",
+    "WIKI": "Kenya",
+    "WOS": "kenya"
+  },
+  {
+    "ISO3166alpha3": "KIR",
+    "WIKI": "Kiribati",
+    "WOS": "kiribati"
+  },
+  {
+    "ISO3166alpha3": "PRK",
+    "WIKI": "Korea (Democratic People's Republic of)",
+    "WOS": "north korea"
+  },
+  {
+    "ISO3166alpha3": "KOR",
+    "WIKI": "Korea, Republic of",
+    "WOS": "south korea"
+  },
+  {
+    "ISO3166alpha3": "KWT",
+    "WIKI": "Kuwait",
+    "WOS": "kuwait"
+  },
+  {
+    "ISO3166alpha3": "KGZ",
+    "WIKI": "Kyrgyzstan",
+    "WOS": "kyrgyzstan"
+  },
+  {
+    "ISO3166alpha3": "LAO",
+    "WIKI": "Lao People's Democratic Republic",
+    "WOS": "laos"
+  },
+  {
+    "ISO3166alpha3": "LVA",
+    "WIKI": "Latvia",
+    "WOS": "latvia"
+  },
+  {
+    "ISO3166alpha3": "LBN",
+    "WIKI": "Lebanon",
+    "WOS": "lebanon"
+  },
+  {
+    "ISO3166alpha3": "LSO",
+    "WIKI": "Lesotho",
+    "WOS": "lesotho"
+  },
+  {
+    "ISO3166alpha3": "LBR",
+    "WIKI": "Liberia",
+    "WOS": "liberia"
+  },
+  {
+    "ISO3166alpha3": "LBY",
+    "WIKI": "Libya",
+    "WOS": "libya"
+  },
+  {
+    "ISO3166alpha3": "LIE",
+    "WIKI": "Liechtenstein",
+    "WOS": "liechtenstein"
+  },
+  {
+    "ISO3166alpha3": "LTU",
+    "WIKI": "Lithuania",
+    "WOS": "lithuania"
+  },
+  {
+    "ISO3166alpha3": "LUX",
+    "WIKI": "Luxembourg",
+    "WOS": "luxembourg"
+  },
+  {
+    "ISO3166alpha3": "MAC",
+    "WIKI": "Macao",
+    "WOS": "macao"
+  },
+  {
+    "ISO3166alpha3": "MDG",
+    "WIKI": "Madagascar",
+    "WOS": "madagascar"
+  },
+  {
+    "ISO3166alpha3": "MWI",
+    "WIKI": "Malawi",
+    "WOS": "malawi"
+  },
+  {
+    "ISO3166alpha3": "MYS",
+    "WIKI": "Malaysia",
+    "WOS": "malaysia"
+  },
+  {
+    "ISO3166alpha3": "MDV",
+    "WIKI": "Maldives",
+    "WOS": "maldives"
+  },
+  {
+    "ISO3166alpha3": "MLI",
+    "WIKI": "Mali",
+    "WOS": "mali"
+  },
+  {
+    "ISO3166alpha3": "MLT",
+    "WIKI": "Malta",
+    "WOS": "malta"
+  },
+  {
+    "ISO3166alpha3": "MHL",
+    "WIKI": "Marshall Islands",
+    "WOS": "marshall islands"
+  },
+  {
+    "ISO3166alpha3": "MTQ",
+    "WIKI": "Martinique",
+    "WOS": "martinique"
+  },
+  {
+    "ISO3166alpha3": "MRT",
+    "WIKI": "Mauritania",
+    "WOS": "mauritania"
+  },
+  {
+    "ISO3166alpha3": "MUS",
+    "WIKI": "Mauritius",
+    "WOS": "mauritius"
+  },
+  {
+    "ISO3166alpha3": "MYT",
+    "WIKI": "Mayotte",
+    "WOS": "mayotte"
+  },
+  {
+    "ISO3166alpha3": "MEX",
+    "WIKI": "Mexico",
+    "WOS": "mexico"
+  },
+  {
+    "ISO3166alpha3": "FSM",
+    "WIKI": "Micronesia (Federated States of)",
+    "WOS": "micronesia"
+  },
+  {
+    "ISO3166alpha3": "MDA",
+    "WIKI": "Moldova, Republic of",
+    "WOS": "moldova"
+  },
+  {
+    "ISO3166alpha3": "MCO",
+    "WIKI": "Monaco",
+    "WOS": "monaco"
+  },
+  {
+    "ISO3166alpha3": "MNG",
+    "WIKI": "Mongolia",
+    "WOS": "mongolia"
+  },
+  {
+    "ISO3166alpha3": "MNE",
+    "WIKI": "Montenegro",
+    "WOS": "montenegro"
+  },
+  {
+    "ISO3166alpha3": "MSR",
+    "WIKI": "Montserrat",
+    "WOS": "montserrat"
+  },
+  {
+    "ISO3166alpha3": "MAR",
+    "WIKI": "Morocco",
+    "WOS": "morocco"
+  },
+  {
+    "ISO3166alpha3": "MOZ",
+    "WIKI": "Mozambique",
+    "WOS": "mozambique"
+  },
+  {
+    "ISO3166alpha3": "MMR",
+    "WIKI": "Myanmar",
+    "WOS": "myanmar"
+  },
+  {
+    "ISO3166alpha3": "NAM",
+    "WIKI": "Namibia",
+    "WOS": "namibia"
+  },
+  {
+    "ISO3166alpha3": "NRU",
+    "WIKI": "Nauru",
+    "WOS": "nauru"
+  },
+  {
+    "ISO3166alpha3": "NPL",
+    "WIKI": "Nepal",
+    "WOS": "nepal"
+  },
+  {
+    "ISO3166alpha3": "NLD",
+    "WIKI": "Netherlands",
+    "WOS": "netherlands"
+  },
+  {
+    "ISO3166alpha3": "NCL",
+    "WIKI": "New Caledonia",
+    "WOS": "new caledonia"
+  },
+  {
+    "ISO3166alpha3": "NZL",
+    "WIKI": "New Zealand",
+    "WOS": "new zealand"
+  },
+  {
+    "ISO3166alpha3": "NIC",
+    "WIKI": "Nicaragua",
+    "WOS": "nicaragua"
+  },
+  {
+    "ISO3166alpha3": "NER",
+    "WIKI": "Niger",
+    "WOS": "niger"
+  },
+  {
+    "ISO3166alpha3": "NGA",
+    "WIKI": "Nigeria",
+    "WOS": "nigeria"
+  },
+  {
+    "ISO3166alpha3": "NIU",
+    "WIKI": "Niue",
+    "WOS": "niue"
+  },
+  {
+    "ISO3166alpha3": "NFK",
+    "WIKI": "Norfolk Island",
+    "WOS": "norfolk island"
+  },
+  {
+    "ISO3166alpha3": "MKD",
+    "WIKI": "North Macedonia",
+    "WOS": "north macedonia"
+  },
+  {
+    "ISO3166alpha3": "MNP",
+    "WIKI": "Northern Mariana Islands",
+    "WOS": "northern mariana islands"
+  },
+  {
+    "ISO3166alpha3": "NOR",
+    "WIKI": "Norway",
+    "WOS": "norway"
+  },
+  {
+    "ISO3166alpha3": "OMN",
+    "WIKI": "Oman",
+    "WOS": "oman"
+  },
+  {
+    "ISO3166alpha3": "PAK",
+    "WIKI": "Pakistan",
+    "WOS": "pakistan"
+  },
+  {
+    "ISO3166alpha3": "PLW",
+    "WIKI": "Palau",
+    "WOS": "palau"
+  },
+  {
+    "ISO3166alpha3": "PSE",
+    "WIKI": "Palestine, State of",
+    "WOS": "palestine"
+  },
+  {
+    "ISO3166alpha3": "PAN",
+    "WIKI": "Panama",
+    "WOS": "panama"
+  },
+  {
+    "ISO3166alpha3": "PNG",
+    "WIKI": "Papua New Guinea",
+    "WOS": "papua n guinea"
+  },
+  {
+    "ISO3166alpha3": "PRY",
+    "WIKI": "Paraguay",
+    "WOS": "paraguay"
+  },
+  {
+    "ISO3166alpha3": "PER",
+    "WIKI": "Peru",
+    "WOS": "peru"
+  },
+  {
+    "ISO3166alpha3": "PHL",
+    "WIKI": "Philippines",
+    "WOS": "philippines"
+  },
+  {
+    "ISO3166alpha3": "PCN",
+    "WIKI": "Pitcairn",
+    "WOS": "pitcairn"
+  },
+  {
+    "ISO3166alpha3": "POL",
+    "WIKI": "Poland",
+    "WOS": "poland"
+  },
+  {
+    "ISO3166alpha3": "PRT",
+    "WIKI": "Portugal",
+    "WOS": "portugal"
+  },
+  {
+    "ISO3166alpha3": "PRI",
+    "WIKI": "Puerto Rico",
+    "WOS": "puerto rico"
+  },
+  {
+    "ISO3166alpha3": "QAT",
+    "WIKI": "Qatar",
+    "WOS": "qatar"
+  },
+  {
+    "ISO3166alpha3": "REU",
+    "WIKI": "Réunion",
+    "WOS": "réunion"
+  },
+  {
+    "ISO3166alpha3": "ROU",
+    "WIKI": "Romania",
+    "WOS": "romania"
+  },
+  {
+    "ISO3166alpha3": "RUS",
+    "WIKI": "Russian Federation",
+    "WOS": "russia"
+  },
+  {
+    "ISO3166alpha3": "RWA",
+    "WIKI": "Rwanda",
+    "WOS": "rwanda"
+  },
+  {
+    "ISO3166alpha3": "BLM",
+    "WIKI": "Saint Barthélemy",
+    "WOS": "saint barthélemy"
+  },
+  {
+    "ISO3166alpha3": "SHN",
+    "WIKI": "Saint Helena, Ascension and Tristan da Cunha",
+    "WOS": "saint helena, ascension and tristan da cunha"
+  },
+  {
+    "ISO3166alpha3": "KNA",
+    "WIKI": "Saint Kitts and Nevis",
+    "WOS": "saint kitts & nevis"
+  },
+  {
+    "ISO3166alpha3": "LCA",
+    "WIKI": "Saint Lucia",
+    "WOS": "saint lucia"
+  },
+  {
+    "ISO3166alpha3": "MAF",
+    "WIKI": "Saint Martin (French part)",
+    "WOS": "saint martin"
+  },
+  {
+    "ISO3166alpha3": "SPM",
+    "WIKI": "Saint Pierre and Miquelon",
+    "WOS": "saint pierre & miquelon"
+  },
+  {
+    "ISO3166alpha3": "VCT",
+    "WIKI": "Saint Vincent and the Grenadines",
+    "WOS": "saint vincent and the grenadines"
+  },
+  {
+    "ISO3166alpha3": "WSM",
+    "WIKI": "Samoa",
+    "WOS": "samoa"
+  },
+  {
+    "ISO3166alpha3": "SMR",
+    "WIKI": "San Marino",
+    "WOS": "san marino"
+  },
+  {
+    "ISO3166alpha3": "STP",
+    "WIKI": "Sao Tome and Principe",
+    "WOS": "sao tome and principe"
+  },
+  {
+    "ISO3166alpha3": "SAU",
+    "WIKI": "Saudi Arabia",
+    "WOS": "saudi arabia"
+  },
+  {
+    "ISO3166alpha3": "SEN",
+    "WIKI": "Senegal",
+    "WOS": "senegal"
+  },
+  {
+    "ISO3166alpha3": "SRB",
+    "WIKI": "Serbia",
+    "WOS": "serbia"
+  },
+  {
+    "ISO3166alpha3": "SYC",
+    "WIKI": "Seychelles",
+    "WOS": "seychelles"
+  },
+  {
+    "ISO3166alpha3": "SLE",
+    "WIKI": "Sierra Leone",
+    "WOS": "sierra leone"
+  },
+  {
+    "ISO3166alpha3": "SGP",
+    "WIKI": "Singapore",
+    "WOS": "singapore"
+  },
+  {
+    "ISO3166alpha3": "SXM",
+    "WIKI": "Sint Maarten (Dutch part)",
+    "WOS": "sint maarten"
+  },
+  {
+    "ISO3166alpha3": "SVK",
+    "WIKI": "Slovakia",
+    "WOS": "slovakia"
+  },
+  {
+    "ISO3166alpha3": "SVN",
+    "WIKI": "Slovenia",
+    "WOS": "slovenia"
+  },
+  {
+    "ISO3166alpha3": "SLB",
+    "WIKI": "Solomon Islands",
+    "WOS": "solomon islands"
+  },
+  {
+    "ISO3166alpha3": "SOM",
+    "WIKI": "Somalia",
+    "WOS": "somalia"
+  },
+  {
+    "ISO3166alpha3": "ZAF",
+    "WIKI": "South Africa",
+    "WOS": "south africa"
+  },
+  {
+    "ISO3166alpha3": "SGS",
+    "WIKI": "South Georgia and the South Sandwich Islands",
+    "WOS": "south georgia and the south sandwich islands"
+  },
+  {
+    "ISO3166alpha3": "SSD",
+    "WIKI": "South Sudan",
+    "WOS": "south sudan"
+  },
+  {
+    "ISO3166alpha3": "ESP",
+    "WIKI": "Spain",
+    "WOS": "spain"
+  },
+  {
+    "ISO3166alpha3": "LKA",
+    "WIKI": "Sri Lanka",
+    "WOS": "sri lanka"
+  },
+  {
+    "ISO3166alpha3": "SDN",
+    "WIKI": "Sudan",
+    "WOS": "sudan"
+  },
+  {
+    "ISO3166alpha3": "SUR",
+    "WIKI": "Suriname",
+    "WOS": "suriname"
+  },
+  {
+    "ISO3166alpha3": "SJM",
+    "WIKI": "Svalbard and Jan Mayen",
+    "WOS": "svalbard"
+  },
+  {
+    "ISO3166alpha3": "SWE",
+    "WIKI": "Sweden",
+    "WOS": "sweden"
+  },
+  {
+    "ISO3166alpha3": "CHE",
+    "WIKI": "Switzerland",
+    "WOS": "switzerland"
+  },
+  {
+    "ISO3166alpha3": "SYR",
+    "WIKI": "Syrian Arab Republic",
+    "WOS": "syria"
+  },
+  {
+    "ISO3166alpha3": "TWN",
+    "WIKI": "Taiwan, Province of China",
+    "WOS": "taiwan"
+  },
+  {
+    "ISO3166alpha3": "TJK",
+    "WIKI": "Tajikistan",
+    "WOS": "tajikistan"
+  },
+  {
+    "ISO3166alpha3": "TZA",
+    "WIKI": "Tanzania, United Republic of",
+    "WOS": "tanzania"
+  },
+  {
+    "ISO3166alpha3": "THA",
+    "WIKI": "Thailand",
+    "WOS": "thailand"
+  },
+  {
+    "ISO3166alpha3": "TLS",
+    "WIKI": "Timor-Leste",
+    "WOS": "timor-leste"
+  },
+  {
+    "ISO3166alpha3": "TGO",
+    "WIKI": "Togo",
+    "WOS": "togo"
+  },
+  {
+    "ISO3166alpha3": "TKL",
+    "WIKI": "Tokelau",
+    "WOS": "tokelau"
+  },
+  {
+    "ISO3166alpha3": "TON",
+    "WIKI": "Tonga",
+    "WOS": "tonga"
+  },
+  {
+    "ISO3166alpha3": "TTO",
+    "WIKI": "Trinidad and Tobago",
+    "WOS": "trinidad tobago"
+  },
+  {
+    "ISO3166alpha3": "TUN",
+    "WIKI": "Tunisia",
+    "WOS": "tunisia"
+  },
+  {
+    "ISO3166alpha3": "TUR",
+    "WIKI": "Turkey",
+    "WOS": "turkey"
+  },
+  {
+    "ISO3166alpha3": "TKM",
+    "WIKI": "Turkmenistan",
+    "WOS": "turkmenistan"
+  },
+  {
+    "ISO3166alpha3": "TCA",
+    "WIKI": "Turks and Caicos Islands",
+    "WOS": "turks & caicos"
+  },
+  {
+    "ISO3166alpha3": "TUV",
+    "WIKI": "Tuvalu",
+    "WOS": "tuvalu"
+  },
+  {
+    "ISO3166alpha3": "UGA",
+    "WIKI": "Uganda",
+    "WOS": "uganda"
+  },
+  {
+    "ISO3166alpha3": "UKR",
+    "WIKI": "Ukraine",
+    "WOS": "ukraine"
+  },
+  {
+    "ISO3166alpha3": "ARE",
+    "WIKI": "United Arab Emirates",
+    "WOS": "u arab emirates"
+  },
+  {
+    "ISO3166alpha3": "GBR",
+    "WIKI": "United Kingdom of Great Britain and Northern Ireland",
+    "WOS": "united kingdom"
+  },
+  {
+    "ISO3166alpha3": "UMI",
+    "WIKI": "United States Minor Outlying Islands",
+    "WOS": "united states minor outlying islands"
+  },
+  {
+    "ISO3166alpha3": "USA",
+    "WIKI": "United States of America",
+    "WOS": "usa"
+  },
+  {
+    "ISO3166alpha3": "URY",
+    "WIKI": "Uruguay",
+    "WOS": "uruguay"
+  },
+  {
+    "ISO3166alpha3": "UZB",
+    "WIKI": "Uzbekistan",
+    "WOS": "uzbekistan"
+  },
+  {
+    "ISO3166alpha3": "VUT",
+    "WIKI": "Vanuatu",
+    "WOS": "vanuatu"
+  },
+  {
+    "ISO3166alpha3": "VEN",
+    "WIKI": "Venezuela (Bolivarian Republic of)",
+    "WOS": "venezuela"
+  },
+  {
+    "ISO3166alpha3": "VNM",
+    "WIKI": "Viet Nam",
+    "WOS": "vietnam"
+  },
+  {
+    "ISO3166alpha3": "VGB",
+    "WIKI": "Virgin Islands (British)",
+    "WOS": "british virgin isl"
+  },
+  {
+    "ISO3166alpha3": "VIR",
+    "WIKI": "Virgin Islands (U.S.)",
+    "WOS": "virgin islands"
+  },
+  {
+    "ISO3166alpha3": "WLF",
+    "WIKI": "Wallis and Futuna",
+    "WOS": "wallis & futuna"
+  },
+  {
+    "ISO3166alpha3": "ESH",
+    "WIKI": "Western Sahara",
+    "WOS": "western sahara"
+  },
+  {
+    "ISO3166alpha3": "YEM",
+    "WIKI": "Yemen",
+    "WOS": "yemen"
+  },
+  {
+    "ISO3166alpha3": "ZMB",
+    "WIKI": "Zambia",
+    "WOS": "zambia"
+  },
+  {
+    "ISO3166alpha3": "ZWE",
+    "WIKI": "Zimbabwe",
+    "WOS": "zimbabwe"
+  },
+  {
+    "ISO3166alpha3": "UNK",
+    "WIKI": "",
+    "WOS": "kosovo"
+  }
+]

@@ -22,6 +22,13 @@ if (is.null(analysis_type) || !analysis_type %in% c("citation_network", "topic_m
   stop("config_analysis.yml params$type_of_analysis must be one of: citation_network, topic_model, both")
 }
 
+if (analysis_type == "both") {
+  stop(
+    "type_of_analysis='both' is temporarily unsupported in automated analysis. ",
+    "Use either 'citation_network' or 'topic_model'."
+  )
+}
+
 source("utils/system_paths.R")
 
 project_folder <- cfg_analysis$metadata$project_folder
@@ -59,14 +66,6 @@ if (analysis_type %in% c("citation_network", "both") && !file.exists(network_csv
 }
 
 if (analysis_type %in% c("topic_model", "both")) {
-  if (!file.exists(topic_dataset_minimal_csv)) {
-    stop(paste(
-      "Required topic-model artifact not found:",
-      topic_dataset_minimal_csv,
-      "Run the topic-model notebook first to generate dataset_minimal.csv."
-    ))
-  }
-
   embeds_folder <- cfg_analysis$topic_model$embeds_folder
   if (is.null(embeds_folder) || !nzchar(embeds_folder)) {
     stop("config_analysis.yml topic_model$embeds_folder must be set for topic_model/both runs")
@@ -84,6 +83,43 @@ if (analysis_type %in% c("topic_model", "both")) {
       ))
     }
   }
+
+  if (!file.exists(topic_dataset_minimal_csv)) {
+    py_exec <- file.path(".venv", "bin", "python3")
+    if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
+    if (!nzchar(py_exec)) py_exec <- Sys.which("python")
+    if (!nzchar(py_exec)) {
+      stop("Python not found in PATH/.venv. Required for automated topic-model analysis.")
+    }
+
+    message("=== Topic-model automation: generating dataset_minimal.csv ===")
+    tm_status <- system2(
+      py_exec,
+      args = c(
+        "pipelines/analysis/topic_model/run_topic_model.py",
+        "--config-analysis", shQuote("config_analysis.yml"),
+        "--config-dataset", shQuote("config_dataset.yml")
+      ),
+      stdout = "", stderr = ""
+    )
+
+    if (!identical(tm_status, 0L)) {
+      stop(
+        "Automated topic-model run failed (exit code ", tm_status,
+        "). Check Python environment and install dependencies from ",
+        "pipelines/analysis/topic_model/requirements_new_tm.txt"
+      )
+    }
+
+    if (!file.exists(topic_dataset_minimal_csv)) {
+      stop(
+        "Topic-model automation finished but dataset_minimal.csv is still missing: ",
+        topic_dataset_minimal_csv
+      )
+    }
+  } else {
+    message("Topic-model artifact already present: ", topic_dataset_minimal_csv)
+  }
 }
 
 if (analysis_type %in% c("citation_network", "both")) {
@@ -98,8 +134,7 @@ if (analysis_type %in% c("citation_network", "both")) {
 }
 
 if (analysis_type %in% c("topic_model")) {
-  message("Analysis type is 'topic_model' — no clustering step needed.")
-  message("Ensure the topic-model notebook has been run to produce dataset_minimal.csv.")
+  message("Analysis type is 'topic_model' — topic artifacts are handled automatically.")
 }
 
 analysis_folder <- file.path(output_folder_path, project_folder, analysis_id)

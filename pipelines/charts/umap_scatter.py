@@ -15,7 +15,7 @@ Usage
         --doc-clusters    path/to/doc_clusters.csv \
         --rcs             path/to/rcs_merged.csv \
         --palette         assets/fukan_colors.json \
-        --output          path/to/fig_umap_scatter.svg \
+        --output          path/to/fig_umap_scatter.png \
         [--seed 100] [--label-min 20] [--title "…"] [--force]
 
 Inputs
@@ -179,15 +179,16 @@ def _resolve_label(row: pd.Series) -> str:
     """Pick the best display label for a cluster.
 
     Priority: global_name > cluster_name > clean cluster_code.
+    The cluster_code is always prepended when a name is available.
     """
+    code = _clean_code(str(row.get("cluster_code", row.get("cluster", ""))))
     gn = str(row.get("global_name", "") or "").strip()
     if gn and gn.lower() != "nan":
-        return gn
+        return f"{code}. {gn}"
     cn = str(row.get("cluster_name", "") or "").strip()
     if cn and cn.lower() != "nan":
-        code = _clean_code(str(row.get("cluster_code", "")))
         return f"{code}. {cn}"
-    return _clean_code(str(row.get("cluster_code", row.get("cluster", ""))))
+    return code
 
 
 # ---------------------------------------------------------------------------
@@ -362,7 +363,7 @@ def main() -> None:
         "--palette", required=True, help="Path to fukan_colors.json"
     )
     p.add_argument(
-        "--output", required=True, help="Output file path (SVG or PNG)"
+        "--output", required=True, help="Output file path (PNG recommended)"
     )
     p.add_argument("--seed", type=int, default=100, help="UMAP random seed")
     p.add_argument(

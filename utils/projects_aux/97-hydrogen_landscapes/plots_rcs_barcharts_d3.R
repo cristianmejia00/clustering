@@ -1,13 +1,21 @@
 library(readr)
 
-# Hydrogen SOCIETY (dataset 1)
+# Hydrogen TRANSPORTATION (dataset 3)
 
 # Load required environment and dataset
-load("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q344 - hydrogen economy/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level1/env_llm.rdata")
-cluster_summary_short_dc <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q344 - hydrogen economy/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level1/cluster_summary_short_dc.csv")
+load("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q346_hydrogen_d3/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level1/environ.rdata")
+
+cluster_summary_short_dc <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q346_hydrogen_d3/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level1/cluster_summary.csv")
+cluster_summary_short_dc$cluster_name <- NULL
+cluster_summary_short_dc$subcluster_name <- cluster_summary_short_dc$global_name
+
+main_clusters <- read_csv("~/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive/Q346_hydrogen_d3/a01_cn__f01_dc__c01_lv_v2/louvain/0.9/level0/cluster_summary.csv")
+main_clusters$cluster_name <- NULL
+main_clusters$cluster_name <- main_clusters$global_name
+main_clusters$main_cluster <- main_clusters$cluster_code
 
 # Fix encoding errors for a label
-cluster_summary$subcluster_name[cluster_summary$cluster_code == "8-1---"] <- "Power Hydrogen Network Coordination and Filling Stations"
+#cluster_summary$subcluster_name[cluster_summary$cluster_code == "8-1---"] <- "Power Hydrogen Network Coordination and Filling Stations"
 
 # Append the Yearly-normalized citations
 dataset <- dataset %>%
@@ -85,14 +93,29 @@ cluster_summary <- cluster_summary %>%
     rcs_merged[c("cluster_code", "main_cluster")],
     by = "cluster_code"
   )
+cluster_summary$xxx <- as.character(cluster_summary$main_cluster)
+cluster_summary$fff <- cluster_summary$main_cluster
+cluster_summary$main_cluster <- as.numeric(as.character(cluster_summary$main_cluster))
 
 cluster_summary <- cluster_summary %>%
   left_join(
-    cluster_summary_short_dc[c("cluster_code", "cluster_name", "subcluster_name", "documents")],
+    main_clusters[c("main_cluster", "cluster_name")],
+    by = "main_cluster"
+  )
+
+cluster_summary <- cluster_summary %>%
+  left_join(
+    cluster_summary_short_dc[c("cluster_code", "subcluster_name", "documents", "description")],
     by = "cluster_code"
   )
 
 cluster_summary$label <- paste(cluster_summary$cluster_code, cluster_summary$subcluster_name, sep="")
+
+# Save report
+write.csv(cluster_summary[c("cluster_code",	"cluster_name",	"subcluster_name",	"documents",	"PY_Ave",	"Z9_Ave", "Z9_Ave_rank",	"description")],
+          file = "cluster_summary.csv",
+          row.names = FALSE)
+
 
 #  Color palette
 fukan_colors <- c("#f00f15","#2270e7","#e5e510","#ff8103","#4f3dd1",
