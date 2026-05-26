@@ -80,6 +80,7 @@ topic_model:
   year_column: "PY"
   n_topics: 0                           # 0 = auto-detect via HDBScan
   min_topic_size: 10
+  others_threshold: 0.99                # Keep topics covering this cumulative share; others -> level0=99999
 
 
 # ==============================================================================
