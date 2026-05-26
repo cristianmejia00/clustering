@@ -57,7 +57,7 @@ compute_term_stats <- function(cluster_data, a_column) {
     return(dplyr::tibble(term = character(), ave_PY = numeric(), ave_Z9 = numeric()))
   }
 
-  raw_vals <- as.character(dplyr::coalesce(cluster_data[[a_column]], ""))
+  raw_vals <- dplyr::coalesce(as.character(cluster_data[[a_column]]), "")
   py_vals  <- suppressWarnings(as.numeric(cluster_data$PY))
   z9_vals  <- suppressWarnings(as.numeric(cluster_data$Z9))
 
@@ -243,7 +243,7 @@ generate_categorical_multi_wide_reports <- function(df, a_column, clusters) {
   # df = a data frame. Usually `myDataCorrect` or any other with X_C column
   # a_column = the column to summarize
   # clusters = a list of clusters to include in the summary
-  split_values <- strsplit(as.character(dplyr::coalesce(df[[a_column]], "")), ";\\s*")
+  split_values <- strsplit(dplyr::coalesce(as.character(df[[a_column]]), ""), ";\\s*")
 
   expanded <- dplyr::tibble(
     X_C = rep(df$X_C, lengths(split_values)),

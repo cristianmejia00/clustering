@@ -1,2 +1,2 @@
 source("/Users/cristian/Desktop/GitHub/clustering/scripts/run_pipeline.R", encoding = "UTF-8")
-run_pipeline(c("reports"))    
+run_pipeline(c("ai", "enriched_embeds", "charts"))    
