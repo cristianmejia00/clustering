@@ -16,9 +16,9 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q354_defi_blockchain"
+  project_folder: "Q343_science_diplomacy_merged"
   filtered_folder: "f01"
-  analysis_id: "a01_cn__f01_dc__c01_lv_v1"
+  analysis_id: "a01_tm__f01_hdbscan__v1"
 
 
 # ==============================================================================
@@ -28,7 +28,7 @@ params:
   recursive_level: 1                    # 0 = clusters only, 1+ = subclusters
   dataset_source: "wos"                 # wos | derwent | factiva
   unit_of_analysis: "cluster"           # cluster | topic | facet | firm | country | etc.
-  type_of_analysis: "citation_network"  # citation_network | topic_model | both
+  type_of_analysis: "topic_model"       # citation_network | topic_model | both
   seed: 100                             # For reproducibility
 
 
@@ -87,8 +87,8 @@ topic_model:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Decentralized Finance and Blockchain for Finance"  # Used as context for LLM summarization and naming
-  description: "Decentralized Finance (DeFi) and Blockchain for Finance refer to the use of blockchain technology to create decentralized financial systems, enabling peer-to-peer transactions, smart contracts, and financial services without traditional intermediaries. These technologies aim to increase transparency, reduce costs, and improve accessibility in the financial sector."
+  theme: "Science Diplomacy"  # Used as context for LLM summarization and naming
+  description: "Science Diplomacy involves the use of scientific collaborations among nations to address common challenges and build constructive international partnerships."
   top_papers: 7                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:
@@ -145,6 +145,19 @@ reporting:
     - DE
     - sentiment_factor
     - ID
+    - is_bibliometrics
+    - policy_dimension
+    - framework_2025_categories_main
+    - framework_2025_categories_detailed
+    - article_type
+    - main_domain
+    - geographic_focus
+    - power_dynamic
+    - diplomacy_goal
+    - key_actors
+    - global_commons
+    - geopolitical_context
+
 
 
   categorical_simple_wide_reports: [PY, sentiment_factor]

@@ -81,6 +81,10 @@ def main() -> None:
         if id_column not in df.columns:
             raise ValueError(f"Profile {profile_name} id_column '{id_column}' not found in dataset.")
 
+        # Prefer uuid as canonical ID when available so topic-model and citation
+        # workflows can join artifacts with a stable identifier.
+        canonical_id_column = "uuid" if "uuid" in df.columns else id_column
+
         data = df.copy()
         for col in text_columns:
             data[col] = data[col].map(_as_str)
@@ -88,7 +92,13 @@ def main() -> None:
         data["text"] = data[text_columns].agg(" ".join, axis=1)
         data["text"] = data["text"].map(lambda x: _clean_text(x, profile))
 
-        corpus_columns = list(dict.fromkeys(["text", "UT", id_column]))
+        corpus_columns = ["text"]
+        if "UT" in data.columns:
+            corpus_columns.append("UT")
+        if "uuid" in data.columns:
+            corpus_columns.append("uuid")
+        corpus_columns.append(id_column)
+        corpus_columns = list(dict.fromkeys(corpus_columns))
         corpus = data[corpus_columns].dropna().reset_index(drop=True)
 
         out_dir = project / filtered_folder / profile_name
@@ -101,7 +111,7 @@ def main() -> None:
 
         np.save(out_dir / "embeddings.npy", embeddings)
 
-        id_values = corpus.loc[:, id_column]
+        id_values = corpus.loc[:, canonical_id_column]
         if isinstance(id_values, pd.DataFrame):
             id_values = id_values.iloc[:, 0]
         ids = id_values.astype(str).tolist()
@@ -110,8 +120,10 @@ def main() -> None:
             json.dump(ids, f)
 
         corpus.to_csv(out_dir / "corpus.csv", index=False)
+        profile_with_resolved_id = dict(profile)
+        profile_with_resolved_id["resolved_id_column"] = canonical_id_column
         with (out_dir / "embeds_settings.json").open("w", encoding="utf-8") as f:
-            json.dump(profile, f, indent=2)
+            json.dump(profile_with_resolved_id, f, indent=2)
 
         print(f"Saved: {out_dir / 'embeddings.npy'}")
         print(f"Saved: {out_dir / 'embeddings_ids.json'}")
