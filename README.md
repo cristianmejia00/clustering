@@ -17,7 +17,9 @@ From repository root, run one setup command:
 
 - **macOS / Linux**
   - `bash scripts/setup_mac_linux.sh`
-- **Windows (PowerShell)**
+- **Windows (PowerShell, recommended)**
+  - `powershell -ExecutionPolicy Bypass -File scripts/setup_windows_safe.ps1`
+- **Windows (PowerShell, basic wrapper)**
   - `powershell -ExecutionPolicy Bypass -File scripts/setup_windows.ps1`
 
 Optional setup modes:
@@ -120,6 +122,10 @@ Canonical shared reports entrypoint:
 - `pipelines/reports/generator.R`
 
 ## Troubleshooting
+
+- **Windows picks unsupported Python (e.g., 3.13/3.14)**
+  - Run the safe wrapper (auto-selects Python 3.10-3.12):
+    - `powershell -ExecutionPolicy Bypass -File scripts/setup_windows_safe.ps1 --force`
 
 - **`Python not found` or missing Python modules**
   - Run: `Rscript --vanilla scripts/setup.R --force`

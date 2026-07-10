@@ -16,7 +16,7 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q343_science_diplomacy_merged"
+  project_folder: "Q356_valery"
   filtered_folder: "f01"
   analysis_id: "a01_tm__f01_hdbscan__v1"
 
@@ -88,8 +88,8 @@ topic_model:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Science Diplomacy"  # Used as context for LLM summarization and naming
-  description: "Science Diplomacy involves the use of scientific collaborations among nations to address common challenges and build constructive international partnerships."
+  theme: "Eco Innovation and AI"  # Used as context for LLM summarization and naming
+  description: "AI-driven eco-innovation accelerates sustainability by optimizing resource use, predicting energy demand, and streamlining supply chains. "
   top_papers: 7                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:

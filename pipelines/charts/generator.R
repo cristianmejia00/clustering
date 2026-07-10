@@ -34,7 +34,7 @@ output_folder_reports <- if (settings$params$type_of_analysis == "citation_netwo
 # Chart levels
 # ---------------------------------------------------------------------------
 available_levels <- if (settings$params$recursive_level > 0 &&
-                        settings$params$type_of_analysis == "citation_network") {
+  settings$params$type_of_analysis == "citation_network") {
   0:settings$params$recursive_level
 } else {
   0
@@ -53,27 +53,29 @@ for (level_report_iteration in available_levels) {
   # This provides: myDataCorrect, rcs_merged, K, rn, etc.
   environ_path <- file.path(output_folder_level, "environ.rdata")
   if (!file.exists(environ_path)) {
-    warning("Skipping level ", level_report,
-            " — environ.rdata not found at: ", environ_path,
-            ". Run the reports pipeline first.")
+    warning(
+      "Skipping level ", level_report,
+      " — environ.rdata not found at: ", environ_path,
+      ". Run the reports pipeline first."
+    )
     next
   }
   load(environ_path, envir = .GlobalEnv)
 
   extension <- "svg"
-  subfolder_dataset  <- "index_files/charts"
+  subfolder_dataset <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
 
   ## ── Overlays (WOS data only) ───────────────────────────────────────────
-  #if (settings$params$dataset_source == "wos" && "WC" %in% colnames(myDataCorrect)) {
+  # if (settings$params$dataset_source == "wos" && "WC" %in% colnames(myDataCorrect)) {
   #  source(file.path(getwd(), "pipelines", "charts", "overlays.R"))
-  #}
+  # }
 
   # ── SVG Charts ─────────────────────────────────────────────────────────
   print("###################### SVG CHARTS")
   chart_scripts <- c(
-    #"dataset_bars.R",
-    #"dataset_trends.R",
+    # "dataset_bars.R",
+    # "dataset_trends.R",
     "cluster_stats.R",
     "cluster_scatterplots.R"
   )
@@ -103,18 +105,22 @@ for (level_report_iteration in available_levels) {
 
     # Write document -> cluster mapping for this level
     doc_clusters_path <- file.path(output_folder_level, "doc_clusters.csv")
-    readr::write_csv(
-      data.frame(
-        UT = as.character(myDataCorrect$UT),
-        X_C = as.character(myDataCorrect$X_C)
-      ),
-      doc_clusters_path
+    doc_clusters_df <- data.frame(
+      UT = as.character(myDataCorrect$UT),
+      X_C = as.character(myDataCorrect$X_C),
+      stringsAsFactors = FALSE
     )
+    if ("uuid" %in% colnames(myDataCorrect)) {
+      doc_clusters_df$uuid <- as.character(myDataCorrect$uuid)
+    }
+    readr::write_csv(doc_clusters_df, doc_clusters_path)
 
-    rcs_path     <- file.path(output_folder_level, "rcs_merged.csv")
+    rcs_path <- file.path(output_folder_level, "rcs_merged.csv")
     palette_path <- file.path(getwd(), "assets", "fukan_colors.json")
-    output_png   <- file.path(output_folder_level, subfolder_clusters,
-                  "fig_umap_scatter.png")
+    output_png <- file.path(
+      output_folder_level, subfolder_clusters,
+      "fig_umap_scatter.png"
+    )
 
     py_exec <- find_python_executable(
       preferred_venvs = c(".venv", file.path("pipelines", "ai", ".venv")),
@@ -145,8 +151,10 @@ for (level_report_iteration in available_levels) {
       message("Python not found - skipping UMAP scatter plot.")
     }
   } else {
-    message("Embeddings not found at ", embeddings_dir,
-            " - skipping UMAP scatter. Run the dataset pipeline first.")
+    message(
+      "Embeddings not found at ", embeddings_dir,
+      " - skipping UMAP scatter. Run the dataset pipeline first."
+    )
   }
 }
 
