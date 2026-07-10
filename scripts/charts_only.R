@@ -12,6 +12,7 @@ if (!file.exists("config_analysis.yml")) {
 
 source("utils/libraries.R")
 source("utils/system_paths.R")
+source("utils/python_env.R")
 source("utils/load_config.R")
 
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()

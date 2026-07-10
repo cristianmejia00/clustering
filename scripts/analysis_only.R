@@ -85,11 +85,10 @@ if (analysis_type %in% c("topic_model", "both")) {
   }
 
   if (!file.exists(topic_dataset_minimal_csv)) {
-    py_exec <- file.path(".venv", "bin", "python3")
-    if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
-    if (!nzchar(py_exec)) py_exec <- Sys.which("python")
+    source("utils/python_env.R")
+    py_exec <- find_python_executable(preferred_venvs = c(".venv"), allow_system = TRUE)
     if (!nzchar(py_exec)) {
-      stop("Python not found in PATH/.venv. Required for automated topic-model analysis.")
+      stop("Python not found. Run: Rscript --vanilla scripts/setup.R")
     }
 
     message("=== Topic-model automation: generating dataset_minimal.csv ===")
@@ -106,8 +105,7 @@ if (analysis_type %in% c("topic_model", "both")) {
     if (!identical(tm_status, 0L)) {
       stop(
         "Automated topic-model run failed (exit code ", tm_status,
-        "). Check Python environment and install dependencies from ",
-        "pipelines/analysis/topic_model/requirements_new_tm.txt"
+        "). Re-run setup: Rscript --vanilla scripts/setup.R --force"
       )
     }
 

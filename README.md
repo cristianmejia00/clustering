@@ -4,6 +4,39 @@ Analysis pipeline for clustering academic articles, news, and patents using cita
 
 ## Quick Start
 
+### 0. First Run (Recommended for New Users)
+
+This project uses a native setup flow (no Docker) to install both R and Python dependencies.
+
+Prerequisites:
+
+- R 4.4+
+- Python 3.10+
+
+From repository root, run one setup command:
+
+- **macOS / Linux**
+  - `bash scripts/setup_mac_linux.sh`
+- **Windows (PowerShell)**
+  - `powershell -ExecutionPolicy Bypass -File scripts/setup_windows.ps1`
+
+Optional setup modes:
+
+- Validate only (no installs):
+  - `Rscript --vanilla scripts/setup.R --validate-only`
+- Force reinstall environments:
+  - `Rscript --vanilla scripts/setup.R --force`
+
+After setup:
+
+1. Edit `config_dataset.yml` and `config_analysis.yml` with paths for your own machine.
+2. Run pipeline stages with `scripts/run_pipeline.R`.
+
+Example:
+
+- `Rscript --vanilla -e "source('scripts/run_pipeline.R'); run_pipeline(c('dataset','analysis','reports'))"`
+- `Rscript --vanilla -e "source('scripts/run_pipeline.R'); run_pipeline(c('ai','charts'))"`
+
 ### 1. Configure Paths in YAML
 
 Set your bibliometrics root path directly in the configuration files.
@@ -85,6 +118,26 @@ Canonical analysis scripts now live at:
 Canonical shared reports entrypoint:
 
 - `pipelines/reports/generator.R`
+
+## Troubleshooting
+
+- **`Python not found` or missing Python modules**
+  - Run: `Rscript --vanilla scripts/setup.R --force`
+
+- **`renv/activate.R` missing**
+  - Run: `Rscript --vanilla scripts/setup.R`
+
+- **Configuration path does not exist**
+  - Update local paths in `config_dataset.yml` and `config_analysis.yml`.
+  - Re-run validation: `Rscript --vanilla scripts/setup.R --validate-only`
+
+- **`Required topic-model embeddings artifact not found`**
+  - Run dataset stage first:
+    - `Rscript --vanilla -e "source('scripts/run_pipeline.R'); run_pipeline(c('dataset'))"`
+
+- **Missing analysis/report outputs**
+  - Run stages in order:
+    - `dataset` -> `analysis` -> `reports` -> `ai` -> `charts`
 
 ## Project Structure
 

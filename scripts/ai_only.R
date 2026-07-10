@@ -11,6 +11,7 @@ if (!file.exists("config_analysis.yml")) {
 
 source("utils/system_paths.R")
 source("utils/libraries.R")
+source("utils/python_env.R")
 source("utils/load_config.R")
 
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
@@ -147,11 +148,12 @@ dataset <- merge(
 )
 
 # Find Python interpreter
-py_exec <- file.path("pipelines", "ai", ".venv", "bin", "python3")
-if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
-if (!nzchar(py_exec)) py_exec <- Sys.which("python")
+py_exec <- find_python_executable(
+  preferred_venvs = c(".venv", file.path("pipelines", "ai", ".venv")),
+  allow_system = TRUE
+)
 if (!nzchar(py_exec)) {
-  stop("Python not found. Install Python and run: pip install -r pipelines/ai/requirements.txt")
+  stop("Python not found. Run: Rscript --vanilla scripts/setup.R")
 }
 
 # Read compute tasks from config

@@ -17,6 +17,7 @@ if (!file.exists("config_analysis.yml") || !file.exists("config_dataset.yml")) {
 
 source("utils/libraries.R")
 source("utils/system_paths.R")
+source("utils/python_env.R")
 source("utils/load_config.R")
 
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
@@ -84,11 +85,9 @@ for (lvl in required_levels) {
 }
 
 # ── Find Python interpreter (needs sentence_transformers from root .venv) ─────
-py_exec <- file.path(".venv", "bin", "python3")
-if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
-if (!nzchar(py_exec)) py_exec <- Sys.which("python")
+py_exec <- find_python_executable(preferred_venvs = c(".venv"), allow_system = TRUE)
 if (!nzchar(py_exec)) {
-  stop("Python not found. Install Python and set up .venv with sentence-transformers")
+  stop("Python not found. Run: Rscript --vanilla scripts/setup.R")
 }
 
 # ── Parse optional --force flag from command-line args ────────────────────────

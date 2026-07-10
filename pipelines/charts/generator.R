@@ -116,9 +116,10 @@ for (level_report_iteration in available_levels) {
     output_png   <- file.path(output_folder_level, subfolder_clusters,
                   "fig_umap_scatter.png")
 
-    py_exec <- file.path("pipelines", "ai", ".venv", "bin", "python3")
-    if (!file.exists(py_exec)) py_exec <- Sys.which("python3")
-    if (!nzchar(py_exec)) py_exec <- Sys.which("python")
+    py_exec <- find_python_executable(
+      preferred_venvs = c(".venv", file.path("pipelines", "ai", ".venv")),
+      allow_system = TRUE
+    )
 
     if (nzchar(py_exec)) {
       seed_val <- if (!is.null(settings$params$seed)) settings$params$seed else 100

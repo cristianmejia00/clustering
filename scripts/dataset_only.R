@@ -18,17 +18,15 @@ message("=== Step 2/3: Build citation network ===")
 source("pipelines/dataset/network.R")
 
 message("=== Step 3/3: Compute embeddings for all profiles ===")
-py_exec <- Sys.which("python")
-if (py_exec == "") {
-  py_exec <- Sys.which("python3")
-}
-if (py_exec == "") {
-  stop("Python executable not found in PATH.")
+source("utils/python_env.R")
+py_exec <- find_python_executable(preferred_venvs = c(".venv"), allow_system = TRUE)
+if (!nzchar(py_exec)) {
+  stop("Python executable not found. Run: Rscript --vanilla scripts/setup.R")
 }
 
 status <- system2(py_exec, c("pipelines/dataset/build_embeddings.py"))
 if (!identical(status, 0L)) {
-  stop("Embedding generation failed. Check Python environment and pipelines/analysis/topic_model/requirements_embeds.txt.")
+  stop("Embedding generation failed. Run setup again: Rscript --vanilla scripts/setup.R --force")
 }
 
 # Re-read config (prior scripts clear workspace with rm(list = ls()))
