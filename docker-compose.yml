@@ -1,0 +1,11 @@
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: clustering-pipeline:latest
+    working_dir: /workspace
+    volumes:
+      - ./docker:/workspace/docker
+    stdin_open: true
+    tty: true

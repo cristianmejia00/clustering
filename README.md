@@ -4,6 +4,58 @@ Analysis pipeline for clustering academic articles, news, and patents using cita
 
 ## Quick Start
 
+### Docker (Recommended for Colleagues)
+
+If local R/Python setup is failing on different operating systems, use Docker.
+This is the simplest system-agnostic path.
+
+Prerequisite:
+
+- Docker Desktop (Windows/macOS) or Docker Engine + Compose plugin (Linux)
+
+From repository root:
+
+1. Build the pipeline image.
+
+```bash
+docker compose build
+```
+
+1. Initialize Docker configs and folders.
+
+```bash
+docker compose run --rm pipeline init
+```
+
+1. Put input files in `docker/raw_input`.
+
+1. Edit Docker runtime configs if needed:
+
+- `docker/config_dataset.yml`
+- `docker/config_analysis.yml`
+
+1. Validate environment and configs.
+
+```bash
+docker compose run --rm pipeline validate
+```
+
+1. Run pipeline stages.
+
+```bash
+docker compose run --rm pipeline run dataset,analysis,reports
+docker compose run --rm pipeline run ai,charts
+```
+
+Outputs are written to:
+
+- `docker/bibliometrics`
+
+Notes:
+
+- Container paths are preconfigured in Docker templates (`/workspace/docker/raw_input` and `/workspace/docker/bibliometrics`).
+- The container installs all R/Python dependencies during image build.
+
 ### 0. First Run (Recommended for New Users)
 
 This project uses a native setup flow (no Docker) to install both R and Python dependencies.
@@ -120,6 +172,16 @@ Canonical shared reports entrypoint:
 - `pipelines/reports/generator.R`
 
 ## Troubleshooting
+
+- **Docker command not found**
+  - Install Docker Desktop (Windows/macOS) or Docker Engine + Compose plugin (Linux).
+
+- **`docker compose` fails on Linux due to permissions**
+  - Add your user to the docker group or run with elevated privileges as required by your distro.
+
+- **Container cannot find input files**
+  - Ensure files are in `docker/raw_input` and re-run:
+    - `docker compose run --rm pipeline init`
 
 - **`Python not found` or missing Python modules**
   - Run: `Rscript --vanilla scripts/setup.R --force`

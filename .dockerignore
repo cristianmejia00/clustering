@@ -1,0 +1,16 @@
+.git
+.Rproj.user
+.Rhistory
+.RData
+.RDataTmp
+.Ruserdata
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+.positai/
+docker/raw_input/
+docker/bibliometrics/
+docker/config_dataset.yml
+docker/config_analysis.yml
+assets/credentials/
