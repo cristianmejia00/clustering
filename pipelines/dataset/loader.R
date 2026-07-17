@@ -42,14 +42,18 @@ if (length(paths_to_files) == 0) {
 }
 
 list_of_all_files <- lapply(paths_to_files, function(path) {
-  fread(path, sep = "\t", stringsAsFactors = FALSE,
-        check.names = FALSE, encoding = "UTF-8",
-        colClasses = "character")
+  fread(path,
+    sep = "\t", stringsAsFactors = FALSE,
+    check.names = FALSE, encoding = "UTF-8",
+    colClasses = "character"
+  )
 })
 
-cat(sprintf("Read %d files (%s rows each)\n",
-            length(list_of_all_files),
-            paste(sapply(list_of_all_files, nrow), collapse = ", ")))
+cat(sprintf(
+  "Read %d files (%s rows each)\n",
+  length(list_of_all_files),
+  paste(sapply(list_of_all_files, nrow), collapse = ", ")
+))
 
 dataset <- bind_rows(list_of_all_files) %>% as.data.frame()
 
@@ -95,7 +99,7 @@ dataset <- dataset %>%
 
 # Countries and ISO codes (derived from the C1 affiliations column)
 if (!"Countries" %in% colnames(dataset) && "C1" %in% colnames(dataset)) {
-  dataset$Countries    <- getCountries(dataset$C1)
+  dataset$Countries <- getCountries(dataset$C1)
   dataset$IsoCountries <- getIsoCountries(dataset$Countries) %>%
     as.character() %>%
     gsub("NA; |; NA$|; NA", "", .)
@@ -130,13 +134,53 @@ selected_cols <- c(
   "X_N", "uuid",
   intersect(
     colnames(dataset),
-    c(unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected),
-      "Countries", "IsoCountries", "Institutions")
+    c(
+      unlist(settings$filtering[[filter_label]]$columns_filter$columns_selected),
+      "Countries", "IsoCountries", "Institutions"
+    )
   )
 )
 dataset <- dataset %>% select(all_of(selected_cols))
 
-# --- 6. Save outputs ----------------------------------------------------------
+# --- 6. Exclude records by UT -------------------------------------------------
+
+exclude_file <- settings$filtering[[filter_label]]$rows_filter$exclude_file
+if (!is.null(exclude_file) && nzchar(trimws(exclude_file))) {
+  if (!file.exists(exclude_file)) {
+    stop("Exclude file not found: ", exclude_file)
+  }
+
+  exclude_data <- fread(
+    exclude_file,
+    stringsAsFactors = FALSE,
+    check.names = FALSE,
+    encoding = "UTF-8",
+    colClasses = "character"
+  )
+
+  if (!"UT" %in% colnames(exclude_data)) {
+    stop("Exclude file must contain a 'UT' column: ", exclude_file)
+  }
+  if (!"UT" %in% colnames(dataset)) {
+    stop("Dataset does not contain a 'UT' column required for exclusion")
+  }
+
+  exclude_uts <- unique(enc2utf8(trimws(as.character(exclude_data$UT))))
+  exclude_uts <- exclude_uts[!is.na(exclude_uts) & exclude_uts != ""]
+
+  n_before_exclusion <- nrow(dataset)
+  dataset <- dataset %>% filter(!(UT %in% exclude_uts))
+  n_removed <- n_before_exclusion - nrow(dataset)
+
+  message(sprintf(
+    "Excluded %d records using %d UT values from %s",
+    n_removed,
+    length(exclude_uts),
+    exclude_file
+  ))
+}
+
+# --- 7. Save outputs ----------------------------------------------------------
 
 results_folder_path <- file.path(
   output_folder_path,

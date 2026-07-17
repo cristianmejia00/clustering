@@ -16,9 +16,9 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q356_valery"
+  project_folder: "Q359_valery"
   filtered_folder: "f01"
-  analysis_id: "a01_tm__f01_hdbscan__v1"
+  analysis_id: "a01_tm__f01_kmeans35__v1"
 
 
 # ==============================================================================
@@ -27,7 +27,7 @@ metadata:
 params:
   recursive_level: 1                    # 0 = clusters only, 1+ = subclusters
   dataset_source: "wos"                 # wos | derwent | factiva
-  unit_of_analysis: "cluster"           # cluster | topic | facet | firm | country | etc.
+  unit_of_analysis: "topic"           # cluster | topic | facet | firm | country | etc.
   type_of_analysis: "topic_model"       # citation_network | topic_model | both
   seed: 100                             # For reproducibility
 
@@ -78,7 +78,7 @@ citation_network:
 topic_model:
   embeds_folder: "e01"
   year_column: "PY"
-  n_topics: 0                           # 0 = auto-detect via HDBScan
+  n_topics: 35                           # 0 = auto-detect via HDBScan
   min_topic_size: 10
   others_threshold: 0.99                # Keep topics covering this cumulative share; others -> level0=99999
 
@@ -88,8 +88,8 @@ topic_model:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Eco Innovation and AI"  # Used as context for LLM summarization and naming
-  description: "AI-driven eco-innovation accelerates sustainability by optimizing resource use, predicting energy demand, and streamlining supply chains. "
+  theme: "Sustainability in Africa"  # Used as context for LLM summarization and naming
+  description: "Sustainability in Africa balances rapid economic development with climate resilience and resource management. Key priorities include expanding renewable energy, restoring degraded land, and local value addition. With a massive annual financing gap, the continent relies on technological innovation, regional collaboration, and grassroots empowerment to meet the SDGs."
   top_papers: 7                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:
