@@ -1,10 +1,12 @@
-FROM rocker/tidyverse:4.5.0
+# rocker/r-ver is multi-arch (amd64 + arm64); rocker/tidyverse is amd64-only.
+FROM rocker/r-ver:4.5.0
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
+    curl \
     python3 \
     python3-venv \
     python3-pip \
@@ -13,6 +15,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglpk-dev \
     libgmp-dev \
     libmpfr-dev \
+    libgsl-dev \
+    libgit2-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libicu-dev \
+    libfontconfig1-dev \
+    libfreetype6-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libpng-dev \
+    libtiff-dev \
+    libjpeg-dev \
+    libcairo2-dev \
+    libxt-dev \
+    zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace

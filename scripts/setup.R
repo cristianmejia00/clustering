@@ -69,6 +69,12 @@ fail <- function(msg) {
   stop(msg, call. = FALSE)
 }
 
+# system2() does not quote arguments; any argument containing spaces or shell
+# metacharacters (e.g. inline "python -c" code) must be quoted per platform.
+quote_arg <- function(x) {
+  if (.Platform$OS.type == "windows") shQuote(x, type = "cmd") else shQuote(x)
+}
+
 run_cmd <- function(command, args, label) {
   cat("[setup] ", label, "\n", sep = "")
   status <- system2(command, args = args)
@@ -101,7 +107,7 @@ find_system_python <- function() {
 
     out <- suppressWarnings(system2(
       py_launcher,
-      c(paste0("-", version_tag), "-c", "import sys; print(sys.executable)"),
+      c(paste0("-", version_tag), "-c", quote_arg("import sys; print(sys.executable)")),
       stdout = TRUE,
       stderr = TRUE
     ))
@@ -155,7 +161,7 @@ check_python_version <- function(py_exec,
 
   version <- suppressWarnings(system2(
     py_exec,
-    c("-c", "import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}')"),
+    c("-c", quote_arg("import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}')")),
     stdout = TRUE,
     stderr = TRUE
   ))
@@ -275,14 +281,14 @@ ensure_python_venv <- function(system_python, force = FALSE, venv_dir = ".venv")
 
 validate_python_imports <- function(py_exec) {
   code <- paste(
-    "import importlib, sys",
+    "import importlib.util, sys",
     "mods=['yaml','pandas','numpy','sentence_transformers','bertopic','litellm','umap','matplotlib','sklearn','hdbscan']",
     "missing=[m for m in mods if importlib.util.find_spec(m) is None]",
     "print('MISSING:' + ','.join(missing) if missing else 'OK')",
     sep = ";"
   )
 
-  result <- suppressWarnings(system2(py_exec, c("-c", code), stdout = TRUE, stderr = TRUE))
+  result <- suppressWarnings(system2(py_exec, c("-c", quote_arg(code)), stdout = TRUE, stderr = TRUE))
   if (length(result) == 0) {
     fail("Python import validation did not produce output.")
   }
