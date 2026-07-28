@@ -27,6 +27,9 @@ Inputs
 UMAP coordinates are cached as ``umap_2d_coords.csv`` next to the embeddings
 so that subsequent calls (e.g., level 1 after level 0) skip the expensive
 projection.  Use ``--force`` to recompute.
+
+The script supports both UT- and uuid-based embedding IDs. It auto-detects
+which identifier column in ``doc_clusters.csv`` overlaps the embedding IDs.
 """
 from __future__ import annotations
 
@@ -342,6 +345,44 @@ def _add_side_labels(
 # Main
 # ---------------------------------------------------------------------------
 
+def _detect_doc_id_column(doc_cl: pd.DataFrame, coord_ids: set[str]) -> tuple[str | None, int]:
+    """Pick the identifier column in doc_cl that best matches embedding IDs."""
+    preferred = ["doc_id", "uuid", "UT", "id"]
+    candidates = [c for c in preferred if c in doc_cl.columns]
+    candidates += [c for c in doc_cl.columns if c not in candidates and c != "X_C"]
+
+    best_col = None
+    best_overlap = -1
+    for col in candidates:
+        values = set(doc_cl[col].dropna().astype(str))
+        overlap = len(values & coord_ids)
+        if overlap > best_overlap:
+            best_overlap = overlap
+            best_col = col
+
+    if best_overlap <= 0:
+        return None, 0
+    return best_col, best_overlap
+
+
+def _save_empty_plot(output: Path, title: str) -> None:
+    """Save a placeholder image when no documents can be plotted."""
+    fig, ax = plt.subplots(figsize=(12, 12), dpi=150)
+    ax.text(
+        0.5,
+        0.5,
+        "No matched documents for UMAP scatter\n(check doc ID vs embedding ID columns)",
+        ha="center",
+        va="center",
+        fontsize=12,
+    )
+    ax.set_title(title or "Document Embeddings - Cluster Map", fontsize=14)
+    ax.axis("off")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     p = argparse.ArgumentParser(
         description="UMAP scatter plot of document embeddings colored by cluster."
@@ -422,17 +463,48 @@ def main() -> None:
             random_state=args.seed,
         ).fit_transform(embeddings)
         coords_df = pd.DataFrame(
-            {"UT": emb_ids, "x": xy[:, 0], "y": xy[:, 1]}
+            {"doc_id": emb_ids, "x": xy[:, 0], "y": xy[:, 1]}
         )
         coords_df.to_csv(cache_path, index=False)
         print(f"[umap_scatter] Cached coordinates: {cache_path}")
+    else:
+        if "doc_id" not in coords_df.columns:
+            if "UT" in coords_df.columns:
+                coords_df = coords_df.rename(columns={"UT": "doc_id"})
+            else:
+                sys.exit("Cached UMAP file missing doc_id/UT column")
+        coords_df["doc_id"] = coords_df["doc_id"].astype(str)
 
     # ── Load cluster data ────────────────────────────────────────────────
-    doc_cl = pd.read_csv(args.doc_clusters, dtype={"UT": str, "X_C": str})
+    doc_cl = pd.read_csv(args.doc_clusters, dtype=str)
     rcs = pd.read_csv(args.rcs, dtype=str)
 
+    if "X_C" not in doc_cl.columns:
+        sys.exit("doc_clusters.csv must include an X_C column")
+
+    coord_ids = set(coords_df["doc_id"].dropna().astype(str))
+    id_col, overlap = _detect_doc_id_column(doc_cl, coord_ids)
+    if id_col is None:
+        out = Path(args.output)
+        print("[umap_scatter] No matching ID column between doc_clusters and embeddings IDs")
+        _save_empty_plot(out, args.title)
+        print(f"[umap_scatter] Saved placeholder: {out}")
+        return
+    print(f"[umap_scatter] Using doc ID column: {id_col} (overlap={overlap:,})")
+
     # ── Merge: docs <-> coords <-> cluster metadata ─────────────────────
-    df = doc_cl.merge(coords_df, on="UT", how="inner")
+    df = doc_cl.merge(
+        coords_df,
+        left_on=id_col,
+        right_on="doc_id",
+        how="inner",
+    )
+    if df.empty:
+        out = Path(args.output)
+        print("[umap_scatter] Merge produced 0 rows; saving placeholder image")
+        _save_empty_plot(out, args.title)
+        print(f"[umap_scatter] Saved placeholder: {out}")
+        return
 
     # Build cluster -> metadata lookup from rcs
     rcs_key = "cluster" if "cluster" in rcs.columns else "cluster_code"
@@ -523,6 +595,15 @@ def main() -> None:
             colored["x"], colored["y"],
             c=colored["sub_color"], s=3, alpha=0.5, edgecolors="none",
         )
+
+    finite = np.isfinite(df["x"].to_numpy()) & np.isfinite(df["y"].to_numpy())
+    df = df.loc[finite].copy()
+    if df.empty:
+        out = Path(args.output)
+        print("[umap_scatter] All coordinates are non-finite; saving placeholder image")
+        _save_empty_plot(out, args.title)
+        print(f"[umap_scatter] Saved placeholder: {out}")
+        return
 
     pad = 1.5
     xlim = (df["x"].min() - pad, df["x"].max() + pad)

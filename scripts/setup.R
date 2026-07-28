@@ -88,6 +88,46 @@ check_r_version <- function(min_version = "4.4.0") {
 }
 
 find_system_python <- function() {
+  env_python <- Sys.getenv("PYTHON_EXECUTABLE", unset = "")
+  if (nzchar(env_python) && file.exists(env_python)) {
+    return(env_python)
+  }
+
+  resolve_python_from_py_launcher <- function(version_tag) {
+    py_launcher <- Sys.which("py")
+    if (!nzchar(py_launcher)) {
+      return("")
+    }
+
+    out <- suppressWarnings(system2(
+      py_launcher,
+      c(paste0("-", version_tag), "-c", "import sys; print(sys.executable)"),
+      stdout = TRUE,
+      stderr = TRUE
+    ))
+
+    if (length(out) == 0) {
+      return("")
+    }
+
+    candidate <- trimws(out[[1]])
+    if (!nzchar(candidate)) {
+      return("")
+    }
+
+    candidate
+  }
+
+  if (.Platform$OS.type == "windows") {
+    # Prefer supported versions for scientific wheels in this project.
+    for (version_tag in c("3.11", "3.10", "3.12")) {
+      candidate <- resolve_python_from_py_launcher(version_tag)
+      if (nzchar(candidate)) {
+        return(candidate)
+      }
+    }
+  }
+
   candidates <- if (.Platform$OS.type == "windows") {
     c("python", "python3", "py")
   } else {
@@ -104,9 +144,13 @@ find_system_python <- function() {
   ""
 }
 
-check_python_version <- function(py_exec, min_major = 3L, min_minor = 10L) {
+check_python_version <- function(py_exec,
+                                 min_major = 3L,
+                                 min_minor = 10L,
+                                 max_major = 3L,
+                                 max_minor = 12L) {
   if (!nzchar(py_exec)) {
-    fail("Python 3.10+ not found in PATH.")
+    fail("Python 3.10-3.12 not found in PATH.")
   }
 
   version <- suppressWarnings(system2(
@@ -133,7 +177,27 @@ check_python_version <- function(py_exec, min_major = 3L, min_minor = 10L) {
     fail(paste0("Python ", min_major, ".", min_minor, "+ required. Current: ", version[[1]], "."))
   }
 
+  if (major > max_major || (major == max_major && minor > max_minor)) {
+    fail(paste0(
+      "Python ", major, ".", minor,
+      " is currently unsupported for this setup. Use Python 3.10-3.12 (recommended: 3.11)."
+    ))
+  }
+
   version[[1]]
+}
+
+configure_windows_binary_restore <- function() {
+  if (.Platform$OS.type != "windows") {
+    return(invisible(FALSE))
+  }
+
+  options(repos = c(CRAN = "https://cloud.r-project.org"))
+  options(pkgType = "binary")
+  Sys.setenv(RENV_CONFIG_PAK_ENABLED = "FALSE")
+
+  cat("[setup] Windows detected: using CRAN binary packages for renv restore\n")
+  invisible(TRUE)
 }
 
 ensure_renv_restore <- function(force = FALSE) {
@@ -142,13 +206,30 @@ ensure_renv_restore <- function(force = FALSE) {
   }
 
   renv::consent(provided = TRUE)
+  configure_windows_binary_restore()
 
-  restore_args <- list(lockfile = "renv.lock", prompt = FALSE)
+  restore_args <- list(
+    lockfile = "renv.lock",
+    prompt = FALSE,
+    repos = getOption("repos")
+  )
   if (force) {
     restore_args$rebuild <- TRUE
   }
 
-  do.call(renv::restore, restore_args)
+  tryCatch(
+    do.call(renv::restore, restore_args),
+    error = function(e) {
+      if (.Platform$OS.type == "windows") {
+        fail(paste0(
+          "renv restore failed on Windows. ",
+          "Try installing Rtools 4.5, then rerun setup. ",
+          "Original error: ", conditionMessage(e)
+        ))
+      }
+      stop(e)
+    }
+  )
 }
 
 venv_python_path <- function(venv_dir = ".venv") {

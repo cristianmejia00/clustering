@@ -52,8 +52,10 @@ target_enrichment_level <- recursive_level
 
 level0_rcs_path <- file.path(output_folder_reports, "level0", "rcs_merged.csv")
 if (!file.exists(level0_rcs_path)) {
-  stop("rcs_merged.csv not found at level 0: ", level0_rcs_path,
-       "\n  Run the reports + AI pipeline first.")
+  stop(
+    "rcs_merged.csv not found at level 0: ", level0_rcs_path,
+    "\n  Run the reports + AI pipeline first."
+  )
 }
 
 level_target_rcs_path <- file.path(output_folder_reports, paste0("level", recursive_level), "rcs_merged.csv")
@@ -68,18 +70,24 @@ required_levels <- unique(c(0, target_enrichment_level))
 for (lvl in required_levels) {
   rcs_path <- file.path(output_folder_reports, paste0("level", lvl), "rcs_merged.csv")
   if (!file.exists(rcs_path)) {
-    stop("rcs_merged.csv not found at level ", lvl, ": ", rcs_path,
-         "\n  Run the reports + AI pipeline first.")
+    stop(
+      "rcs_merged.csv not found at level ", lvl, ": ", rcs_path,
+      "\n  Run the reports + AI pipeline first."
+    )
   }
   rcs <- readr::read_csv(rcs_path, show_col_types = FALSE)
   if (!"global_name" %in% colnames(rcs)) {
-    stop("global_name column missing in rcs_merged.csv at level ", lvl,
-         "\n  Run the AI pipeline (with global_naming) first.")
+    stop(
+      "global_name column missing in rcs_merged.csv at level ", lvl,
+      "\n  Run the AI pipeline (with global_naming) first."
+    )
   }
   has_names <- sum(!is.na(rcs$global_name) & nchar(trimws(rcs$global_name)) > 0)
   if (has_names == 0) {
-    stop("No global_name values found in rcs_merged.csv at level ", lvl,
-         "\n  Run the AI pipeline (with global_naming) first.")
+    stop(
+      "No global_name values found in rcs_merged.csv at level ", lvl,
+      "\n  Run the AI pipeline (with global_naming) first."
+    )
   }
   message("Level ", lvl, ": ", has_names, " clusters with global names")
 }
@@ -145,8 +153,10 @@ for (level_report in available_levels) {
   } else {
     dm_path <- file.path(output_folder_reports, "dataset_minimal.csv")
     if (!file.exists(dm_path)) {
-      warning("Skipping level ", level_report,
-              " — neither environ.rdata nor dataset_minimal.csv found")
+      warning(
+        "Skipping level ", level_report,
+        " — neither environ.rdata nor dataset_minimal.csv found"
+      )
       next
     }
     dm <- readr::read_csv(dm_path, show_col_types = FALSE)
@@ -160,17 +170,21 @@ for (level_report in available_levels) {
   }
 
   doc_clusters_path <- file.path(output_folder_level, "doc_clusters_enriched.csv")
-  readr::write_csv(
-    data.frame(
-      UT = as.character(my_data$UT),
-      X_C = as.character(my_data$X_C)
-    ),
-    doc_clusters_path
+  doc_clusters_df <- data.frame(
+    UT = as.character(my_data$UT),
+    X_C = as.character(my_data$X_C),
+    stringsAsFactors = FALSE
   )
+  if ("uuid" %in% colnames(my_data)) {
+    doc_clusters_df$uuid <- as.character(my_data$uuid)
+  }
+  readr::write_csv(doc_clusters_df, doc_clusters_path)
 
-  rcs_path   <- file.path(output_folder_level, "rcs_merged.csv")
-  output_png <- file.path(output_folder_level, subfolder_clusters,
-                          "fig_umap_scatter_enriched.png")
+  rcs_path <- file.path(output_folder_level, "rcs_merged.csv")
+  output_png <- file.path(
+    output_folder_level, subfolder_clusters,
+    "fig_umap_scatter_enriched.png"
+  )
 
   umap_status <- system2(
     py_exec,
