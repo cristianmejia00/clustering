@@ -15,24 +15,24 @@
 metadata:
   # --- Raw input (WoS export files as downloaded) ---
   raw_input_directory: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads"
-  raw_input_folder_name: "Q359_valery"
+  raw_input_folder_name: "Q360_hydrogen_economy"
 
   # --- Output directory (Google Drive / Bibliometrics) ---
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q359_valery"
+  project_folder: "Q360_hydrogen_economy"
 
   # --- Query and data source ---
   date_id: "2026-07-10"                # Analysis date label
-  query: "Q359_valery"
+  query: "Q360_hydrogen_economy"
   type_of_dataset: "papers"             # papers | patents | news
   dataset_source: "wos"                 # wos | derwent | factiva
 
   # --- Project metadata ---
-  dataset_name: "Q359_valery"
-  dataset_file_name_suffix: "Q359_valery"     # Used in output file names
+  dataset_name: "Q360_hydrogen_economy"
+  dataset_file_name_suffix: "Q360_hydrogen_economy"     # Used in output file names
   dataset_description: ""
   created_by: "cristianmejia00@gmail.com"
-  notes: "ERCA/BRIDGE"
+  notes: "Kimura"
 
 
 # ==============================================================================
@@ -45,7 +45,7 @@ filtering:
     rows_filter:
       removed_duplicated_UT: true
       most_recent_year: "2026"          # Fill missing PY with this year
-      exclude_file: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads/Q360_exclusion/df_text.csv"
+      exclude_file: "/Users/cristian/Library/CloudStorage/OneDrive-Personal/Documentos/imacros/downloads/Q360_exclusion/exclude.csv"
 
     columns_filter:
       columns_selected:

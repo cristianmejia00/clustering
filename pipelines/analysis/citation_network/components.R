@@ -11,9 +11,11 @@ source("utils/load_config.R")
 settings <- load_config("config_analysis.yml") |> add_legacy_aliases()
 
 # Archive config snapshot to the analysis output folder
-archive_path <- file.path(output_folder_path,
-                          settings$metadata$project_folder,
-                          settings$metadata$analysis_id)
+archive_path <- file.path(
+  output_folder_path,
+  settings$metadata$project_folder,
+  settings$metadata$analysis_id
+)
 dir.create(archive_path, showWarnings = FALSE, recursive = TRUE)
 load_config("config_analysis.yml", archive_to = archive_path)
 
@@ -67,11 +69,12 @@ if (settings$cno$network_type == "cocitation") {
   cci <- cocitation(g1)
   mask <- colSums(cci) > 0
   cci <- cci[mask, mask]
-  cci2 <- Matrix::Matrix(cci, sparse=TRUE)
+  cci2 <- Matrix::Matrix(cci, sparse = TRUE)
   g1 <- graph_from_adjacency_matrix(cci2,
-                                    mode='undirected',
-                                    weighted = TRUE,
-                                    diag = FALSE)
+    mode = "undirected",
+    weighted = TRUE,
+    diag = FALSE
+  )
   g1 <- simplify(g1)
   rm(cci, cci2)
 }
@@ -84,7 +87,7 @@ components_available <- length(components_sizes)
 
 # Get components df
 components_df <- data.frame(
-  "node_ids" = c(1:length(components_membership$new_membership)),
+  "node_ids" = seq_along(components_membership$new_membership),
   "X_N" = V(g1) %>% names() %>% as.numeric(),
   "component" = components_membership$new_membership
 )
@@ -129,11 +132,35 @@ orphans <- dataset %>% filter(!(X_N %in% valid_vertices))
 
 # Order dataset to the order of nodes in the network
 dataset <- dataset %>% filter(X_N %in% valid_vertices)
-dataset <- dataset[match(valid_vertices, dataset$X_N), ]
+matched_idx <- match(valid_vertices, dataset$X_N)
+
+if (any(is.na(matched_idx))) {
+  missing_vertices <- valid_vertices[is.na(matched_idx)]
+  warning(sprintf(
+    "Dropping %d network node(s) without matching dataset rows. First IDs: %s",
+    length(missing_vertices),
+    paste(utils::head(missing_vertices, 10), collapse = ", ")
+  ))
+
+  keep <- !is.na(matched_idx)
+  valid_vertices <- valid_vertices[keep]
+  matched_idx <- matched_idx[keep]
+}
+
+dataset <- dataset[matched_idx, , drop = FALSE]
+
+if (nrow(dataset) == 0) {
+  stop("No matched records found between selected network component and dataset.")
+}
+
+g_valid <- induced_subgraph(
+  g_valid,
+  vids = which(as.numeric(names(V(g_valid))) %in% valid_vertices)
+)
 
 # Network for this type of network and compnent
 if (settings$cno$network_type == "cocitation") {
-  network <- igraph::as_data_frame(g_valid, what="edges")
+  network <- igraph::as_data_frame(g_valid, what = "edges")
 } else {
   # Filter the network to have only nodes in the selected network
   network <- network[network$V1 %in% valid_vertices, ]

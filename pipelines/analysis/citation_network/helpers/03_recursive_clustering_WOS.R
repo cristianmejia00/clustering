@@ -43,8 +43,16 @@ if (settings$cno$threshold$threshold > 1) {
 # Takes a comunity vector, and the percentage threshold of papers
 # New cluster selector (Changed on 20190611)
 cl_selector <- function(a_com, threshold, size_lower_limit, max_cluster) {
+  if (length(a_com) == 0) {
+    return(0)
+  }
+
   # Get the number of clusters which cum sum is below the threshold
   test <- sort(table(a_com), decreasing = TRUE)
+  if (length(test) == 0) {
+    return(0)
+  }
+
   test2 <- cumsum(test) / length(a_com)
   below_threshold <- length(test2[test2 <= threshold])
   # Get the number of clusters having more papers than size_lower_limit
@@ -156,8 +164,12 @@ if (settings$params$recursive_level > 0) {
   # for (i in 1:cl_threshold) {
   for (i in c(1:cl_threshold, 99)) {
     subg <- induced_subgraph(g1, which(V(g1)$level0 == i))
-    # if (vcount(subg) > settings$cno$thresholding$size_limit && resol_limit1[i] > 0) {
-    if (vcount(subg) > settings$cno$thresholding$size_limit | TRUE) { # passtrough for level0, because we need the centralities
+    if (vcount(subg) == 0) {
+      next
+    }
+
+    # passthrough for level0, because we need the centralities
+    if (vcount(subg) > 0) {
       communi <- clusterize(subg, algorithm = settings$cno$clustering$algorithm)
       temp_threshold <- cl_selector(communi,
         threshold = settings$cno$thresholding$threshold,
@@ -285,7 +297,6 @@ if (settings$params$recursive_level > 0) {
 
   dataset_minimal$cl99 <- grepl("99", subclusters_label) # Marks all cluster with 99
   dataset_minimal$cl_99 <- grepl("-99", subclusters_label) # Marks RECURSIVE cluster with 99, while untouching the clusters of the first level
-
 
 
   ####                                                                                ####

@@ -33,8 +33,23 @@ table(m_com)
 
 # Order vector of communities as they appear in the dataset
 vertex <- as.numeric(names(V(g1)))
-ids <- dataset$"X_N"
-dataset$X_C <- m_com[order(match(vertex, ids))]
+cluster_map <- data.frame(
+  X_N = vertex,
+  X_C = as.numeric(m_com[as.character(vertex)])
+)
+
+dataset <- dataset %>%
+  filter(!is.na(X_N)) %>%
+  left_join(cluster_map, by = "X_N")
+
+missing_clusters <- sum(is.na(dataset$X_C))
+if (missing_clusters > 0) {
+  warning(sprintf(
+    "Dropping %d dataset row(s) that have no matching graph node for clustering.",
+    missing_clusters
+  ))
+  dataset <- dataset %>% filter(!is.na(X_C))
+}
 
 # dataset_minimal
 dataset_minimal <- dataset %>% select(X_N, UT, uuid, X_C)
