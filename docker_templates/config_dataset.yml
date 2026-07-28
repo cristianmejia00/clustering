@@ -1,38 +1,43 @@
 # ==============================================================================
-# Dataset Configuration
+# Dataset Configuration (Docker template)
 # ==============================================================================
-# Edit this file, then run:  source("a00_data_loader.R")
-#                        or:  source("a01_network.R")
 #
-# This single file replaces the old workflow of:
-#   1. Editing _0_settings_dataset.R  (R code)
-#   2. Running it to generate a JSON directive
-#   3. Pasting the JSON filename into _1_entry_dataset.R
+#  >>> EDIT THESE 4 LINES before running the pipeline <<<
 #
-# A JSON snapshot is still archived automatically for reproducibility.
+#  1. raw_input_folder_name : the folder inside  docker\raw_input\  where you
+#                             placed your Web of Science .txt export files.
+#  2. project_folder        : name for your results folder. Outputs appear in
+#                             docker\bibliometrics\<project_folder>\
+#  3. date_id               : today's date, e.g. "2026-07-28".
+#  4. dataset_name          : a short name for your dataset (also update
+#                             "query" to match).
+#
+#  Leave raw_input_directory and bibliometrics_directory as-is: they are
+#  paths INSIDE the Docker container that map to the docker\ folder next to
+#  this repository on your computer.
 # ==============================================================================
 
 metadata:
   # --- Raw input (WoS export files as downloaded) ---
   raw_input_directory: "/workspace/docker/raw_input"
-  raw_input_folder_name: "Q343_science_diplomacy_merged"
+  raw_input_folder_name: "my_project"
 
-  # --- Output directory (Google Drive / Bibliometrics) ---
+  # --- Output directory ---
   bibliometrics_directory: "/workspace/docker/bibliometrics"
-  project_folder: "Q343_science_diplomacy_merged"
+  project_folder: "my_project"
 
   # --- Query and data source ---
-  date_id: "2026-05-22"                # Analysis date label
-  query: "Q343_science_diplomacy_merged"
+  date_id: "2026-01-01"                 # Analysis date label
+  query: "my_project"
   type_of_dataset: "papers"             # papers | patents | news
   dataset_source: "wos"                 # wos | derwent | factiva
 
   # --- Project metadata ---
-  dataset_name: "Q343_science_diplomacy_merged"
-  dataset_file_name_suffix: "Q343"     # Used in output file names
+  dataset_name: "my_project"
+  dataset_file_name_suffix: "my_project"  # Used in output file names
   dataset_description: ""
-  created_by: "cristianmejia00@gmail.com"
-  notes: "Update to Science Diplomacy dataset merging WoS and Scopus."
+  created_by: ""
+  notes: ""
 
 
 # ==============================================================================
@@ -71,32 +76,6 @@ filtering:
         - LA
         - IS
         - EP
-        # --- Custom / LLM-enriched columns ---
-        - is_science_diplomacy
-        - is_bibliometrics
-        - policy_dimension
-        - policy_dimension_reasoning
-        - framework_2025_categories_main
-        - framework_2025_categories_detailed
-        - framework_2025_reasoning
-        - article_type
-        - article_type_reasoning
-        - main_domain
-        - geographic_focus
-        - geographic_focus_reasoning
-        - power_dynamic
-        - power_dynamic_reasoning
-        - diplomacy_goal
-        - diplomacy_goal_reasoning
-        - key_actors
-        - key_actors_reasoning
-        - global_commons
-        - global_commons_reasoning
-        - geopolitical_context
-        - geopolitical_context_reasoning 
-        - outcome
-        - technology_type
-
 
 
 # ==============================================================================

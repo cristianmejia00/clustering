@@ -1,11 +1,9 @@
 services:
   pipeline:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: clustering-pipeline:latest
+    image: ghcr.io/cristianmejia00/clustering:latest
     working_dir: /workspace
     volumes:
       - ./docker:/workspace/docker
+      - ./docker/credentials:/workspace/assets/credentials:ro
     stdin_open: true
     tty: true

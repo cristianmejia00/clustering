@@ -14,3 +14,4 @@ docker/bibliometrics/
 docker/config_dataset.yml
 docker/config_analysis.yml
 assets/credentials/
+docker/credentials/

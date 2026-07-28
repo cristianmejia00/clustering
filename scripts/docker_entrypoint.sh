@@ -6,7 +6,7 @@ DOCKER_HOME="${WORKDIR}/docker"
 TEMPLATE_DIR="${WORKDIR}/docker_templates"
 
 ensure_docker_workspace() {
-  mkdir -p "${DOCKER_HOME}/raw_input" "${DOCKER_HOME}/bibliometrics"
+  mkdir -p "${DOCKER_HOME}/raw_input" "${DOCKER_HOME}/bibliometrics" "${DOCKER_HOME}/credentials"
 }
 
 ensure_docker_configs() {
@@ -36,13 +36,14 @@ Docker pipeline commands:
   setup                       Run full setup (R + Python) inside container.
   validate                    Validate setup and config paths.
   run <comma_stages>          Run stages, e.g. run dataset,analysis,reports.
+                              Default: dataset,analysis,reports,ai,enriched_embeds,charts
   shell                       Open an interactive shell.
 
 Examples:
   docker compose run --rm pipeline init
-  docker compose run --rm pipeline setup
+  docker compose run --rm pipeline run
   docker compose run --rm pipeline run dataset,analysis,reports
-  docker compose run --rm pipeline run ai,charts
+  docker compose run --rm pipeline run ai,enriched_embeds,charts
 EOF
 }
 
@@ -54,6 +55,7 @@ case "${cmd}" in
     ensure_docker_configs
     echo "[docker] Ready. Put your raw files under ${DOCKER_HOME}/raw_input"
     echo "[docker] Outputs will be written under ${DOCKER_HOME}/bibliometrics"
+    echo "[docker] For the 'ai' stage, put your API key file (e.g. openai.key) in ${DOCKER_HOME}/credentials"
     ;;
 
   setup)
@@ -67,7 +69,8 @@ case "${cmd}" in
     ;;
 
   run)
-    stages="${1:-dataset,analysis,reports,ai,charts}"
+    stages="${1:-dataset,analysis,reports,ai,enriched_embeds,charts}"
+    stages="${stages// /}"
     activate_runtime_configs
     Rscript --vanilla -e "source('scripts/run_pipeline.R'); run_pipeline(strsplit('${stages}', ',')[[1]])"
     ;;

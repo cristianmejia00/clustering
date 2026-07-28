@@ -1,24 +1,24 @@
 # ==============================================================================
-# Analysis Configuration
+# Analysis Configuration (Docker template)
 # ==============================================================================
-# Edit this file, then run:  source("a02_components.R")  (step 1)
-#                             source("a03_clustering.R")  (step 2)
-#                             source("a04_thresholding.R") (step 3)
-#                             source("a05_reports.R")     (step 4)
 #
-# This single file replaces the old workflow of:
-#   1. Editing _2_settings_analysis.R  (R code)
-#   2. Running it to generate a JSON directive
-#   3. Pasting the JSON filename into _3_entry_analysis.R
+#  >>> EDIT THESE 4 LINES before running the pipeline <<<
 #
-# A JSON snapshot is still archived automatically for reproducibility.
+#  1. project_folder : must match the project_folder in config_dataset.yml.
+#  2. analysis_id    : name for this analysis run, e.g. "a01_tm__f01__v1".
+#  3. llm.theme      : one-line topic of your dataset (used to guide the AI
+#                      cluster naming), e.g. "Hydrogen Economy".
+#  4. llm.description: one or two sentences describing the topic.
+#
+#  Leave bibliometrics_directory as-is: it is a path INSIDE the Docker
+#  container that maps to the docker\ folder next to this repository.
 # ==============================================================================
 
 metadata:
   bibliometrics_directory: "/workspace/docker/bibliometrics"
-  project_folder: "Q343_science_diplomacy_merged"
+  project_folder: "my_project"
   filtered_folder: "f01"
-  analysis_id: "a01_tm__f01_hdbscan__v1"
+  analysis_id: "a01_tm__f01__v1"
 
 
 # ==============================================================================
@@ -88,8 +88,8 @@ topic_model:
 # ==============================================================================
 llm:
   provider: "openai"                    # openai | anthropic | google
-  theme: "Science Diplomacy"  # Used as context for LLM summarization and naming
-  description: "Science Diplomacy involves the use of scientific collaborations among nations to address common challenges and build constructive international partnerships."
+  theme: "My Research Topic"            # Used as context for LLM summarization and naming
+  description: "One or two sentences describing what this dataset is about."
   top_papers: 7                         # Representative papers per criterion per cluster
   rate_limit_delay: 2                   # Seconds between API calls
   compute:
@@ -98,7 +98,6 @@ llm:
     - cluster_description
     - cluster_enhanced_description
     - global_naming                     # Rename all clusters at once for distinctive, non-overlapping names
-
 
 
 # ==============================================================================
@@ -146,19 +145,6 @@ reporting:
     - DE
     - sentiment_factor
     - ID
-    - is_bibliometrics
-    - policy_dimension
-    - framework_2025_categories_main
-    - framework_2025_categories_detailed
-    - article_type
-    - main_domain
-    - geographic_focus
-    - power_dynamic
-    - diplomacy_goal
-    - key_actors
-    - global_commons
-    - geopolitical_context
-
 
 
   categorical_simple_wide_reports: [PY, sentiment_factor]
@@ -224,5 +210,3 @@ reporting:
       UT: "ID"
       issues: "Issues"
       Keywords: "Keywords"
-
-

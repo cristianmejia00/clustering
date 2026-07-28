@@ -19,3 +19,4 @@ docker/config_dataset.yml
 docker/config_analysis.yml
 docker/raw_input/
 docker/bibliometrics/
+docker/credentials/

@@ -1,0 +1,8 @@
+# Maintainer-only override: build the image locally instead of pulling it.
+#   docker compose -f docker-compose.yml -f docker-compose.build.yml build
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/cristianmejia00/clustering:latest
