@@ -2,1251 +2,1543 @@
   {
     "ISO3166alpha3": "AFG",
     "WIKI": "Afghanistan",
-    "WOS": "afghanistan"
+    "WOS": "afghanistan",
+    "WIPO": "AF"
   },
   {
     "ISO3166alpha3": "ALA",
     "WIKI": "Åland Islands",
-    "WOS": "aland islands"
+    "WOS": "aland islands",
+    "WIPO": "AX"
   },
   {
     "ISO3166alpha3": "ALB",
     "WIKI": "Albania",
-    "WOS": "albania"
+    "WOS": "albania",
+    "WIPO": "AL"
   },
   {
     "ISO3166alpha3": "DZA",
     "WIKI": "Algeria",
-    "WOS": "algeria"
+    "WOS": "algeria",
+    "WIPO": "DZ"
   },
   {
     "ISO3166alpha3": "ASM",
     "WIKI": "American Samoa",
-    "WOS": "american samoa"
+    "WOS": "american samoa",
+    "WIPO": "AS"
   },
   {
     "ISO3166alpha3": "AND",
     "WIKI": "Andorra",
-    "WOS": "andorra"
+    "WOS": "andorra",
+    "WIPO": "AD"
   },
   {
     "ISO3166alpha3": "AGO",
     "WIKI": "Angola",
-    "WOS": "angola"
+    "WOS": "angola",
+    "WIPO": "AO"
   },
   {
     "ISO3166alpha3": "AIA",
     "WIKI": "Anguilla",
-    "WOS": "anguilla"
+    "WOS": "anguilla",
+    "WIPO": "AI"
   },
   {
     "ISO3166alpha3": "ATA",
     "WIKI": "Antarctica",
-    "WOS": "antarctica"
+    "WOS": "antarctica",
+    "WIPO": "AQ"
   },
   {
     "ISO3166alpha3": "ATG",
     "WIKI": "Antigua and Barbuda",
-    "WOS": "antigua & barbu"
+    "WOS": "antigua & barbu",
+    "WIPO": "AG"
   },
   {
     "ISO3166alpha3": "ARG",
     "WIKI": "Argentina",
-    "WOS": "argentina"
+    "WOS": "argentina",
+    "WIPO": "AR"
   },
   {
     "ISO3166alpha3": "ARM",
     "WIKI": "Armenia",
-    "WOS": "armenia"
+    "WOS": "armenia",
+    "WIPO": "AM"
   },
   {
     "ISO3166alpha3": "ABW",
     "WIKI": "Aruba",
-    "WOS": "aruba"
+    "WOS": "aruba",
+    "WIPO": "AW"
   },
   {
     "ISO3166alpha3": "AUS",
     "WIKI": "Australia",
-    "WOS": "australia"
+    "WOS": "australia",
+    "WIPO": "AU"
   },
   {
     "ISO3166alpha3": "AUT",
     "WIKI": "Austria",
-    "WOS": "austria"
+    "WOS": "austria",
+    "WIPO": "AT"
   },
   {
     "ISO3166alpha3": "AZE",
     "WIKI": "Azerbaijan",
-    "WOS": "azerbaijan"
+    "WOS": "azerbaijan",
+    "WIPO": "AZ"
   },
   {
     "ISO3166alpha3": "BHS",
     "WIKI": "Bahamas",
-    "WOS": "bahamas"
+    "WOS": "bahamas",
+    "WIPO": "BS"
   },
   {
     "ISO3166alpha3": "BHR",
     "WIKI": "Bahrain",
-    "WOS": "bahrain"
+    "WOS": "bahrain",
+    "WIPO": "BH"
   },
   {
     "ISO3166alpha3": "BGD",
     "WIKI": "Bangladesh",
-    "WOS": "bangladesh"
+    "WOS": "bangladesh",
+    "WIPO": "BD"
   },
   {
     "ISO3166alpha3": "BRB",
     "WIKI": "Barbados",
-    "WOS": "barbados"
+    "WOS": "barbados",
+    "WIPO": "BB"
   },
   {
     "ISO3166alpha3": "BLR",
     "WIKI": "Belarus",
-    "WOS": "belarus"
+    "WOS": "belarus",
+    "WIPO": "BY"
   },
   {
     "ISO3166alpha3": "BEL",
     "WIKI": "Belgium",
-    "WOS": "belgium"
+    "WOS": "belgium",
+    "WIPO": "BE"
   },
   {
     "ISO3166alpha3": "BLZ",
     "WIKI": "Belize",
-    "WOS": "belize"
+    "WOS": "belize",
+    "WIPO": "BZ"
   },
   {
     "ISO3166alpha3": "BEN",
     "WIKI": "Benin",
-    "WOS": "benin"
+    "WOS": "benin",
+    "WIPO": "BJ"
   },
   {
     "ISO3166alpha3": "BMU",
     "WIKI": "Bermuda",
-    "WOS": "bermuda"
+    "WOS": "bermuda",
+    "WIPO": "BM"
   },
   {
     "ISO3166alpha3": "BTN",
     "WIKI": "Bhutan",
-    "WOS": "bhutan"
+    "WOS": "bhutan",
+    "WIPO": "BT"
   },
   {
     "ISO3166alpha3": "BOL",
     "WIKI": "Bolivia (Plurinational State of)",
-    "WOS": "bolivia"
+    "WOS": "bolivia",
+    "WIPO": "BO"
   },
   {
     "ISO3166alpha3": "BES",
     "WIKI": "Bonaire, Sint Eustatius and Saba",
-    "WOS": "bonaire"
+    "WOS": "bonaire",
+    "WIPO": "BQ"
   },
   {
     "ISO3166alpha3": "BIH",
     "WIKI": "Bosnia and Herzegovina",
-    "WOS": "bosnia & herceg"
+    "WOS": "bosnia & herceg",
+    "WIPO": "BA"
   },
   {
     "ISO3166alpha3": "BWA",
     "WIKI": "Botswana",
-    "WOS": "botswana"
+    "WOS": "botswana",
+    "WIPO": "BW"
   },
   {
     "ISO3166alpha3": "BVT",
     "WIKI": "Bouvet Island",
-    "WOS": "bouvet island"
+    "WOS": "bouvet island",
+    "WIPO": "BV"
   },
   {
     "ISO3166alpha3": "BRA",
     "WIKI": "Brazil",
-    "WOS": "brazil"
+    "WOS": "brazil",
+    "WIPO": "BR"
   },
   {
     "ISO3166alpha3": "IOT",
     "WIKI": "British Indian Ocean Territory",
-    "WOS": "british indian ocean territory"
+    "WOS": "british indian ocean territory",
+    "WIPO": "IO"
   },
   {
     "ISO3166alpha3": "BRN",
     "WIKI": "Brunei Darussalam",
-    "WOS": "brunei"
+    "WOS": "brunei",
+    "WIPO": "BN"
   },
   {
     "ISO3166alpha3": "BGR",
     "WIKI": "Bulgaria",
-    "WOS": "bulgaria"
+    "WOS": "bulgaria",
+    "WIPO": "BG"
   },
   {
     "ISO3166alpha3": "BFA",
     "WIKI": "Burkina Faso",
-    "WOS": "burkina faso"
+    "WOS": "burkina faso",
+    "WIPO": "BF"
   },
   {
     "ISO3166alpha3": "BDI",
     "WIKI": "Burundi",
-    "WOS": "burundi"
+    "WOS": "burundi",
+    "WIPO": "BI"
   },
   {
     "ISO3166alpha3": "CPV",
     "WIKI": "Cabo Verde",
-    "WOS": "cabo verde"
+    "WOS": "cabo verde",
+    "WIPO": "CV"
   },
   {
     "ISO3166alpha3": "KHM",
     "WIKI": "Cambodia",
-    "WOS": "cambodia"
+    "WOS": "cambodia",
+    "WIPO": "KH"
   },
   {
     "ISO3166alpha3": "CMR",
     "WIKI": "Cameroon",
-    "WOS": "cameroon"
+    "WOS": "cameroon",
+    "WIPO": "CM"
   },
   {
     "ISO3166alpha3": "CAN",
     "WIKI": "Canada",
-    "WOS": "canada"
+    "WOS": "canada",
+    "WIPO": "CA"
   },
   {
     "ISO3166alpha3": "CYM",
     "WIKI": "Cayman Islands",
-    "WOS": "cayman islands"
+    "WOS": "cayman islands",
+    "WIPO": "KY"
   },
   {
     "ISO3166alpha3": "CAF",
     "WIKI": "Central African Republic",
-    "WOS": "central african republic"
+    "WOS": "central african republic",
+    "WIPO": "CF"
   },
   {
     "ISO3166alpha3": "TCD",
     "WIKI": "Chad",
-    "WOS": "chad"
+    "WOS": "chad",
+    "WIPO": "TD"
   },
   {
     "ISO3166alpha3": "CHL",
     "WIKI": "Chile",
-    "WOS": "chile"
+    "WOS": "chile",
+    "WIPO": "CL"
   },
   {
     "ISO3166alpha3": "CHN",
     "WIKI": "China",
-    "WOS": "peoples r china"
+    "WOS": "peoples r china",
+    "WIPO": "CN"
   },
   {
     "ISO3166alpha3": "CXR",
     "WIKI": "Christmas Island",
-    "WOS": "christmas island"
+    "WOS": "christmas island",
+    "WIPO": "CX"
   },
   {
     "ISO3166alpha3": "CCK",
     "WIKI": "Cocos (Keeling) Islands",
-    "WOS": "cocos islands"
+    "WOS": "cocos islands",
+    "WIPO": "CC"
   },
   {
     "ISO3166alpha3": "COL",
     "WIKI": "Colombia",
-    "WOS": "colombia"
+    "WOS": "colombia",
+    "WIPO": "CO"
   },
   {
     "ISO3166alpha3": "COM",
     "WIKI": "Comoros",
-    "WOS": "comoros"
+    "WOS": "comoros",
+    "WIPO": "KM"
   },
   {
     "ISO3166alpha3": "COG",
     "WIKI": "Congo",
-    "WOS": "congo"
+    "WOS": "congo",
+    "WIPO": "CG"
   },
   {
     "ISO3166alpha3": "COD",
     "WIKI": "Congo, Democratic Republic of the",
-    "WOS": "dem rep congo"
+    "WOS": "dem rep congo",
+    "WIPO": "CD"
   },
   {
     "ISO3166alpha3": "COK",
     "WIKI": "Cook Islands",
-    "WOS": "cook islands"
+    "WOS": "cook islands",
+    "WIPO": "CK"
   },
   {
     "ISO3166alpha3": "CRI",
     "WIKI": "Costa Rica",
-    "WOS": "costa rica"
+    "WOS": "costa rica",
+    "WIPO": "CR"
   },
   {
     "ISO3166alpha3": "CIV",
     "WIKI": "Côte d'Ivoire",
-    "WOS": "cote ivoire"
+    "WOS": "cote ivoire",
+    "WIPO": "CI"
   },
   {
     "ISO3166alpha3": "HRV",
     "WIKI": "Croatia",
-    "WOS": "croatia"
+    "WOS": "croatia",
+    "WIPO": "HR"
   },
   {
     "ISO3166alpha3": "CUB",
     "WIKI": "Cuba",
-    "WOS": "cuba"
+    "WOS": "cuba",
+    "WIPO": "CU"
   },
   {
     "ISO3166alpha3": "CUW",
     "WIKI": "Curaçao",
-    "WOS": "curacao"
+    "WOS": "curacao",
+    "WIPO": "CW"
   },
   {
     "ISO3166alpha3": "CYP",
     "WIKI": "Cyprus",
-    "WOS": "cyprus"
+    "WOS": "cyprus",
+    "WIPO": "CY"
   },
   {
     "ISO3166alpha3": "CZE",
     "WIKI": "Czechia",
-    "WOS": "czech republic"
+    "WOS": "czech republic",
+    "WIPO": "CZ"
   },
   {
     "ISO3166alpha3": "DNK",
     "WIKI": "Denmark",
-    "WOS": "denmark"
+    "WOS": "denmark",
+    "WIPO": "DK"
   },
   {
     "ISO3166alpha3": "DJI",
     "WIKI": "Djibouti",
-    "WOS": "djibouti"
+    "WOS": "djibouti",
+    "WIPO": "DJ"
   },
   {
     "ISO3166alpha3": "DMA",
     "WIKI": "Dominica",
-    "WOS": "dominica"
+    "WOS": "dominica",
+    "WIPO": "DM"
   },
   {
     "ISO3166alpha3": "DOM",
     "WIKI": "Dominican Republic",
-    "WOS": "dominican republic"
+    "WOS": "dominican republic",
+    "WIPO": "DO"
   },
   {
     "ISO3166alpha3": "ECU",
     "WIKI": "Ecuador",
-    "WOS": "ecuador"
+    "WOS": "ecuador",
+    "WIPO": "EC"
   },
   {
     "ISO3166alpha3": "EGY",
     "WIKI": "Egypt",
-    "WOS": "egypt"
+    "WOS": "egypt",
+    "WIPO": "EG"
   },
   {
     "ISO3166alpha3": "SLV",
     "WIKI": "El Salvador",
-    "WOS": "el salvador"
+    "WOS": "el salvador",
+    "WIPO": "SV"
   },
   {
     "ISO3166alpha3": "GNQ",
     "WIKI": "Equatorial Guinea",
-    "WOS": "equatorial guinea"
+    "WOS": "equatorial guinea",
+    "WIPO": "GQ"
   },
   {
     "ISO3166alpha3": "ERI",
     "WIKI": "Eritrea",
-    "WOS": "eritrea"
+    "WOS": "eritrea",
+    "WIPO": "ER"
   },
   {
     "ISO3166alpha3": "EST",
     "WIKI": "Estonia",
-    "WOS": "estonia"
+    "WOS": "estonia",
+    "WIPO": "EE"
   },
   {
     "ISO3166alpha3": "SWZ",
     "WIKI": "Eswatini",
-    "WOS": "eswatini"
+    "WOS": "eswatini",
+    "WIPO": "SZ"
   },
   {
     "ISO3166alpha3": "ETH",
     "WIKI": "Ethiopia",
-    "WOS": "ethiopia"
+    "WOS": "ethiopia",
+    "WIPO": "ET"
   },
   {
     "ISO3166alpha3": "FLK",
     "WIKI": "Falkland Islands (Malvinas)",
-    "WOS": "falkland island"
+    "WOS": "falkland island",
+    "WIPO": "FK"
   },
   {
     "ISO3166alpha3": "FRO",
     "WIKI": "Faroe Islands",
-    "WOS": "faroe islands"
+    "WOS": "faroe islands",
+    "WIPO": "FO"
   },
   {
     "ISO3166alpha3": "FJI",
     "WIKI": "Fiji",
-    "WOS": "fiji"
+    "WOS": "fiji",
+    "WIPO": "FJ"
   },
   {
     "ISO3166alpha3": "FIN",
     "WIKI": "Finland",
-    "WOS": "finland"
+    "WOS": "finland",
+    "WIPO": "FI"
   },
   {
     "ISO3166alpha3": "FRA",
     "WIKI": "France",
-    "WOS": "france"
+    "WOS": "france",
+    "WIPO": "FR"
   },
   {
     "ISO3166alpha3": "GUF",
     "WIKI": "French Guiana",
-    "WOS": "french guiana"
+    "WOS": "french guiana",
+    "WIPO": "GF"
   },
   {
     "ISO3166alpha3": "PYF",
     "WIKI": "French Polynesia",
-    "WOS": "french polynesia"
+    "WOS": "french polynesia",
+    "WIPO": "PF"
   },
   {
     "ISO3166alpha3": "ATF",
     "WIKI": "French Southern Territories",
-    "WOS": "french southern territories"
+    "WOS": "french southern territories",
+    "WIPO": "TF"
   },
   {
     "ISO3166alpha3": "GAB",
     "WIKI": "Gabon",
-    "WOS": "gabon"
+    "WOS": "gabon",
+    "WIPO": "GA"
   },
   {
     "ISO3166alpha3": "GMB",
     "WIKI": "Gambia",
-    "WOS": "gambia"
+    "WOS": "gambia",
+    "WIPO": "GM"
   },
   {
     "ISO3166alpha3": "GEO",
     "WIKI": "Georgia",
-    "WOS": "georgia"
+    "WOS": "georgia",
+    "WIPO": "GE"
   },
   {
     "ISO3166alpha3": "DEU",
     "WIKI": "Germany",
-    "WOS": "germany"
+    "WOS": "germany",
+    "WIPO": "DE"
   },
   {
     "ISO3166alpha3": "GHA",
     "WIKI": "Ghana",
-    "WOS": "ghana"
+    "WOS": "ghana",
+    "WIPO": "GH"
   },
   {
     "ISO3166alpha3": "GIB",
     "WIKI": "Gibraltar",
-    "WOS": "gibraltar"
+    "WOS": "gibraltar",
+    "WIPO": "GI"
   },
   {
     "ISO3166alpha3": "GRC",
     "WIKI": "Greece",
-    "WOS": "greece"
+    "WOS": "greece",
+    "WIPO": "GR"
   },
   {
     "ISO3166alpha3": "GRL",
     "WIKI": "Greenland",
-    "WOS": "greenland"
+    "WOS": "greenland",
+    "WIPO": "GL"
   },
   {
     "ISO3166alpha3": "GRD",
     "WIKI": "Grenada",
-    "WOS": "grenada"
+    "WOS": "grenada",
+    "WIPO": "GD"
   },
   {
     "ISO3166alpha3": "GLP",
     "WIKI": "Guadeloupe",
-    "WOS": "guadeloupe"
+    "WOS": "guadeloupe",
+    "WIPO": "GP"
   },
   {
     "ISO3166alpha3": "GUM",
     "WIKI": "Guam",
-    "WOS": "guam"
+    "WOS": "guam",
+    "WIPO": "GU"
   },
   {
     "ISO3166alpha3": "GTM",
     "WIKI": "Guatemala",
-    "WOS": "guatemala"
+    "WOS": "guatemala",
+    "WIPO": "GT"
   },
   {
     "ISO3166alpha3": "GGY",
     "WIKI": "Guernsey",
-    "WOS": "guernsey"
+    "WOS": "guernsey",
+    "WIPO": "GG"
   },
   {
     "ISO3166alpha3": "GIN",
     "WIKI": "Guinea",
-    "WOS": "guinea"
+    "WOS": "guinea",
+    "WIPO": "GN"
   },
   {
     "ISO3166alpha3": "GNB",
     "WIKI": "Guinea-Bissau",
-    "WOS": "guinea-bissau"
+    "WOS": "guinea-bissau",
+    "WIPO": "GW"
   },
   {
     "ISO3166alpha3": "GUY",
     "WIKI": "Guyana",
-    "WOS": "guyana"
+    "WOS": "guyana",
+    "WIPO": "GY"
   },
   {
     "ISO3166alpha3": "HTI",
     "WIKI": "Haiti",
-    "WOS": "haiti"
+    "WOS": "haiti",
+    "WIPO": "HT"
   },
   {
     "ISO3166alpha3": "HMD",
     "WIKI": "Heard Island and McDonald Islands",
-    "WOS": "heard island and mcdonald islands"
+    "WOS": "heard island and mcdonald islands",
+    "WIPO": "HM"
   },
   {
     "ISO3166alpha3": "VAT",
     "WIKI": "Holy See",
-    "WOS": "vatican"
+    "WOS": "vatican",
+    "WIPO": "VA"
   },
   {
     "ISO3166alpha3": "HND",
     "WIKI": "Honduras",
-    "WOS": "honduras"
+    "WOS": "honduras",
+    "WIPO": "HN"
   },
   {
     "ISO3166alpha3": "HKG",
     "WIKI": "Hong Kong",
-    "WOS": "hong kong"
+    "WOS": "hong kong",
+    "WIPO": "HK"
   },
   {
     "ISO3166alpha3": "HUN",
     "WIKI": "Hungary",
-    "WOS": "hungary"
+    "WOS": "hungary",
+    "WIPO": "HU"
   },
   {
     "ISO3166alpha3": "ISL",
     "WIKI": "Iceland",
-    "WOS": "iceland"
+    "WOS": "iceland",
+    "WIPO": "IS"
   },
   {
     "ISO3166alpha3": "IND",
     "WIKI": "India",
-    "WOS": "india"
+    "WOS": "india",
+    "WIPO": "IN"
   },
   {
     "ISO3166alpha3": "IDN",
     "WIKI": "Indonesia",
-    "WOS": "indonesia"
+    "WOS": "indonesia",
+    "WIPO": "ID"
   },
   {
     "ISO3166alpha3": "IRN",
     "WIKI": "Iran (Islamic Republic of)",
-    "WOS": "iran"
+    "WOS": "iran",
+    "WIPO": "IR"
   },
   {
     "ISO3166alpha3": "IRQ",
     "WIKI": "Iraq",
-    "WOS": "iraq"
+    "WOS": "iraq",
+    "WIPO": "IQ"
   },
   {
     "ISO3166alpha3": "IRL",
     "WIKI": "Ireland",
-    "WOS": "ireland"
+    "WOS": "ireland",
+    "WIPO": "IE"
   },
   {
     "ISO3166alpha3": "IMN",
     "WIKI": "Isle of Man",
-    "WOS": "isle of man"
+    "WOS": "isle of man",
+    "WIPO": "IM"
   },
   {
     "ISO3166alpha3": "ISR",
     "WIKI": "Israel",
-    "WOS": "israel"
+    "WOS": "israel",
+    "WIPO": "IL"
   },
   {
     "ISO3166alpha3": "ITA",
     "WIKI": "Italy",
-    "WOS": "italy"
+    "WOS": "italy",
+    "WIPO": "IT"
   },
   {
     "ISO3166alpha3": "JAM",
     "WIKI": "Jamaica",
-    "WOS": "jamaica"
+    "WOS": "jamaica",
+    "WIPO": "JM"
   },
   {
     "ISO3166alpha3": "JPN",
     "WIKI": "Japan",
-    "WOS": "japan"
+    "WOS": "japan",
+    "WIPO": "JP"
   },
   {
     "ISO3166alpha3": "JEY",
     "WIKI": "Jersey",
-    "WOS": "jersey"
+    "WOS": "jersey",
+    "WIPO": "JE"
   },
   {
     "ISO3166alpha3": "JOR",
     "WIKI": "Jordan",
-    "WOS": "jordan"
+    "WOS": "jordan",
+    "WIPO": "JO"
   },
   {
     "ISO3166alpha3": "KAZ",
     "WIKI": "Kazakhstan",
-    "WOS": "kazakhstan"
+    "WOS": "kazakhstan",
+    "WIPO": "KZ"
   },
   {
     "ISO3166alpha3": "KEN",
     "WIKI": "Kenya",
-    "WOS": "kenya"
+    "WOS": "kenya",
+    "WIPO": "KE"
   },
   {
     "ISO3166alpha3": "KIR",
     "WIKI": "Kiribati",
-    "WOS": "kiribati"
+    "WOS": "kiribati",
+    "WIPO": "KI"
   },
   {
     "ISO3166alpha3": "PRK",
     "WIKI": "Korea (Democratic People's Republic of)",
-    "WOS": "north korea"
+    "WOS": "north korea",
+    "WIPO": "KP"
   },
   {
     "ISO3166alpha3": "KOR",
     "WIKI": "Korea, Republic of",
-    "WOS": "south korea"
+    "WOS": "south korea",
+    "WIPO": "KR"
   },
   {
     "ISO3166alpha3": "KWT",
     "WIKI": "Kuwait",
-    "WOS": "kuwait"
+    "WOS": "kuwait",
+    "WIPO": "KW"
   },
   {
     "ISO3166alpha3": "KGZ",
     "WIKI": "Kyrgyzstan",
-    "WOS": "kyrgyzstan"
+    "WOS": "kyrgyzstan",
+    "WIPO": "KG"
   },
   {
     "ISO3166alpha3": "LAO",
     "WIKI": "Lao People's Democratic Republic",
-    "WOS": "laos"
+    "WOS": "laos",
+    "WIPO": "LA"
   },
   {
     "ISO3166alpha3": "LVA",
     "WIKI": "Latvia",
-    "WOS": "latvia"
+    "WOS": "latvia",
+    "WIPO": "LV"
   },
   {
     "ISO3166alpha3": "LBN",
     "WIKI": "Lebanon",
-    "WOS": "lebanon"
+    "WOS": "lebanon",
+    "WIPO": "LB"
   },
   {
     "ISO3166alpha3": "LSO",
     "WIKI": "Lesotho",
-    "WOS": "lesotho"
+    "WOS": "lesotho",
+    "WIPO": "LS"
   },
   {
     "ISO3166alpha3": "LBR",
     "WIKI": "Liberia",
-    "WOS": "liberia"
+    "WOS": "liberia",
+    "WIPO": "LR"
   },
   {
     "ISO3166alpha3": "LBY",
     "WIKI": "Libya",
-    "WOS": "libya"
+    "WOS": "libya",
+    "WIPO": "LY"
   },
   {
     "ISO3166alpha3": "LIE",
     "WIKI": "Liechtenstein",
-    "WOS": "liechtenstein"
+    "WOS": "liechtenstein",
+    "WIPO": "LI"
   },
   {
     "ISO3166alpha3": "LTU",
     "WIKI": "Lithuania",
-    "WOS": "lithuania"
+    "WOS": "lithuania",
+    "WIPO": "LT"
   },
   {
     "ISO3166alpha3": "LUX",
     "WIKI": "Luxembourg",
-    "WOS": "luxembourg"
+    "WOS": "luxembourg",
+    "WIPO": "LU"
   },
   {
     "ISO3166alpha3": "MAC",
     "WIKI": "Macao",
-    "WOS": "macao"
+    "WOS": "macao",
+    "WIPO": "MO"
   },
   {
     "ISO3166alpha3": "MDG",
     "WIKI": "Madagascar",
-    "WOS": "madagascar"
+    "WOS": "madagascar",
+    "WIPO": "MG"
   },
   {
     "ISO3166alpha3": "MWI",
     "WIKI": "Malawi",
-    "WOS": "malawi"
+    "WOS": "malawi",
+    "WIPO": "MW"
   },
   {
     "ISO3166alpha3": "MYS",
     "WIKI": "Malaysia",
-    "WOS": "malaysia"
+    "WOS": "malaysia",
+    "WIPO": "MY"
   },
   {
     "ISO3166alpha3": "MDV",
     "WIKI": "Maldives",
-    "WOS": "maldives"
+    "WOS": "maldives",
+    "WIPO": "MV"
   },
   {
     "ISO3166alpha3": "MLI",
     "WIKI": "Mali",
-    "WOS": "mali"
+    "WOS": "mali",
+    "WIPO": "ML"
   },
   {
     "ISO3166alpha3": "MLT",
     "WIKI": "Malta",
-    "WOS": "malta"
+    "WOS": "malta",
+    "WIPO": "MT"
   },
   {
     "ISO3166alpha3": "MHL",
     "WIKI": "Marshall Islands",
-    "WOS": "marshall islands"
+    "WOS": "marshall islands",
+    "WIPO": "MH"
   },
   {
     "ISO3166alpha3": "MTQ",
     "WIKI": "Martinique",
-    "WOS": "martinique"
+    "WOS": "martinique",
+    "WIPO": "MQ"
   },
   {
     "ISO3166alpha3": "MRT",
     "WIKI": "Mauritania",
-    "WOS": "mauritania"
+    "WOS": "mauritania",
+    "WIPO": "MR"
   },
   {
     "ISO3166alpha3": "MUS",
     "WIKI": "Mauritius",
-    "WOS": "mauritius"
+    "WOS": "mauritius",
+    "WIPO": "MU"
   },
   {
     "ISO3166alpha3": "MYT",
     "WIKI": "Mayotte",
-    "WOS": "mayotte"
+    "WOS": "mayotte",
+    "WIPO": "YT"
   },
   {
     "ISO3166alpha3": "MEX",
     "WIKI": "Mexico",
-    "WOS": "mexico"
+    "WOS": "mexico",
+    "WIPO": "MX"
   },
   {
     "ISO3166alpha3": "FSM",
     "WIKI": "Micronesia (Federated States of)",
-    "WOS": "micronesia"
+    "WOS": "micronesia",
+    "WIPO": "FM"
   },
   {
     "ISO3166alpha3": "MDA",
     "WIKI": "Moldova, Republic of",
-    "WOS": "moldova"
+    "WOS": "moldova",
+    "WIPO": "MD"
   },
   {
     "ISO3166alpha3": "MCO",
     "WIKI": "Monaco",
-    "WOS": "monaco"
+    "WOS": "monaco",
+    "WIPO": "MC"
   },
   {
     "ISO3166alpha3": "MNG",
     "WIKI": "Mongolia",
-    "WOS": "mongolia"
+    "WOS": "mongolia",
+    "WIPO": "MN"
   },
   {
     "ISO3166alpha3": "MNE",
     "WIKI": "Montenegro",
-    "WOS": "montenegro"
+    "WOS": "montenegro",
+    "WIPO": "ME"
   },
   {
     "ISO3166alpha3": "MSR",
     "WIKI": "Montserrat",
-    "WOS": "montserrat"
+    "WOS": "montserrat",
+    "WIPO": "MS"
   },
   {
     "ISO3166alpha3": "MAR",
     "WIKI": "Morocco",
-    "WOS": "morocco"
+    "WOS": "morocco",
+    "WIPO": "MA"
   },
   {
     "ISO3166alpha3": "MOZ",
     "WIKI": "Mozambique",
-    "WOS": "mozambique"
+    "WOS": "mozambique",
+    "WIPO": "MZ"
   },
   {
     "ISO3166alpha3": "MMR",
     "WIKI": "Myanmar",
-    "WOS": "myanmar"
+    "WOS": "myanmar",
+    "WIPO": "MM"
   },
   {
     "ISO3166alpha3": "NAM",
     "WIKI": "Namibia",
-    "WOS": "namibia"
+    "WOS": "namibia",
+    "WIPO": "NA"
   },
   {
     "ISO3166alpha3": "NRU",
     "WIKI": "Nauru",
-    "WOS": "nauru"
+    "WOS": "nauru",
+    "WIPO": "NR"
   },
   {
     "ISO3166alpha3": "NPL",
     "WIKI": "Nepal",
-    "WOS": "nepal"
+    "WOS": "nepal",
+    "WIPO": "NP"
   },
   {
     "ISO3166alpha3": "NLD",
     "WIKI": "Netherlands",
-    "WOS": "netherlands"
+    "WOS": "netherlands",
+    "WIPO": "NL"
   },
   {
     "ISO3166alpha3": "NCL",
     "WIKI": "New Caledonia",
-    "WOS": "new caledonia"
+    "WOS": "new caledonia",
+    "WIPO": "NC"
   },
   {
     "ISO3166alpha3": "NZL",
     "WIKI": "New Zealand",
-    "WOS": "new zealand"
+    "WOS": "new zealand",
+    "WIPO": "NZ"
   },
   {
     "ISO3166alpha3": "NIC",
     "WIKI": "Nicaragua",
-    "WOS": "nicaragua"
+    "WOS": "nicaragua",
+    "WIPO": "NI"
   },
   {
     "ISO3166alpha3": "NER",
     "WIKI": "Niger",
-    "WOS": "niger"
+    "WOS": "niger",
+    "WIPO": "NE"
   },
   {
     "ISO3166alpha3": "NGA",
     "WIKI": "Nigeria",
-    "WOS": "nigeria"
+    "WOS": "nigeria",
+    "WIPO": "NG"
   },
   {
     "ISO3166alpha3": "NIU",
     "WIKI": "Niue",
-    "WOS": "niue"
+    "WOS": "niue",
+    "WIPO": "NU"
   },
   {
     "ISO3166alpha3": "NFK",
     "WIKI": "Norfolk Island",
-    "WOS": "norfolk island"
+    "WOS": "norfolk island",
+    "WIPO": "NF"
   },
   {
     "ISO3166alpha3": "MKD",
     "WIKI": "North Macedonia",
-    "WOS": "north macedonia"
+    "WOS": "north macedonia",
+    "WIPO": "MK"
   },
   {
     "ISO3166alpha3": "MNP",
     "WIKI": "Northern Mariana Islands",
-    "WOS": "northern mariana islands"
+    "WOS": "northern mariana islands",
+    "WIPO": "MP"
   },
   {
     "ISO3166alpha3": "NOR",
     "WIKI": "Norway",
-    "WOS": "norway"
+    "WOS": "norway",
+    "WIPO": "NO"
   },
   {
     "ISO3166alpha3": "OMN",
     "WIKI": "Oman",
-    "WOS": "oman"
+    "WOS": "oman",
+    "WIPO": "OM"
   },
   {
     "ISO3166alpha3": "PAK",
     "WIKI": "Pakistan",
-    "WOS": "pakistan"
+    "WOS": "pakistan",
+    "WIPO": "PK"
   },
   {
     "ISO3166alpha3": "PLW",
     "WIKI": "Palau",
-    "WOS": "palau"
+    "WOS": "palau",
+    "WIPO": "PW"
   },
   {
     "ISO3166alpha3": "PSE",
     "WIKI": "Palestine, State of",
-    "WOS": "palestine"
+    "WOS": "palestine",
+    "WIPO": "PS"
   },
   {
     "ISO3166alpha3": "PAN",
     "WIKI": "Panama",
-    "WOS": "panama"
+    "WOS": "panama",
+    "WIPO": "PA"
   },
   {
     "ISO3166alpha3": "PNG",
     "WIKI": "Papua New Guinea",
-    "WOS": "papua n guinea"
+    "WOS": "papua n guinea",
+    "WIPO": "PG"
   },
   {
     "ISO3166alpha3": "PRY",
     "WIKI": "Paraguay",
-    "WOS": "paraguay"
+    "WOS": "paraguay",
+    "WIPO": "PY"
   },
   {
     "ISO3166alpha3": "PER",
     "WIKI": "Peru",
-    "WOS": "peru"
+    "WOS": "peru",
+    "WIPO": "PE"
   },
   {
     "ISO3166alpha3": "PHL",
     "WIKI": "Philippines",
-    "WOS": "philippines"
+    "WOS": "philippines",
+    "WIPO": "PH"
   },
   {
     "ISO3166alpha3": "PCN",
     "WIKI": "Pitcairn",
-    "WOS": "pitcairn"
+    "WOS": "pitcairn",
+    "WIPO": "PN"
   },
   {
     "ISO3166alpha3": "POL",
     "WIKI": "Poland",
-    "WOS": "poland"
+    "WOS": "poland",
+    "WIPO": "PL"
   },
   {
     "ISO3166alpha3": "PRT",
     "WIKI": "Portugal",
-    "WOS": "portugal"
+    "WOS": "portugal",
+    "WIPO": "PT"
   },
   {
     "ISO3166alpha3": "PRI",
     "WIKI": "Puerto Rico",
-    "WOS": "puerto rico"
+    "WOS": "puerto rico",
+    "WIPO": "PR"
   },
   {
     "ISO3166alpha3": "QAT",
     "WIKI": "Qatar",
-    "WOS": "qatar"
+    "WOS": "qatar",
+    "WIPO": "QA"
   },
   {
     "ISO3166alpha3": "REU",
     "WIKI": "Réunion",
-    "WOS": "réunion"
+    "WOS": "réunion",
+    "WIPO": "RE"
   },
   {
     "ISO3166alpha3": "ROU",
     "WIKI": "Romania",
-    "WOS": "romania"
+    "WOS": "romania",
+    "WIPO": "RO"
   },
   {
     "ISO3166alpha3": "RUS",
     "WIKI": "Russian Federation",
-    "WOS": "russia"
+    "WOS": "russia",
+    "WIPO": "RU"
   },
   {
     "ISO3166alpha3": "RWA",
     "WIKI": "Rwanda",
-    "WOS": "rwanda"
+    "WOS": "rwanda",
+    "WIPO": "RW"
   },
   {
     "ISO3166alpha3": "BLM",
     "WIKI": "Saint Barthélemy",
-    "WOS": "saint barthélemy"
+    "WOS": "saint barthélemy",
+    "WIPO": "BL"
   },
   {
     "ISO3166alpha3": "SHN",
     "WIKI": "Saint Helena, Ascension and Tristan da Cunha",
-    "WOS": "saint helena, ascension and tristan da cunha"
+    "WOS": "saint helena, ascension and tristan da cunha",
+    "WIPO": "SH"
   },
   {
     "ISO3166alpha3": "KNA",
     "WIKI": "Saint Kitts and Nevis",
-    "WOS": "saint kitts & nevis"
+    "WOS": "saint kitts & nevis",
+    "WIPO": "KN"
   },
   {
     "ISO3166alpha3": "LCA",
     "WIKI": "Saint Lucia",
-    "WOS": "saint lucia"
+    "WOS": "saint lucia",
+    "WIPO": "LC"
   },
   {
     "ISO3166alpha3": "MAF",
     "WIKI": "Saint Martin (French part)",
-    "WOS": "saint martin"
+    "WOS": "saint martin",
+    "WIPO": "MF"
   },
   {
     "ISO3166alpha3": "SPM",
     "WIKI": "Saint Pierre and Miquelon",
-    "WOS": "saint pierre & miquelon"
+    "WOS": "saint pierre & miquelon",
+    "WIPO": "PM"
   },
   {
     "ISO3166alpha3": "VCT",
     "WIKI": "Saint Vincent and the Grenadines",
-    "WOS": "saint vincent and the grenadines"
+    "WOS": "saint vincent and the grenadines",
+    "WIPO": "VC"
   },
   {
     "ISO3166alpha3": "WSM",
     "WIKI": "Samoa",
-    "WOS": "samoa"
+    "WOS": "samoa",
+    "WIPO": "WS"
   },
   {
     "ISO3166alpha3": "SMR",
     "WIKI": "San Marino",
-    "WOS": "san marino"
+    "WOS": "san marino",
+    "WIPO": "SM"
   },
   {
     "ISO3166alpha3": "STP",
     "WIKI": "Sao Tome and Principe",
-    "WOS": "sao tome and principe"
+    "WOS": "sao tome and principe",
+    "WIPO": "ST"
   },
   {
     "ISO3166alpha3": "SAU",
     "WIKI": "Saudi Arabia",
-    "WOS": "saudi arabia"
+    "WOS": "saudi arabia",
+    "WIPO": "SA"
   },
   {
     "ISO3166alpha3": "SEN",
     "WIKI": "Senegal",
-    "WOS": "senegal"
+    "WOS": "senegal",
+    "WIPO": "SN"
   },
   {
     "ISO3166alpha3": "SRB",
     "WIKI": "Serbia",
-    "WOS": "serbia"
+    "WOS": "serbia",
+    "WIPO": "RS"
   },
   {
     "ISO3166alpha3": "SYC",
     "WIKI": "Seychelles",
-    "WOS": "seychelles"
+    "WOS": "seychelles",
+    "WIPO": "SC"
   },
   {
     "ISO3166alpha3": "SLE",
     "WIKI": "Sierra Leone",
-    "WOS": "sierra leone"
+    "WOS": "sierra leone",
+    "WIPO": "SL"
   },
   {
     "ISO3166alpha3": "SGP",
     "WIKI": "Singapore",
-    "WOS": "singapore"
+    "WOS": "singapore",
+    "WIPO": "SG"
   },
   {
     "ISO3166alpha3": "SXM",
     "WIKI": "Sint Maarten (Dutch part)",
-    "WOS": "sint maarten"
+    "WOS": "sint maarten",
+    "WIPO": "SX"
   },
   {
     "ISO3166alpha3": "SVK",
     "WIKI": "Slovakia",
-    "WOS": "slovakia"
+    "WOS": "slovakia",
+    "WIPO": "SK"
   },
   {
     "ISO3166alpha3": "SVN",
     "WIKI": "Slovenia",
-    "WOS": "slovenia"
+    "WOS": "slovenia",
+    "WIPO": "SI"
   },
   {
     "ISO3166alpha3": "SLB",
     "WIKI": "Solomon Islands",
-    "WOS": "solomon islands"
+    "WOS": "solomon islands",
+    "WIPO": "SB"
   },
   {
     "ISO3166alpha3": "SOM",
     "WIKI": "Somalia",
-    "WOS": "somalia"
+    "WOS": "somalia",
+    "WIPO": "SO"
   },
   {
     "ISO3166alpha3": "ZAF",
     "WIKI": "South Africa",
-    "WOS": "south africa"
+    "WOS": "south africa",
+    "WIPO": "ZA"
   },
   {
     "ISO3166alpha3": "SGS",
     "WIKI": "South Georgia and the South Sandwich Islands",
-    "WOS": "south georgia and the south sandwich islands"
+    "WOS": "south georgia and the south sandwich islands",
+    "WIPO": "GS"
   },
   {
     "ISO3166alpha3": "SSD",
     "WIKI": "South Sudan",
-    "WOS": "south sudan"
+    "WOS": "south sudan",
+    "WIPO": "SS"
   },
   {
     "ISO3166alpha3": "ESP",
     "WIKI": "Spain",
-    "WOS": "spain"
+    "WOS": "spain",
+    "WIPO": "ES"
   },
   {
     "ISO3166alpha3": "LKA",
     "WIKI": "Sri Lanka",
-    "WOS": "sri lanka"
+    "WOS": "sri lanka",
+    "WIPO": "LK"
   },
   {
     "ISO3166alpha3": "SDN",
     "WIKI": "Sudan",
-    "WOS": "sudan"
+    "WOS": "sudan",
+    "WIPO": "SD"
   },
   {
     "ISO3166alpha3": "SUR",
     "WIKI": "Suriname",
-    "WOS": "suriname"
+    "WOS": "suriname",
+    "WIPO": "SR"
   },
   {
     "ISO3166alpha3": "SJM",
     "WIKI": "Svalbard and Jan Mayen",
-    "WOS": "svalbard"
+    "WOS": "svalbard",
+    "WIPO": "SJ"
   },
   {
     "ISO3166alpha3": "SWE",
     "WIKI": "Sweden",
-    "WOS": "sweden"
+    "WOS": "sweden",
+    "WIPO": "SE"
   },
   {
     "ISO3166alpha3": "CHE",
     "WIKI": "Switzerland",
-    "WOS": "switzerland"
+    "WOS": "switzerland",
+    "WIPO": "CH"
   },
   {
     "ISO3166alpha3": "SYR",
     "WIKI": "Syrian Arab Republic",
-    "WOS": "syria"
+    "WOS": "syria",
+    "WIPO": "SY"
   },
   {
     "ISO3166alpha3": "TWN",
     "WIKI": "Taiwan, Province of China",
-    "WOS": "taiwan"
+    "WOS": "taiwan",
+    "WIPO": "TW"
   },
   {
     "ISO3166alpha3": "TJK",
     "WIKI": "Tajikistan",
-    "WOS": "tajikistan"
+    "WOS": "tajikistan",
+    "WIPO": "TJ"
   },
   {
     "ISO3166alpha3": "TZA",
     "WIKI": "Tanzania, United Republic of",
-    "WOS": "tanzania"
+    "WOS": "tanzania",
+    "WIPO": "TZ"
   },
   {
     "ISO3166alpha3": "THA",
     "WIKI": "Thailand",
-    "WOS": "thailand"
+    "WOS": "thailand",
+    "WIPO": "TH"
   },
   {
     "ISO3166alpha3": "TLS",
     "WIKI": "Timor-Leste",
-    "WOS": "timor-leste"
+    "WOS": "timor-leste",
+    "WIPO": "TL"
   },
   {
     "ISO3166alpha3": "TGO",
     "WIKI": "Togo",
-    "WOS": "togo"
+    "WOS": "togo",
+    "WIPO": "TG"
   },
   {
     "ISO3166alpha3": "TKL",
     "WIKI": "Tokelau",
-    "WOS": "tokelau"
+    "WOS": "tokelau",
+    "WIPO": "TK"
   },
   {
     "ISO3166alpha3": "TON",
     "WIKI": "Tonga",
-    "WOS": "tonga"
+    "WOS": "tonga",
+    "WIPO": "TO"
   },
   {
     "ISO3166alpha3": "TTO",
     "WIKI": "Trinidad and Tobago",
-    "WOS": "trinidad tobago"
+    "WOS": "trinidad tobago",
+    "WIPO": "TT"
   },
   {
     "ISO3166alpha3": "TUN",
     "WIKI": "Tunisia",
-    "WOS": "tunisia"
+    "WOS": "tunisia",
+    "WIPO": "TN"
   },
   {
     "ISO3166alpha3": "TUR",
     "WIKI": "Turkey",
-    "WOS": "turkey"
+    "WOS": "turkey",
+    "WIPO": "TR"
   },
   {
     "ISO3166alpha3": "TKM",
     "WIKI": "Turkmenistan",
-    "WOS": "turkmenistan"
+    "WOS": "turkmenistan",
+    "WIPO": "TM"
   },
   {
     "ISO3166alpha3": "TCA",
     "WIKI": "Turks and Caicos Islands",
-    "WOS": "turks & caicos"
+    "WOS": "turks & caicos",
+    "WIPO": "TC"
   },
   {
     "ISO3166alpha3": "TUV",
     "WIKI": "Tuvalu",
-    "WOS": "tuvalu"
+    "WOS": "tuvalu",
+    "WIPO": "TV"
   },
   {
     "ISO3166alpha3": "UGA",
     "WIKI": "Uganda",
-    "WOS": "uganda"
+    "WOS": "uganda",
+    "WIPO": "UG"
   },
   {
     "ISO3166alpha3": "UKR",
     "WIKI": "Ukraine",
-    "WOS": "ukraine"
+    "WOS": "ukraine",
+    "WIPO": "UA"
   },
   {
     "ISO3166alpha3": "ARE",
     "WIKI": "United Arab Emirates",
-    "WOS": "u arab emirates"
+    "WOS": "u arab emirates",
+    "WIPO": "AE"
   },
   {
     "ISO3166alpha3": "GBR",
     "WIKI": "United Kingdom of Great Britain and Northern Ireland",
-    "WOS": "united kingdom"
+    "WOS": "united kingdom",
+    "WIPO": "GB"
   },
   {
     "ISO3166alpha3": "UMI",
     "WIKI": "United States Minor Outlying Islands",
-    "WOS": "united states minor outlying islands"
+    "WOS": "united states minor outlying islands",
+    "WIPO": "UM"
   },
   {
     "ISO3166alpha3": "USA",
     "WIKI": "United States of America",
-    "WOS": "usa"
+    "WOS": "usa",
+    "WIPO": "US"
   },
   {
     "ISO3166alpha3": "URY",
     "WIKI": "Uruguay",
-    "WOS": "uruguay"
+    "WOS": "uruguay",
+    "WIPO": "UY"
   },
   {
     "ISO3166alpha3": "UZB",
     "WIKI": "Uzbekistan",
-    "WOS": "uzbekistan"
+    "WOS": "uzbekistan",
+    "WIPO": "UZ"
   },
   {
     "ISO3166alpha3": "VUT",
     "WIKI": "Vanuatu",
-    "WOS": "vanuatu"
+    "WOS": "vanuatu",
+    "WIPO": "VU"
   },
   {
     "ISO3166alpha3": "VEN",
     "WIKI": "Venezuela (Bolivarian Republic of)",
-    "WOS": "venezuela"
+    "WOS": "venezuela",
+    "WIPO": "VE"
   },
   {
     "ISO3166alpha3": "VNM",
     "WIKI": "Viet Nam",
-    "WOS": "vietnam"
+    "WOS": "vietnam",
+    "WIPO": "VN"
   },
   {
     "ISO3166alpha3": "VGB",
     "WIKI": "Virgin Islands (British)",
-    "WOS": "british virgin isl"
+    "WOS": "british virgin isl",
+    "WIPO": "VG"
   },
   {
     "ISO3166alpha3": "VIR",
     "WIKI": "Virgin Islands (U.S.)",
-    "WOS": "virgin islands"
+    "WOS": "virgin islands",
+    "WIPO": "VI"
   },
   {
     "ISO3166alpha3": "WLF",
     "WIKI": "Wallis and Futuna",
-    "WOS": "wallis & futuna"
+    "WOS": "wallis & futuna",
+    "WIPO": "WF"
   },
   {
     "ISO3166alpha3": "ESH",
     "WIKI": "Western Sahara",
-    "WOS": "western sahara"
+    "WOS": "western sahara",
+    "WIPO": "EH"
   },
   {
     "ISO3166alpha3": "YEM",
     "WIKI": "Yemen",
-    "WOS": "yemen"
+    "WOS": "yemen",
+    "WIPO": "YE"
   },
   {
     "ISO3166alpha3": "ZMB",
     "WIKI": "Zambia",
-    "WOS": "zambia"
+    "WOS": "zambia",
+    "WIPO": "ZM"
   },
   {
     "ISO3166alpha3": "ZWE",
     "WIKI": "Zimbabwe",
-    "WOS": "zimbabwe"
+    "WOS": "zimbabwe",
+    "WIPO": "ZW"
   },
   {
     "ISO3166alpha3": "UNK",
     "WIKI": "",
-    "WOS": "kosovo"
+    "WOS": "kosovo",
+    "WIPO": "XX"
+  },
+  {
+    "ISO3166alpha3": "WOX",
+    "WIPO": "WO",
+    "WIKI": "International",
+    "WOS": "international"
+  },
+  {
+    "ISO3166alpha3": "EPX",
+    "WIPO": "EP",
+    "WIKI": "European",
+    "WOS": "european"
+  },
+  {
+    "ISO3166alpha3": "EAX",
+    "WIPO": "EA",
+    "WIKI": "Eurasian",
+    "WOS": "eurasian"
+  },
+  {
+    "ISO3166alpha3": "APX",
+    "WIPO": "AP",
+    "WIKI": "African RIPO",
+    "WOS": "african ripo"
+  },
+  {
+    "ISO3166alpha3": "OAX",
+    "WIPO": "OA",
+    "WIKI": "African IPO",
+    "WOS": "african ipo"
+  },
+  {
+    "ISO3166alpha3": "GCX",
+    "WIPO": "GC",
+    "WIKI": "GULF",
+    "WOS": "gulf"
+  },
+  {
+    "ISO3166alpha3": "XXX",
+    "WIPO": "XX",
+    "WIKI": "Unknown",
+    "WOS": "unknown"
   }
 ]
