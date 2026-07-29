@@ -40,6 +40,101 @@ if (!("Z9" %in% available_columns)) {
   dataset$Z9 <- 1
 }
 
+# --- Countries: required + standardized to canonical WOS names ---------------
+if (!("Countries" %in% available_columns)) {
+  stop("CRITICAL: Column 'Countries' is missing from dataset.")
+}
+
+standardize_countries_to_wos <- function(a_countries_column) {
+  conversion_path <- file.path(getwd(), "assets", "country_conversion.json")
+  if (!file.exists(conversion_path)) {
+    stop(glue("CRITICAL: Country conversion file not found: {conversion_path}"))
+  }
+
+  country_codes <- jsonlite::fromJSON(conversion_path)
+  required_country_cols <- c("ISO3166alpha3", "WIKI", "WOS", "WIPO")
+  if (!all(required_country_cols %in% colnames(country_codes))) {
+    stop("CRITICAL: country_conversion.json must contain ISO3166alpha3, WIKI, WOS, and WIPO columns.")
+  }
+
+  normalize_country_key <- function(x) {
+    x <- as.character(x)
+    x <- enc2utf8(x)
+    x <- iconv(x, to = "ASCII//TRANSLIT", sub = "")
+    x <- tolower(trimws(x))
+    x <- gsub("[[:punct:]]+", " ", x)
+    x <- gsub("\\s+", " ", x)
+    trimws(x)
+  }
+
+  canonical_wos <- tolower(trimws(as.character(country_codes$WOS)))
+  key_to_wos <- new.env(hash = TRUE, parent = emptyenv())
+
+  add_mapping <- function(keys, values) {
+    keys <- normalize_country_key(keys)
+    valid <- !is.na(keys) & keys != "" & !is.na(values) & values != ""
+    if (!any(valid)) {
+      return(invisible(NULL))
+    }
+    keys <- keys[valid]
+    values <- values[valid]
+    for (i in seq_along(keys)) {
+      assign(keys[[i]], values[[i]], envir = key_to_wos)
+    }
+    invisible(NULL)
+  }
+
+  # Accept WOS, WIKI, ISO alpha-3 and WIPO alpha-2 as inputs.
+  add_mapping(country_codes$WOS, canonical_wos)
+  add_mapping(country_codes$WIKI, canonical_wos)
+  add_mapping(country_codes$ISO3166alpha3, canonical_wos)
+  add_mapping(country_codes$WIPO, canonical_wos)
+
+  # Common aliases observed in address fields.
+  add_mapping(
+    c("uk", "u k", "england", "scotland", "wales", "north ireland", "united states", "us", "u s", "u s a"),
+    c("united kingdom", "united kingdom", "united kingdom", "united kingdom", "united kingdom", "united kingdom", "usa", "usa", "usa", "usa")
+  )
+
+  standardized <- vapply(a_countries_column, function(country_value) {
+    if (is.na(country_value)) {
+      return(NA_character_)
+    }
+
+    raw_value <- as.character(country_value)
+    if (!nzchar(trimws(raw_value))) {
+      return(NA_character_)
+    }
+
+    tokens <- unlist(strsplit(raw_value, split = ";", fixed = TRUE), use.names = FALSE)
+    tokens <- trimws(tokens)
+    tokens <- tokens[tokens != ""]
+    if (length(tokens) == 0) {
+      return(NA_character_)
+    }
+
+    mapped_tokens <- vapply(tokens, function(token) {
+      key <- normalize_country_key(token)
+      if (nzchar(key) && exists(key, envir = key_to_wos, inherits = FALSE)) {
+        return(get(key, envir = key_to_wos, inherits = FALSE))
+      }
+      # Keep unknown values normalized, so separators/casing are still standardized.
+      key
+    }, FUN.VALUE = character(1))
+
+    mapped_tokens <- unique(mapped_tokens[mapped_tokens != ""])
+    if (length(mapped_tokens) == 0) {
+      return(NA_character_)
+    }
+
+    paste(mapped_tokens, collapse = "; ")
+  }, FUN.VALUE = character(1), USE.NAMES = FALSE)
+
+  standardized
+}
+
+dataset$Countries <- standardize_countries_to_wos(dataset$Countries)
+
 # Generate semicolon-separated keywords from title text (fallback for DE/ID).
 # Uses base R + stringr only — no dependency on the tm package.
 get_keywords_split <- function(a_column) {
@@ -47,9 +142,9 @@ get_keywords_split <- function(a_column) {
     iconv(to = "UTF-8", sub = "byte") %>%
     iconv(to = "ASCII//TRANSLIT", sub = "") %>%
     tolower() %>%
-    str_replace_all("[0-9]+", "") %>%              # remove numbers
-    str_replace_all("[[:punct:]]+", " ") %>%       # remove punctuation
-    str_squish()                                    # collapse whitespace
+    str_replace_all("[0-9]+", "") %>% # remove numbers
+    str_replace_all("[[:punct:]]+", " ") %>% # remove punctuation
+    str_squish() # collapse whitespace
 
   # Remove common English stopwords (tm::stopwords equivalent)
   en_stopwords <- c(
@@ -86,7 +181,7 @@ if (!("ID" %in% available_columns)) {
 }
 
 # --- Optional columns (warn if missing) --------------------------------------
-optional_cols <- c("WC", "AU", "DI", "SO")
+optional_cols <- c("WC", "AU", "DI", "SO", "Institutions")
 for (col in optional_cols) {
   if (!(col %in% available_columns)) {
     message(glue("Warning: Optional column '{col}' is missing from dataset."))
@@ -108,6 +203,5 @@ if (future_year_papers > 0) {
 dataset$X_N <- as.numeric(as.character(dataset$X_N))
 dataset$X_C <- as.numeric(as.character(dataset$X_C))
 dataset$X_E <- as.numeric(dataset$X_E)
-dataset$Z9  <- as.numeric(dataset$Z9)
-dataset$PY  <- as.numeric(as.character(dataset$PY))
-
+dataset$Z9 <- as.numeric(dataset$Z9)
+dataset$PY <- as.numeric(as.character(dataset$PY))
