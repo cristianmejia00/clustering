@@ -66,6 +66,36 @@ for (level_report_iteration in available_levels) {
   subfolder_dataset <- "index_files/charts"
   subfolder_clusters <- "index_files/charts"
 
+  # ── CE R-strategy charts ───────────────────────────────────────────────
+  source(file.path(getwd(), "utils", "CE_utils", "charts_rs.R"))
+
+  rs_levels_to_run <- 0
+  rs_strategies <- NULL
+  rs_top_n_countries <- 20
+
+  if (!is.null(settings$reporting$rs_charts)) {
+    if (!is.null(settings$reporting$rs_charts$levels)) {
+      rs_levels_to_run <- as.integer(settings$reporting$rs_charts$levels)
+    }
+    if (!is.null(settings$reporting$rs_charts$strategies_to_show)) {
+      rs_strategies <- as.character(settings$reporting$rs_charts$strategies_to_show)
+    }
+    if (!is.null(settings$reporting$rs_charts$top_n_countries)) {
+      rs_top_n_countries <- as.integer(settings$reporting$rs_charts$top_n_countries)
+    }
+  }
+
+  create_rs_charts(
+    settings = settings,
+    output_dir = file.path(output_folder_level, subfolder_clusters),
+    level_filter = level_report,
+    levels_to_run = rs_levels_to_run,
+    strategies_to_show = rs_strategies,
+    top_n_countries = rs_top_n_countries,
+    country_counting = "full",
+    formats = c(extension)
+  )
+
   ## ── Overlays (WOS data only) ───────────────────────────────────────────
   # if (settings$params$dataset_source == "wos" && "WC" %in% colnames(myDataCorrect)) {
   #  source(file.path(getwd(), "pipelines", "charts", "overlays.R"))

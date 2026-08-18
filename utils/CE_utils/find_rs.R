@@ -5,7 +5,7 @@
 # and dataset_minimal.csv.
 #
 # Output columns:
-#   UT, level0, subcluster_label1,
+#   UT, PY, Countries, level0, subcluster_label1,
 #   refuse, reduce, reuse, rethink, repair, refurbish,
 #   remanufacture, repurpose, recycle, recover, remine,
 #   strategies
@@ -153,6 +153,20 @@ find_rs_strategies <- function(settings,
         stop("dataset_comp is missing required column(s): ", paste(missing_comp_cols, collapse = ", "))
     }
 
+    py_vals <- if ("PY" %in% colnames(dataset_comp)) {
+        dataset_comp$PY
+    } else {
+        warning("Column PY not found in dataset_comp; filling PY with empty strings")
+        rep("", nrow(dataset_comp))
+    }
+
+    countries_vals <- if ("Countries" %in% colnames(dataset_comp)) {
+        dataset_comp$Countries
+    } else {
+        warning("Column Countries not found in dataset_comp; filling Countries with empty strings")
+        rep("", nrow(dataset_comp))
+    }
+
     if (!("UT" %in% colnames(dataset_minimal))) {
         stop("dataset_minimal is missing required column: UT")
     }
@@ -187,6 +201,8 @@ find_rs_strategies <- function(settings,
 
     output <- data.frame(
         UT = dataset_comp$UT,
+        PY = py_vals,
+        Countries = countries_vals,
         level0 = level0_vals,
         subcluster_label1 = subcluster_vals,
         rs_flags,
