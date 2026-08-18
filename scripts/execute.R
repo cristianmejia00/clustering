@@ -1,2 +1,2 @@
 source("scripts/run_pipeline.R", encoding = "UTF-8")
-run_pipeline(c("reports")) # "dataset", "analysis", "reports", "ai", "enriched_embeds", "charts"
+run_pipeline(c("dataset", "analysis", "reports", "ai", "enriched_embeds", "charts"))

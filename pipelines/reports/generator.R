@@ -52,6 +52,10 @@ if (settings$params$type_of_analysis %in% c("topic_model", "both")) {
   ))
 }
 
+# Build Circular Economy R-strategies dataset beside dataset_comp.csv
+source(file.path(getwd(), "utils", "CE_utils", "find_rs.R"))
+find_rs_strategies(settings = settings)
+
 
 # Ensure we have all the papers in the network
 dataset_minimal$uuid <- dataset$uuid[match(dataset_minimal$UT, dataset$UT)]

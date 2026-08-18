@@ -88,6 +88,33 @@ dataset <- dataset %>% filter(nchar(as.character(PY)) == 4)
 # Convert all columns to UTF-8 character (required for consistent downstream processing)
 dataset <- dataset %>% mutate(across(everything(), ~ enc2utf8(as.character(.x))))
 
+# Initialize removed-records dataset for persistence, even when no rows are removed
+dataset_removed <- dataset[0, , drop = FALSE]
+
+# Remove non-circular-economy records that match technical "circular" terms
+if (all(c("TI", "AB") %in% colnames(dataset))) {
+  ti_text <- ifelse(is.na(dataset$TI), "", dataset$TI)
+  ab_text <- ifelse(is.na(dataset$AB), "", dataset$AB)
+  text_data <- tolower(paste(ti_text, ab_text, sep = ". "))
+
+  filter_bool_ce <- !grepl("circular economy", text_data)
+  filter_bool_remove <- grepl(
+    "circular dichroism|circular rna|circular muscle|circular dna|circular cylind|circular smooth|circular tube|circular patch|circular antenna|circular steel|circular bend|circular column|circular plate|circular array|circular pipe|circular shape|circular section|circular hole|circular chrom|circular concrete|circular polarization|circularly polarized|vortex shedd|vortex-induced vib|vortex induced vib|flow-induced|flow induced|drag reduction|o2 reduct|o-2 reduct|reduction of o-2|reduction of o2|electron reduct|reynolds number",
+    text_data
+  )
+
+  filter_bool <- filter_bool_ce & filter_bool_remove
+  dataset_removed <- dataset[filter_bool, , drop = FALSE]
+  dataset <- dataset[!filter_bool, , drop = FALSE]
+
+  message(sprintf(
+    "Circular-term filter removed %d records and kept %d records",
+    nrow(dataset_removed), nrow(dataset)
+  ))
+} else {
+  warning("Skipping circular-term filter because TI and/or AB columns are missing")
+}
+
 # --- 3. Append derived columns ------------------------------------------------
 
 # Row index and UUID
@@ -191,6 +218,11 @@ dir.create(results_folder_path, showWarnings = FALSE, recursive = TRUE)
 
 write.csv(dataset,
   file = file.path(results_folder_path, "dataset_raw_cleaned.csv"),
+  row.names = FALSE
+)
+
+write.csv(dataset_removed,
+  file = file.path(results_folder_path, "dataset_removed.csv"),
   row.names = FALSE
 )
 
