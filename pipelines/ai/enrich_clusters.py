@@ -10,14 +10,21 @@ Usage
         --rcs       path/to/rcs_merged.csv \
         --dataset   path/to/dataset_for_ai.csv \
         --output-dir path/to/output/ \
-        [--top-papers 5]
+        [--subcluster-summary path/to/level1/cluster_summary.csv] \
+        [--top-papers 10]
 
 The script reads ``config_analysis.yml`` from the repository root for:
   - ``llm.provider``  — which provider YAML to load (openai | anthropic | google)
   - ``llm.theme``     — research topic used in prompts
   - ``llm.description`` — topic description used in prompts
   - ``llm.compute``   — list of tasks to execute
-  - ``llm.rate_limit_delay`` — seconds between API calls (default: 2)
+  - ``llm.top_papers`` / ``llm.sample_titles`` / ``llm.top_keywords`` — context per cluster
+  - ``llm.rate_limit_delay`` — seconds between API calls (default: 1)
+
+Each cluster gets one LLM call that sees its distinctive keywords, its
+representative papers with abstracts, a sample of further titles and, for
+parent clusters, the names of its subclusters, and returns both the name
+and the description.
 
 Resumption
 ----------
@@ -30,7 +37,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -42,9 +48,28 @@ import yaml
 # Ensure the package directory is importable when called as a script
 sys.path.insert(0, str(Path(__file__).parent))
 
-from papers import build_bulk_text, get_cluster_papers
+from papers import (
+    build_cluster_context,
+    clean_code,
+    get_cluster_papers,
+    parent_code,
+    parse_keywords,
+)
 from prompts import load_prompt
 from providers import call_llm, init_provider
+
+CLUSTER_LABEL_SCHEMA = {
+    "name": "cluster_label",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "description": {"type": "string"},
+            "name": {"type": "string"},
+        },
+        "required": ["description", "name"],
+        "additionalProperties": False,
+    },
+}
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -61,11 +86,21 @@ def _is_complete(value: object) -> bool:
 
 
 def _clean_name(raw: str) -> str:
-    """Strip surrounding quotes and whitespace from an LLM-generated name."""
-    name = re.sub(r'^.*?"', "", raw)
-    name = re.sub(r'".$', "", name)
-    name = name.replace('"', "").strip()
-    return name
+    """Strip whitespace, surrounding quotes and a trailing period from a name."""
+    return str(raw).strip().strip("\"'“”").rstrip(".").strip()
+
+
+def _load_subclusters(path: str | None) -> pd.DataFrame | None:
+    """Load subcluster names (global_name preferred) keyed by parent code."""
+    if not path or not Path(path).exists():
+        return None
+    sub = pd.read_csv(path, dtype={"cluster_code": str})
+    names = sub.get("global_name", pd.Series(index=sub.index, dtype=str))
+    sub["name"] = names.where(names.notna() & names.astype(str).str.strip().ne(""),
+                              sub.get("cluster_name"))
+    sub = sub.loc[sub["name"].notna()].copy()
+    sub["parent"] = sub["cluster_code"].map(parent_code)
+    return sub
 
 
 # ---------------------------------------------------------------------------
@@ -77,29 +112,27 @@ def _summarize_papers(
     dataset: pd.DataFrame,
     topic: str,
     topic_description: str,
-    model: str,
-    defaults: dict,
+    settings: dict,
     delay: float,
 ) -> pd.DataFrame:
-    """Summarize each paper that doesn't already have a summary."""
+    """Replace each abstract with a one-sentence summary (cached in *dataset*)."""
     for idx in papers.index:
         existing = str(dataset.loc[dataset["UT"] == papers.at[idx, "UT"], "summary"].values[0])
         if existing and existing != "nan" and len(existing) > 0:
             papers.at[idx, "text"] = existing
             continue
 
-        system, user, settings = load_prompt(
+        system, user, prompt_settings = load_prompt(
             "summarize_paper",
             topic=topic,
             topic_description=topic_description,
-            article_text=papers.at[idx, "text"],
+            article_text=f"{papers.at[idx, 'TI']}. {papers.at[idx, 'text']}",
         )
         summary = call_llm(
             system_prompt=system,
             user_prompt=user,
-            model=model,
-            temperature=settings.get("temperature", defaults.get("temperature", 0.7)),
-            max_tokens=settings.get("max_tokens", defaults.get("max_tokens", 200)),
+            settings=settings,
+            temperature=prompt_settings.get("temperature"),
         )
         papers.at[idx, "text"] = summary
 
@@ -118,21 +151,17 @@ def enrich_cluster(
     dataset: pd.DataFrame,
     topic: str,
     topic_description: str,
-    model: str,
-    defaults: dict,
+    settings: dict,
     compute_tasks: list[str],
-    top_papers: int,
+    context_cfg: dict,
+    subclusters: pd.DataFrame | None,
     delay: float,
 ) -> None:
     """Run all LLM tasks for a single cluster, updating *rcs* in place."""
     mask = rcs["cluster_code"].astype(str) == str(cluster_code)
 
     # ── Select representative papers ──────────────────────────────────────
-    papers = get_cluster_papers(
-        dataset,
-        cluster_code,
-        top=top_papers,
-    )
+    papers = get_cluster_papers(dataset, cluster_code, top=context_cfg["top_papers"])
     if papers.empty:
         print(f"  [skip] No papers found for cluster {cluster_code}")
         return
@@ -143,70 +172,47 @@ def enrich_cluster(
     if "representative_docs_summaries" in compute_tasks:
         print("  Summarizing papers...")
         papers = _summarize_papers(
-            papers, dataset, topic, topic_description, model, defaults, delay
+            papers, dataset, topic, topic_description, settings, delay
         )
 
-    # ── Build bulk text ───────────────────────────────────────────────────
-    bulk_text = build_bulk_text(papers)
+    if not {"cluster_title", "cluster_description"} & set(compute_tasks):
+        return
 
-    # ── Cluster description ───────────────────────────────────────────────
-    description = ""
+    # ── Name + description in one call ────────────────────────────────────
+    children = None
+    if subclusters is not None:
+        children = subclusters.loc[subclusters["parent"] == clean_code(cluster_code)]
+
+    context = build_cluster_context(
+        dataset,
+        cluster_code,
+        papers,
+        n_titles=context_cfg["sample_titles"],
+        n_keywords=context_cfg["top_keywords"],
+        seed=context_cfg["seed"],
+        subclusters=children,
+    )
+    system, user, _ = load_prompt(
+        "cluster_label",
+        topic=topic,
+        topic_description=topic_description,
+        cluster_context=context,
+    )
+    print("  Generating name and description...")
+    result = call_llm(
+        system_prompt=system,
+        user_prompt=user,
+        settings=settings,
+        json_schema=CLUSTER_LABEL_SCHEMA,
+    )
+
     if "cluster_description" in compute_tasks:
-        print("  Generating description...")
-        system, user, settings = load_prompt(
-            "cluster_description",
-            topic=topic,
-            topic_description=topic_description,
-            cluster_text=bulk_text,
-        )
-        description = call_llm(
-            system_prompt=system,
-            user_prompt=user,
-            model=model,
-            temperature=settings.get("temperature", defaults.get("temperature", 0.2)),
-            max_tokens=settings.get("max_tokens", defaults.get("max_tokens", 500)),
-        )
-        rcs.loc[mask, "description"] = description
-        time.sleep(delay)
-
-    # ── Cluster name ──────────────────────────────────────────────────────
+        rcs.loc[mask, "description"] = str(result["description"]).strip()
     if "cluster_title" in compute_tasks:
-        print("  Generating name...")
-        system, user, settings = load_prompt(
-            "cluster_name",
-            topic=topic,
-            topic_description=topic_description,
-            cluster_description=description,
-        )
-        raw_name = call_llm(
-            system_prompt=system,
-            user_prompt=user,
-            model=model,
-            temperature=settings.get("temperature", defaults.get("temperature", 0.3)),
-            max_tokens=settings.get("max_tokens", defaults.get("max_tokens", 60)),
-        )
-        name = _clean_name(raw_name)
+        name = _clean_name(result["name"])
         rcs.loc[mask, "cluster_name"] = name
         print(f"  Name: {name}")
-        time.sleep(delay)
-
-    # ── Enhanced description ──────────────────────────────────────────────
-    if "cluster_enhanced_description" in compute_tasks:
-        print("  Enhancing description...")
-        system, user, settings = load_prompt(
-            "cluster_enhanced_description",
-            topic=topic,
-            cluster_description=description,
-        )
-        enhanced = call_llm(
-            system_prompt=system,
-            user_prompt=user,
-            model=model,
-            temperature=settings.get("temperature", defaults.get("temperature", 0.1)),
-            max_tokens=settings.get("max_tokens", defaults.get("max_tokens", 500)),
-        )
-        rcs.loc[mask, "description"] = enhanced
-        time.sleep(delay)
+    time.sleep(delay)
 
 
 # ---------------------------------------------------------------------------
@@ -220,6 +226,9 @@ def main() -> None:
     parser.add_argument("--rcs", required=True, help="Path to rcs_merged.csv")
     parser.add_argument("--dataset", required=True, help="Path to dataset_for_ai.csv")
     parser.add_argument("--output-dir", required=True, help="Output directory")
+    parser.add_argument("--subcluster-summary", default=None,
+                        help="Optional path to subcluster cluster_summary.csv; "
+                             "their names are shown when naming parent clusters")
     parser.add_argument("--top-papers", type=int, default=None,
                         help="Papers per criterion per cluster (overrides config)")
     args = parser.parse_args()
@@ -237,8 +246,13 @@ def main() -> None:
     topic = llm_cfg.get("theme", "")
     topic_description = llm_cfg.get("description", "")
     compute_tasks = llm_cfg.get("compute", [])
-    top_papers = args.top_papers or llm_cfg.get("top_papers", 5)
-    delay = llm_cfg.get("rate_limit_delay", 2)
+    delay = llm_cfg.get("rate_limit_delay", 1)
+    context_cfg = {
+        "top_papers": args.top_papers or llm_cfg.get("top_papers", 10),
+        "sample_titles": llm_cfg.get("sample_titles", 40),
+        "top_keywords": llm_cfg.get("top_keywords", 15),
+        "seed": config.get("params", {}).get("seed", 100),
+    }
 
     if not compute_tasks:
         print("No LLM compute tasks configured. Nothing to do.")
@@ -248,12 +262,9 @@ def main() -> None:
     print(f"Provider: {provider_name}")
     settings = init_provider(provider_name, repo_root=Path.cwd())
     model = settings["model"]
-    defaults = {
-        "temperature": settings.get("temperature", 0.1),
-        "max_tokens": settings.get("max_tokens", 500),
-    }
     print(f"Model: {model}")
     print(f"Tasks: {compute_tasks}")
+    print(f"Context per cluster: {context_cfg}")
 
     # ── Load data ─────────────────────────────────────────────────────────
     rcs_path = Path(args.rcs)
@@ -262,6 +273,13 @@ def main() -> None:
 
     rcs = pd.read_csv(rcs_path, dtype={"cluster_code": str})
     dataset = pd.read_csv(dataset_path, dtype={"X_C": str})
+    dataset["_code"] = dataset["X_C"].map(clean_code)
+    if "DE" in dataset.columns:
+        dataset["_keywords"] = parse_keywords(dataset["DE"])
+
+    subclusters = _load_subclusters(args.subcluster_summary)
+    if subclusters is not None:
+        print(f"Subcluster context: {len(subclusters)} subclusters")
 
     # Ensure required columns exist
     if "cluster_name" not in rcs.columns:
@@ -272,8 +290,8 @@ def main() -> None:
         dataset["summary"] = ""
 
     # Fill NAs to simplify downstream checks
-    rcs["cluster_name"] = rcs["cluster_name"].fillna("")
-    rcs["description"] = rcs["description"].fillna("")
+    rcs["cluster_name"] = rcs["cluster_name"].fillna("").astype(str)
+    rcs["description"] = rcs["description"].fillna("").astype(str)
 
     cluster_codes = sorted(rcs["cluster_code"].dropna().unique())
     total = len(cluster_codes)
@@ -301,10 +319,10 @@ def main() -> None:
                 dataset=dataset,
                 topic=topic,
                 topic_description=topic_description,
-                model=model,
-                defaults=defaults,
+                settings=settings,
                 compute_tasks=compute_tasks,
-                top_papers=top_papers,
+                context_cfg=context_cfg,
+                subclusters=subclusters,
                 delay=delay,
             )
             processed += 1
@@ -335,6 +353,7 @@ def main() -> None:
         "clusters_processed": processed,
         "clusters_skipped": skipped,
         "compute_tasks": compute_tasks,
+        "context": context_cfg,
     }
     with (output_dir / "ai_metadata.json").open("w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)

@@ -1,7 +1,14 @@
 # Anthropic provider settings
 # Model names follow litellm convention: https://docs.litellm.ai/docs/providers/anthropic
-model: "claude-sonnet-4-20250514"
+# Claude 5.x thinks adaptively and rejects temperature and forced tool use, so
+# JSON is requested in the prompt (litellm 1.83 would force a tool call for
+# response_format). Effort trades depth for cost: low | medium | high.
+model: "anthropic/claude-opus-5-5"
 api_key_file: "assets/credentials/claude.key"
 api_key_env_var: "ANTHROPIC_API_KEY"
-temperature: 0.1
-max_tokens: 500
+temperature: null
+max_tokens: 16000
+structured_output: false
+extra_params:
+  output_config:
+    effort: "medium"

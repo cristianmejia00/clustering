@@ -16,7 +16,7 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q360_hydrogen_economy"
+  project_folder: "Q362_CE_Rs_layered"
   filtered_folder: "f01"
   analysis_id: "a01_cn__f01_dc__c01_lv_v1"
 
@@ -87,16 +87,18 @@ topic_model:
 # LLM Integration
 # ==============================================================================
 llm:
-  provider: "openai"                    # openai | anthropic | google
-  theme: "Hydrogen Economy"  # Used as context for LLM summarization and naming
-  description: "a proposed energy system that uses hydrogen as a clean, versatile fuel source to replace fossil fuels, producing only water vapor upon combustion"
-  top_papers: 7                         # Representative papers per criterion per cluster
-  rate_limit_delay: 2                   # Seconds between API calls
+  provider: "anthropic"                    # openai | anthropic | google — model and request settings in pipelines/ai/providers/<provider>.yml
+  theme: "Circular Economy"             # Used as context for LLM summarization and naming
+  description: "an economic and industrial model that keeps products, components and materials in use at their highest value for as long as possible, through R-strategies such as refuse, rethink, reduce, reuse, repair, refurbish, remanufacture, repurpose, recycle and recover, decoupling economic activity from virgin resource use and waste generation"
+  # Context sent per cluster (one call returns both its name and description):
+  top_papers: 10                        # Title + abstract of the top-N most connected (X_E) and top-N most cited (Z9) papers (union, <= 2N)
+  sample_titles: 40                     # Random further titles, so the name covers the whole cluster, not only its hubs
+  top_keywords: 15                      # Most over-represented author keywords (vs. whole dataset; subclusters vs. their siblings)
+  rate_limit_delay: 1                   # Seconds between API calls
   compute:
-    # - representative_docs_summaries   # Uncomment to summarize each paper via LLM before clustering (slow/costly)
+    # - representative_docs_summaries   # Uncomment to replace abstracts with one-sentence LLM summaries (slow/costly)
     - cluster_title
     - cluster_description
-    - cluster_enhanced_description
     - global_naming                     # Rename all clusters at once for distinctive, non-overlapping names
 
 

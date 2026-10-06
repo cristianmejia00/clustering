@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Assign globally distinctive cluster names using LLM function calling.
+"""Assign globally distinctive cluster names with one LLM call per level.
 
 After ``enrich_clusters.py`` assigns per-cluster names in isolation, this
 script sees **all** clusters at once and renames them so that every name
-is unique and clearly distinguishable.
+is unique and clearly distinguishable. Sibling subclusters are listed
+together, and parent clusters show their subclusters, so the model can
+see where names collide.
 
 Usage
 -----
@@ -23,6 +25,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pandas as pd
@@ -30,7 +33,32 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from providers import call_llm_with_tools, init_provider
+from papers import clean_code, parent_code
+from providers import call_llm, init_provider
+
+RENAME_SCHEMA = {
+    "name": "rename_topics",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "topics": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "topic_id": {"type": "string"},
+                        "issue": {"type": "string"},
+                        "name": {"type": "string"},
+                    },
+                    "required": ["topic_id", "issue", "name"],
+                    "additionalProperties": False,
+                },
+            },
+        },
+        "required": ["topics"],
+        "additionalProperties": False,
+    },
+}
 
 # ---------------------------------------------------------------------------
 # ID normalisation
@@ -64,30 +92,6 @@ def _normalize_id(s: str) -> str:
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 
 
-def _fixed_max_tokens_for_model(model: str, fallback: int = 4096) -> int:
-    """Return a fixed max_tokens value per model family (no dynamic scaling)."""
-    m = (model or "").lower()
-
-    # OpenAI GPT-4.1 family supports long context and high output limits.
-    # Keep a fixed cap for global naming to avoid truncating tool-call JSON.
-    if m.startswith("gpt-4.1"):
-        return 32768
-
-    # GPT-5 family supports higher output limits.
-    if m.startswith("gpt-5"):
-        return 128000
-
-    # Anthropic Claude 3/3.5/3.7/4 families commonly support up to 8192 output.
-    if "claude" in m:
-        return 8192
-
-    # Gemini models typically support at least 8192 output.
-    if "gemini" in m:
-        return 8192
-
-    return fallback
-
-
 def _load_system_prompt(topic: str, topic_description: str) -> str:
     """Load and fill the global_naming system prompt."""
     path = _PROMPTS_DIR / "global_naming.yml"
@@ -100,61 +104,101 @@ def _load_system_prompt(topic: str, topic_description: str) -> str:
     )
 
 
+_MAX_NAME_CHARS = 60
+_STOPWORDS = {"and", "of", "for", "the", "in", "to", "from", "with", "by", "on", "a", "an"}
+
+
+def _shared_words(names: list[str], min_count: int = 3) -> list[tuple[str, int]]:
+    """Content words that recur across several names (a sign of weak contrast)."""
+    counts = Counter(
+        w
+        for name in names
+        for w in {t for t in re.findall(r"[a-z0-9][a-z0-9-]*", str(name).lower())
+                  if t not in _STOPWORDS}
+    )
+    return [(w, c) for w, c in counts.most_common() if c >= min_count]
+
+
 def _build_user_message(
     rcs: pd.DataFrame,
     subcluster_summary: pd.DataFrame | None = None,
 ) -> str:
-    """Format all clusters into a numbered list for the LLM."""
-    lines: list[str] = []
+    """List all clusters for the LLM, grouping siblings under their parent.
 
+    With *subcluster_summary*, each parent cluster also lists its
+    subclusters' names as read-only context.
+    """
+    children: dict[str, list[str]] = {}
     if subcluster_summary is not None and not subcluster_summary.empty:
-        lines.append("=== SUBCLUSTER CONTEXT (for reference only — do NOT rename these) ===")
-        lines.append("The following are the subclusters that belong to the parent clusters "
-                      "you will rename. Use them to understand the landscape and ensure "
-                      "parent names are broader and non-overlapping with subclusters.\n")
         for _, row in subcluster_summary.iterrows():
-            code = row.get("cluster_code", "")
-            name = row.get("global_name") or row.get("cluster_name", "")
-            lines.append(f"  Subcluster {code}: {name}")
-        lines.append("\n=== CLUSTERS TO RENAME ===\n")
+            gn = row.get("global_name")
+            name = gn if isinstance(gn, str) and gn.strip() else row.get("cluster_name", "")
+            children.setdefault(parent_code(row["cluster_code"]), []).append(
+                f"{clean_code(row['cluster_code'])} {name} ({row.get('documents', '?')} papers)"
+            )
 
-    for _, row in rcs.iterrows():
-        code = row["cluster_code"].rstrip("-")
-        name = row.get("cluster_name", "")
-        desc = row.get("description", "")
-        lines.append(f"Topic {code}:")
-        lines.append(f"  Current name: {name}")
-        lines.append(f"  Description: {desc}")
-        lines.append("")
+    lines: list[str] = [f"Clusters to name: {len(rcs)}"]
+    if children:
+        lines.append(
+            "Each cluster lists its subclusters for context only; do not rename them. "
+            "A parent name must be broader than its subclusters' names and cover all "
+            "of them, not just the largest."
+        )
+
+    parents = rcs["cluster_code"].map(parent_code)
+    for parent, group in rcs.groupby(parents, sort=False, dropna=False):
+        names = group["cluster_name"].astype(str).tolist()
+        if pd.notna(parent):
+            lines += ["", f"=== Subclusters of parent cluster {parent} ==="]
+        shared = _shared_words(names)
+        if shared:
+            lines.append(
+                "Words repeated across these current names: "
+                + ", ".join(f'"{w}" ({c} of {len(names)})' for w, c in shared)
+            )
+        for _, row in group.iterrows():
+            code = clean_code(row["cluster_code"])
+            name = str(row.get("cluster_name", ""))
+            too_long = (f"  [too long: {len(name)} characters]"
+                        if len(name) > _MAX_NAME_CHARS else "")
+            lines += [
+                "",
+                f"Topic {code} ({row.get('documents', '?')} papers)",
+                f"  Current name: {name}{too_long}",
+                f"  Description: {row.get('description', '')}",
+            ]
+            if code in children:
+                lines.append("  Subclusters: " + "; ".join(children[code]))
 
     return "\n".join(lines)
+
+
+def _duplicate_keys(renamed: dict[str, str]) -> set[str]:
+    """Names (case-insensitive) assigned to more than one cluster."""
+    counts = Counter(n.strip().casefold() for n in renamed.values())
+    return {n for n, c in counts.items() if c > 1}
 
 
 def _fix_duplicates(
     renamed: dict[str, str],
     clusters_to_rename: pd.DataFrame,
     system_prompt: str,
-    model: str,
-    temperature: float,
-    max_tokens: int,
+    settings: dict,
 ) -> dict[str, str]:
     """Second LLM pass: disambiguate any clusters that still share a name."""
-    from collections import Counter
-
-    name_counts = Counter(renamed.values())
-    dup_names = {n for n, c in name_counts.items() if c > 1}
-    if not dup_names:
+    dup_keys = _duplicate_keys(renamed)
+    if not dup_keys:
         return renamed
 
-    dup_codes = [code for code, name in renamed.items() if name in dup_names]
+    dup_codes = [code for code, name in renamed.items() if name.strip().casefold() in dup_keys]
     print(f"[global_naming] Dedup pass: {len(dup_codes)} clusters share "
-          f"{len(dup_names)} duplicate name(s)")
+          f"{len(dup_keys)} duplicate name(s)")
 
     dup_df = clusters_to_rename[
         clusters_to_rename["cluster_code"].astype(str).isin(dup_codes)
     ].copy()
 
-    already_taken = sorted(set(renamed.values()) - dup_names)
+    already_taken = sorted({n for c, n in renamed.items() if c not in dup_codes})
     lines: list[str] = [
         "The following clusters currently share a name with at least one other cluster. "
         "Assign a NEW, unique name to each one.\n",
@@ -164,78 +208,29 @@ def _fix_duplicates(
         lines.append(f"  - {nm}")
     lines.append("\nClusters that need a unique replacement name:\n")
     for _, row in dup_df.iterrows():
-        code = str(row["cluster_code"]).rstrip("-")
-        name = row.get("cluster_name", "")
-        desc = row.get("description", "")
-        current_dup = renamed.get(str(row["cluster_code"]), "")
+        code = clean_code(row["cluster_code"])
         lines.append(f"Topic {code}:")
-        lines.append(f"  Duplicate name to replace: {current_dup}")
-        lines.append(f"  Original cluster name: {name}")
-        lines.append(f"  Description: {desc}")
+        lines.append(f"  Duplicate name to replace: {renamed.get(str(row['cluster_code']), '')}")
+        lines.append(f"  Original cluster name: {row.get('cluster_name', '')}")
+        lines.append(f"  Description: {row.get('description', '')}")
         lines.append("")
 
-    tool = _build_rename_tool(len(dup_df))
-    result2 = call_llm_with_tools(
+    result2 = call_llm(
         system_prompt=system_prompt,
         user_prompt="\n".join(lines),
-        model=model,
-        tools=[tool],
-        temperature=temperature,
-        max_tokens=max_tokens,
+        settings=settings,
+        json_schema=RENAME_SCHEMA,
     )
 
-    orig_codes_dup = dup_df["cluster_code"].astype(str).tolist()
-    norm_to_orig_dup: dict[str, str] = {_normalize_id(c): c for c in orig_codes_dup}
+    norm_to_orig_dup: dict[str, str] = {_normalize_id(c): c for c in dup_codes}
     matched_dedup = 0
     for item in result2.get("topics", []):
-        raw_id = str(item.get("topic_id", ""))
-        orig_code = norm_to_orig_dup.get(_normalize_id(raw_id))
+        orig_code = norm_to_orig_dup.get(_normalize_id(str(item.get("topic_id", ""))))
         if orig_code:
             renamed[orig_code] = item["name"]
             matched_dedup += 1
     print(f"[global_naming] Dedup pass applied {matched_dedup} / {len(dup_codes)} fixes")
     return renamed
-
-
-def _build_rename_tool(n_topics: int) -> dict:
-    """Build the function-calling tool schema."""
-    return {
-        "type": "function",
-        "function": {
-            "name": "rename_topics",
-            "description": (
-                f"Assign a unique, concise, publication-ready name to each of "
-                f"the {n_topics} topic clusters. Every name must be distinct."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "topics": {
-                        "type": "array",
-                        "description": f"Exactly {n_topics} renamed topics.",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "topic_id": {
-                                    "type": "string",
-                                    "description": "The original topic/cluster ID.",
-                                },
-                                "name": {
-                                    "type": "string",
-                                    "description": (
-                                        "A short, unique name for this topic. "
-                                        "Must be distinct from every other topic name."
-                                    ),
-                                },
-                            },
-                            "required": ["topic_id", "name"],
-                        },
-                    },
-                },
-                "required": ["topics"],
-            },
-        },
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -244,7 +239,7 @@ def _build_rename_tool(n_topics: int) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Assign globally distinctive cluster names via LLM function calling."
+        description="Assign globally distinctive cluster names with one LLM call per level."
     )
     parser.add_argument("--rcs", required=True, help="Path to rcs_merged.csv")
     parser.add_argument("--output-dir", required=True, help="Output directory")
@@ -296,30 +291,16 @@ def main() -> None:
         )
         print(f"[global_naming] Subcluster context: {len(subcluster_summary)} subclusters")
 
-    # ── Build prompt and tool ────────────────────────────────────────────
+    # ── Build prompt and call LLM ────────────────────────────────────────
     system_prompt = _load_system_prompt(topic, topic_description)
     user_message = _build_user_message(clusters_to_rename, subcluster_summary)
-    tool = _build_rename_tool(n_topics)
 
-    # Fixed max_tokens (no dynamic scaling by number of clusters)
-    prompt_settings_path = _PROMPTS_DIR / "global_naming.yml"
-    with prompt_settings_path.open("r", encoding="utf-8") as f:
-        prompt_cfg = yaml.safe_load(f)
-    max_tokens = _fixed_max_tokens_for_model(
-        model,
-        fallback=prompt_cfg.get("settings", {}).get("max_tokens", 4096),
-    )
-    print(f"[global_naming] max_tokens (fixed): {max_tokens}")
-
-    # ── Call LLM with function calling ───────────────────────────────────
     print("[global_naming] Calling LLM for global renaming...")
-    result = call_llm_with_tools(
+    result = call_llm(
         system_prompt=system_prompt,
         user_prompt=user_message,
-        model=model,
-        tools=[tool],
-        temperature=prompt_cfg.get("settings", {}).get("temperature", 0.2),
-        max_tokens=max_tokens,
+        settings=settings,
+        json_schema=RENAME_SCHEMA,
     )
 
     # ── Save raw API response for debugging ──────────────────────────────
@@ -397,22 +378,12 @@ def main() -> None:
     if still_missing:
         print(f"[global_naming] WARNING: Missing names for clusters: {still_missing}")
 
-    names_list = list(renamed.values())
-    dup_names = {n for n in set(names_list) if names_list.count(n) > 1}
-    if dup_names:
-        print(f"[global_naming] WARNING: {len(dup_names)} duplicate name(s) — running dedup pass")
-        renamed = _fix_duplicates(
-            renamed,
-            clusters_to_rename,
-            system_prompt,
-            model,
-            prompt_cfg.get("settings", {}).get("temperature", 0.2),
-            max_tokens,
-        )
+    if _duplicate_keys(renamed):
+        print("[global_naming] WARNING: duplicate name(s) — running dedup pass")
+        renamed = _fix_duplicates(renamed, clusters_to_rename, system_prompt, settings)
 
     # Final check
-    names_final = list(renamed.values())
-    final_dups = {n for n in set(names_final) if names_final.count(n) > 1}
+    final_dups = _duplicate_keys(renamed)
     if final_dups:
         print(f"[global_naming] WARNING: {len(final_dups)} duplicate(s) remain after dedup: "
               f"{final_dups}")

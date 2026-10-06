@@ -3,5 +3,6 @@
 model: "gemini/gemini-2.0-flash"
 api_key_file: "assets/credentials/google.key"
 api_key_env_var: "GEMINI_API_KEY"
-temperature: 0.1
-max_tokens: 500
+temperature: 0.2
+max_tokens: 8192
+structured_output: false

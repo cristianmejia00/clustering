@@ -1,0 +1,212 @@
+# ==============================================================================
+# Analysis Configuration (Docker template)
+# ==============================================================================
+#
+#  >>> EDIT THESE 4 LINES before running the pipeline <<<
+#
+#  1. project_folder : must match the project_folder in config_dataset.yml.
+#  2. analysis_id    : name for this analysis run, e.g. "a01_tm__f01__v1".
+#  3. llm.theme      : one-line topic of your dataset (used to guide the AI
+#                      cluster naming), e.g. "Hydrogen Economy".
+#  4. llm.description: one or two sentences describing the topic.
+#
+#  Leave bibliometrics_directory as-is: it is a path INSIDE the Docker
+#  container that maps to the docker\ folder next to this repository.
+# ==============================================================================
+
+metadata:
+  bibliometrics_directory: "/workspace/docker/bibliometrics"
+  project_folder: "my_project"
+  filtered_folder: "f01"
+  analysis_id: "a01_tm__f01__v1"
+
+
+# ==============================================================================
+# General Parameters
+# ==============================================================================
+params:
+  recursive_level: 1                    # 0 = clusters only, 1+ = subclusters
+  dataset_source: "wos"                 # wos | derwent | factiva
+  unit_of_analysis: "cluster"           # cluster | topic | facet | firm | country | etc.
+  type_of_analysis: "topic_model"       # citation_network | topic_model | both
+  seed: 100                             # For reproducibility
+
+
+# ==============================================================================
+# Citation Network Options
+# ==============================================================================
+# Used when type_of_analysis is "citation_network" or "both".
+# Ignored otherwise — no need to remove this section.
+citation_network:
+  using_mission_pairs_from_fukan: false
+  using_initial_column_C_from_fukan: false
+  network_type: "direct_citation"
+  # Canonical source for X_E in AI representative-paper selection.
+  # Options:
+  #   global_in_degree | global_page_rank | global_degree |
+  #   level_in_degree  | level_page_rank  | level_degree
+  # For recursive levels, level_* maps levelN selections to level(N-1)_* metrics.
+  x_e_metric: "level_in_degree"
+
+  # Component selection — which connected component(s) to analyze
+  component:
+    strategy: "top"                     # all | top | component | min_vertices
+    value: 1
+
+  # Clustering algorithm
+  clustering:
+    algorithm: "louvain"                # louvain | newman | infomap
+
+  # Network chart layout algorithm
+  layout: "drl"                         # drl | kk (Kamada-Kawai)
+
+  # Thresholding — controls recursive clustering and small-cluster aggregation
+  thresholding:
+    threshold: 0.90                     # Proportion (<1) or exact cluster count (1+)
+    max_clusters: 1000
+    scope: "all"                        # all | cl99 | cl_99
+    size_limit: 270                     # Subcluster only if cluster has >= this many articles
+    size_lower_limit: 30                # Include clusters with >= this many articles
+    remove_zero: false                  # Remove "-0" suffix from labels (may conflict with Excel)
+
+
+# ==============================================================================
+# Topic Model Options
+# ==============================================================================
+# Used when type_of_analysis is "topic_model" or "both".
+# Ignored otherwise.
+topic_model:
+  embeds_folder: "e01"
+  year_column: "PY"
+  n_topics: 0                           # 0 = auto-detect via HDBScan
+  min_topic_size: 10
+  others_threshold: 0.99                # Keep topics covering this cumulative share; others -> level0=99999
+
+
+# ==============================================================================
+# LLM Integration
+# ==============================================================================
+llm:
+  provider: "openai"                    # openai | anthropic | google
+  theme: "My Research Topic"            # Used as context for LLM summarization and naming
+  description: "One or two sentences describing what this dataset is about."
+  top_papers: 7                         # Representative papers per criterion per cluster
+  rate_limit_delay: 2                   # Seconds between API calls
+  compute:
+    # - representative_docs_summaries   # Uncomment to summarize each paper via LLM before clustering (slow/costly)
+    - cluster_title
+    - cluster_description
+    - cluster_enhanced_description
+    - global_naming                     # Rename all clusters at once for distinctive, non-overlapping names
+
+
+# ==============================================================================
+# Add-ons
+# ==============================================================================
+addons:
+  include_orphans: "NO"                 # NO | 99 | 999
+  sentiment_analysis: false
+
+
+# ==============================================================================
+# Reporting
+# ==============================================================================
+reporting:
+  most_recent_year: 2026
+  top_documents: 0                      # 0 = ALL
+  top_items: 20                         # 0 = ALL
+  text_columns: [TI, AB]
+
+  article_report_columns:
+    - X_C
+    - cluster_code
+    - AU
+    - PY
+    - DI
+    - TI
+    - AB
+    - Z9
+    - X_E
+    - DE
+    - SO
+    - WC
+    - Countries
+    - UT
+    - sentiment
+    - sentiment_factor
+
+
+  categorical_long_reports:
+    - AU
+    - WC
+    - SO
+    - Countries
+    - Institutions
+    - DE
+    - sentiment_factor
+    - ID
+
+
+  categorical_simple_wide_reports: [PY, sentiment_factor]
+  categorical_multi_wide_reports: [WC, Countries, Institutions]
+  numerical_reports: [PY, Z9, sentiment, score]
+
+  # Column display labels — chosen automatically based on params.dataset_source.
+  # Only the section matching your dataset_source is used.
+  column_labels:
+    wos:
+      X_C: "Cluster Index"
+      cluster_code: "Cluster Code"
+      TI: "Title"
+      AB: "Abstract"
+      AU: "Authors"
+      PY: "Publication Years"
+      X_E: "Degree"
+      SO: "Journals"
+      Countries: "Countries"
+      Institutions: "Institutions"
+      DI: "DOI"
+      WC: "Categories"
+      DE: "Author Keywords"
+      ID: "WOS Keywords"
+      Z9: "Citations"
+      score: "Score"
+      sentiment: "Sentiment score"
+      sentiment_factor: "Sentiment"
+      UT: "ID"
+
+    derwent:
+      X_C: "Cluster"
+      TI: "Title"
+      AB: "Abstract"
+      AU: "Inventors"
+      PY: "Publication Years"
+      X_E: "Degree"
+      SO: "Firms"
+      Countries: "Countries"
+      Institutions: "Asignees"
+      DI: "DOI"
+      WC: "IPC"
+      DE: "Author Keywords"
+      Z9: "Citations"
+      score: "Score"
+      UT: "Patent Number"
+
+    factiva:
+      X_C: "Cluster"
+      TI: "Headline"
+      AB: "Main paragraph"
+      X_E: "Score"
+      PY: "Publication Years"
+      SO: "Newspapers"
+      AU: "Factiva Types"
+      Countries: "Regions"
+      Institutions: "Entities"
+      DE: "Categories"
+      ID: "Entities"
+      score: "Score"
+      sentiment: "Sentiment score"
+      sentiment_factor: "Sentiment"
+      UT: "ID"
+      issues: "Issues"
+      Keywords: "Keywords"

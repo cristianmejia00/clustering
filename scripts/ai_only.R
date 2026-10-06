@@ -268,8 +268,25 @@ for (level_report in ordered_levels) {
   }
 
   ai_dataset_path <- file.path(output_folder_level, "dataset_for_ai.csv")
-  ai_cols <- intersect(c("UT", "TI", "AB", "X_C", "X_E", "Z9", "PY"), colnames(level_dataset))
+  ai_cols <- intersect(c("UT", "TI", "AB", "DE", "X_C", "X_E", "Z9", "PY"), colnames(level_dataset))
   readr::write_csv(level_dataset[, ai_cols], ai_dataset_path)
+
+  # For level 0, pass the subclusters' names as context (if available), so
+  # parent names cover all their subclusters and do not duplicate them
+  subcluster_args <- character(0)
+  if (level_report == 0) {
+    # Find the deepest available subcluster summary
+    for (sub_level in sort(setdiff(available_levels, 0), decreasing = TRUE)) {
+      sub_summary <- file.path(output_folder_reports,
+                               paste0("level", sub_level),
+                               "cluster_summary.csv")
+      if (file.exists(sub_summary)) {
+        subcluster_args <- c("--subcluster-summary", shQuote(sub_summary))
+        message("  Using subcluster context from level ", sub_level)
+        break
+      }
+    }
+  }
 
   # Step 1: Per-cluster enrichment (names, descriptions)
   ai_status <- system2(
@@ -278,7 +295,8 @@ for (level_report in ordered_levels) {
       "pipelines/ai/enrich_clusters.py",
       "--rcs", shQuote(rcs_path),
       "--dataset", shQuote(ai_dataset_path),
-      "--output-dir", shQuote(output_folder_level)
+      "--output-dir", shQuote(output_folder_level),
+      subcluster_args
     ),
     stdout = "", stderr = ""
   )
@@ -292,22 +310,6 @@ for (level_report in ordered_levels) {
   # Step 2: Global naming — rename all clusters at once for distinctiveness
   if ("global_naming" %in% llm_compute) {
     message("=== Global Naming: level ", level_report, " ===")
-
-    # For level 0, pass subcluster summary as context (if available)
-    subcluster_args <- character(0)
-    if (level_report == 0) {
-      # Find the deepest available subcluster summary
-      for (sub_level in sort(setdiff(available_levels, 0), decreasing = TRUE)) {
-        sub_summary <- file.path(output_folder_reports,
-                                 paste0("level", sub_level),
-                                 "cluster_summary.csv")
-        if (file.exists(sub_summary)) {
-          subcluster_args <- c("--subcluster-summary", shQuote(sub_summary))
-          message("  Using subcluster context from level ", sub_level)
-          break
-        }
-      }
-    }
 
     gn_status <- system2(
       py_exec,

@@ -1,21 +1,50 @@
-# Global cluster renaming — assigns distinctive, non-overlapping names
+# Global cluster renaming — makes the names of one level work together as a set
 # by giving the LLM visibility of ALL clusters at once.
 # Placeholders: {topic}, {topic_description}
-system: >
-  You are a research consultant with expertise on {topic}, meaning that you
-  know about {topic_description}
+system: |
+  You are an expert in bibliometrics and science mapping with deep knowledge of
+  {topic} research. In this project, {topic} refers to {topic_description}.
 
-  You will receive a list of topic clusters, each with an ID, a current name,
-  and a description. Some current names may be duplicated or ambiguous.
-  Your task is to assign a NEW, UNIQUE, short name to each topic that:
-  1. Clearly distinguishes it from every other topic in the list.
-  2. Faithfully reflects the description.
-  3. Is concise and suitable for use in an academic publication.
-  4. No two names should overlap or be paraphrases of each other.
+  You will receive every cluster from one level of a citation-network analysis of
+  the {topic} literature, each with its ID, size, current name and description.
+  The current names and descriptions were written by an analyst who read each
+  cluster's papers in isolation, so the descriptions are accurate about content,
+  but the names were never compared with each other. Your job is to make the
+  names work together as one map, where a reader can tell every cluster apart
+  from its name alone.
 
-  Return ALL topics, even if the current name is already good — confirm or
-  improve each one.
+  Final names must meet these rules:
+  1. Faithful: each name reflects the main body of its own description. Do not
+     broaden it, shift it toward a neighbouring topic, or narrow it to a minor
+     strand. Descriptions signal weight with words such as "dominant", "core" or
+     "centre" versus "smaller", "further", "peripheral" or "also"; a strand
+     introduced with the latter must not carry the name.
+  2. Distinct: no two names overlap, paraphrase each other or could be confused.
+     Where clusters are close, name the specific aspect that separates them, such
+     as the material, waste stream, sector, process, method, scale, actor or
+     policy instrument. The descriptions contain these details; use them, but
+     only details that hold for most of the cluster. If the only way to separate
+     a broad cluster from a specialised sibling is a minor strand, keep the broad
+     name and make the sibling's name carry the contrast instead.
+  3. Contrastive among siblings: subclusters of the same parent share a broader
+     theme, and words repeated across their names (listed for each group) carry
+     little information. Keep a repeated word only in names where it is the
+     distinguishing feature, and elsewhere replace it with what sets that
+     cluster apart.
+  4. Consistent style: 2 to 6 words and at most 60 characters, Title Case; no
+     colon, subtitle, quotation marks or final period; no filler words
+     (Research, Studies, Advances, Approaches, Perspectives, Insights,
+     Innovations, Applications, Towards); no repetition of the field name
+     ("{topic}") or of words any cluster in the field could claim.
+  5. Stable: a current name that already meets every rule stays unchanged.
 
-settings:
-  temperature: 0.2
-  max_tokens: 32768
+  IDs ending in 99 are residual groups that merge many small clusters. Name them
+  by their dominant themes, even if the result is broader than the other names.
+
+  Review the clusters in order. For each, write "issue": "none" if the current
+  name meets every rule, or otherwise a short note on the rule it breaks and
+  which cluster IDs it overlaps with. Then give the final "name".
+
+  Return a JSON object of the form
+  {"topics": [{"topic_id": "<ID as given>", "issue": "...", "name": "<final name>"}, ...]}
+  with exactly one entry per cluster. Reply with the JSON object only.

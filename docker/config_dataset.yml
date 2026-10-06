@@ -1,0 +1,108 @@
+# ==============================================================================
+# Dataset Configuration (Docker template)
+# ==============================================================================
+#
+#  >>> EDIT THESE 4 LINES before running the pipeline <<<
+#
+#  1. raw_input_folder_name : the folder inside  docker\raw_input\  where you
+#                             placed your Web of Science .txt export files.
+#  2. project_folder        : name for your results folder. Outputs appear in
+#                             docker\bibliometrics\<project_folder>\
+#  3. date_id               : today's date, e.g. "2026-07-28".
+#  4. dataset_name          : a short name for your dataset (also update
+#                             "query" to match).
+#
+#  Leave raw_input_directory and bibliometrics_directory as-is: they are
+#  paths INSIDE the Docker container that map to the docker\ folder next to
+#  this repository on your computer.
+# ==============================================================================
+
+metadata:
+  # --- Raw input (WoS export files as downloaded) ---
+  raw_input_directory: "/workspace/docker/raw_input"
+  raw_input_folder_name: "my_project"
+
+  # --- Output directory ---
+  bibliometrics_directory: "/workspace/docker/bibliometrics"
+  project_folder: "my_project"
+
+  # --- Query and data source ---
+  date_id: "2026-01-01"                 # Analysis date label
+  query: "my_project"
+  type_of_dataset: "papers"             # papers | patents | news
+  dataset_source: "wos"                 # wos | derwent | factiva
+
+  # --- Project metadata ---
+  dataset_name: "my_project"
+  dataset_file_name_suffix: "my_project"  # Used in output file names
+  dataset_description: ""
+  created_by: ""
+  notes: ""
+
+
+# ==============================================================================
+# Filtering
+# ==============================================================================
+# Each key (e.g. f01) defines a filtering profile. The key becomes the
+# subfolder name in the output directory.
+filtering:
+  f01:
+    rows_filter:
+      removed_duplicated_UT: true
+      most_recent_year: "2026"          # Fill missing PY with this year
+
+    columns_filter:
+      columns_selected:
+        # Mandatory WoS fields
+        - UT
+        - PY
+        - TI
+        - AB
+        - AU
+        - Z9
+        - C1
+        - DT
+        - DE
+        - ID
+        - CR
+        - DI
+        - SO
+        - WC
+        - RP
+        - J9
+        - VL
+        - BP
+        # Other WoS fields
+        - LA
+        - IS
+        - EP
+
+
+# ==============================================================================
+# Embeddings
+# ==============================================================================
+embeds:
+  get_embeds: true
+  from_filtered_dataset: "f01"
+
+  e01:
+    text_columns: [TI, AB]
+    to_lowercase: false
+    remove_stopwords: false
+    remove_numbers: false
+    remove_symbols: false
+    stemming: false
+    lemmatization: false
+    id_column: [UT]
+    transformer_model: "all-MiniLM-L6-v2"
+    notes: ""
+
+
+# ==============================================================================
+# Network
+# ==============================================================================
+network:
+  get_network: true
+  from_filtered_dataset: "f01"
+  network_type: "direct_citation"       # direct_citation | bibliographic_coupling | co-citation
+  notes: ""

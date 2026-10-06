@@ -1,6 +1,10 @@
 # OpenAI provider settings
 # Model names follow litellm convention: https://docs.litellm.ai/docs/providers/openai
-model: "gpt-4.1-mini"
+# gpt-4.1 is the strongest model this API project can use (GPT-5 models return 403
+# until enabled for the project). For GPT-5.x / o-series set temperature: null.
+model: "gpt-4.1"
 api_key_file: "assets/credentials/openai.key"
 api_key_env_var: "OPENAI_API_KEY"
-temperature: 0.1
+temperature: 0.2
+max_tokens: 16000
+structured_output: true
