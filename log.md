@@ -1,5 +1,17 @@
 # Change log
 
+## 2026-11-12: OpenAlex datasets; scatter-plot axis and title
+
+- **OpenAlex citation networks** (`pipelines/dataset/utils/01_data_loading/01z_compute_direct_citation_network.R`).
+  - When every `UT` is an OpenAlex work ID (`https://openalex.org/W…`), the `CR` entries (cited OpenAlex IDs) are matched exactly against `UT`.
+  - WoS datasets keep the record-key/DOI matching, unchanged: a test on a synthetic WoS dataset gives identical edges.
+  - Input files come from `../openalex/map_to_wos.ipynb`.
+- **Scatter plots** (`pipelines/charts/cluster_scatterplots.R`).
+  - `fig_scatter_clusters_PY_x_Z9_rank` is now titled "Cluster Landscape: Impact vs. Age", not "Impact vs. Recency".
+  - Publication-year axes now extend to whole years at both ends, so the outer ticks show.
+  - The tick step adapts: 1 year for spans up to 12 years, 2 up to 24, else 5.
+  - Before, a level-0 plot with cluster means between 2021.5 and 2023.8 showed only a 2023 tick.
+
 ## 2026-10-05: AI cluster naming and description (`ai` stage)
 
 Goal: use stronger models, better prompts and more context per cluster, so that cluster names match the papers they cover and stay distinct from each other.

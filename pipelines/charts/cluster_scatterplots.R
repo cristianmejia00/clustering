@@ -94,16 +94,18 @@ plot_scatter <- function(rcs_data,
       panel.grid.minor = element_blank()
     )
 
-  # Add year-step breaks when x axis is a publication year
+  # Add year breaks when x axis is a publication year. The axis is widened to
+  # whole years at both ends so the outer ticks are visible, and the step
+  # adapts to the span (cluster means often fall within a few years).
   if (grepl("PY", x_col, ignore.case = TRUE)) {
-    x_vals <- rcs_data[[x_col]]
-    p <- p + scale_x_continuous(
-      breaks = seq(
-        floor(min(x_vals, na.rm = TRUE)),
-        ceiling(max(x_vals, na.rm = TRUE)),
-        by = 2
-      )
-    )
+    x_vals  <- rcs_data[[x_col]]
+    x_from  <- floor(min(x_vals, na.rm = TRUE))
+    x_to    <- ceiling(max(x_vals, na.rm = TRUE))
+    span    <- x_to - x_from
+    step    <- if (span <= 12) 1 else if (span <= 24) 2 else 5
+    p <- p +
+      scale_x_continuous(breaks = seq(x_from, x_to, by = step)) +
+      expand_limits(x = c(x_from, x_to))
   }
 
   p
@@ -128,7 +130,7 @@ if ("Z9_ave_rank" %in% colnames(rcs_plot)) {
     list("PY_Mean", "Z9_ave_rank", "documents",
          "Average Publication Year", "Mean Yearly-Normalized Citations (Z9)",
          "fig_scatter_clusters_PY_x_Z9_rank",
-         "Cluster Landscape: Impact vs. Recency")
+         "Cluster Landscape: Impact vs. Age")
   ))
 }
 
