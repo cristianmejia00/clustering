@@ -1,17 +1,56 @@
+# ── Project ───────────────────────────────────────────────────────────────────
+# Data files (datasets live outside the repo)
 *.csv
 *.tsv
-*.rdata
 *.xlsx
+*.rdata
+# Credentials and local tools
 /assets/credentials/*
-.Rproj.user
+env-tm*
+.positai
+
+# ── Secrets / environment ─────────────────────────────────────────────────────
+.env
+.env.*
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── R ─────────────────────────────────────────────────────────────────────────
 .Rhistory
 *.RData
+.RDataTmp
 .RdataTmp
 .Ruserdata
-env-tm*
-*DS_Store
+.Rproj.user/
+*.Rcheck/
+renv/library/
+renv/local/
+renv/staging/
+renv/python/
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
 .DS_Store
-__pycache__/
-*.pyc
-.venv/
-.positai
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Office / editors ──────────────────────────────────────────────────────────
+~$*
+.~lock.*#
+*.swp
+*~
+.idea/
