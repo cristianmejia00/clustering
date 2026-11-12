@@ -16,7 +16,7 @@
 
 metadata:
   bibliometrics_directory: "/Users/cristian/Library/CloudStorage/GoogleDrive-cristianmejia00@gmail.com/My Drive/Bibliometrics_Drive"
-  project_folder: "Q26-11-12_oax_biostimulants"
+  project_folder: "Q26-11-12_oax_crop_breeding"
   filtered_folder: "f01"
   analysis_id: "a01_cn__f01_dc__c01_lv_v1"
 
@@ -88,8 +88,8 @@ topic_model:
 # ==============================================================================
 llm:
   provider: "anthropic"                    # openai | anthropic | google — model and request settings in pipelines/ai/providers/<provider>.yml
-  theme: "Plant Biostimulants"          # Used as context for LLM summarization and naming
-  description: "substances and microorganisms applied to plants, seeds or the rhizosphere to stimulate natural processes that enhance nutrient uptake and nutrient use efficiency, tolerance to abiotic stress, and crop quality and yield, regardless of their own nutrient content; they include humic and fulvic substances, protein hydrolysates and other nitrogen-containing compounds, seaweed and botanical extracts, chitosan and other biopolymers, beneficial inorganic elements such as silicon and selenium, and beneficial fungi and bacteria such as arbuscular mycorrhizal fungi, Trichoderma and plant growth-promoting rhizobacteria"
+  theme: "Crop Breeding"          # Used as context for LLM summarization and naming
+  description: "the genetic improvement of crop plants for yield, quality, resistance to pests and diseases, tolerance to abiotic stress and adaptation, from conventional plant breeding to genomics-assisted breeding; it includes genomic selection and genomic prediction, crop wild relatives, landraces, introgression, interspecific and wide hybridization and pre-breeding, marker-assisted selection and backcrossing, QTL mapping and genome-wide association studies, and crossing methods such as doubled haploids, speed breeding, heterosis and hybrid breeding, recurrent selection and backcross breeding"
   # Context sent per cluster (one call returns both its name and description):
   top_papers: 10                        # Title + abstract of the top-N most connected (X_E) and top-N most cited (Z9) papers (union, <= 2N)
   sample_titles: 40                     # Random further titles, so the name covers the whole cluster, not only its hubs

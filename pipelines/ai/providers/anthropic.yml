@@ -3,7 +3,7 @@
 # Claude 5.x thinks adaptively and rejects temperature and forced tool use, so
 # JSON is requested in the prompt (litellm 1.83 would force a tool call for
 # response_format). Effort trades depth for cost: low | medium | high.
-model: "anthropic/claude-opus-5-5"
+model: "anthropic/claude-sonnet-5-5"
 api_key_file: "assets/credentials/claude.key"
 api_key_env_var: "ANTHROPIC_API_KEY"
 temperature: null

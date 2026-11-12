@@ -1,5 +1,24 @@
 # Change log
 
+## 2026-11-12: LLM switched to Claude Sonnet 5.5; crop breeding analysis
+
+- **Model.** `pipelines/ai/providers/anthropic.yml`: `model` changed from `anthropic/claude-opus-5-5` to `anthropic/claude-sonnet-5-5`. Other settings are unchanged and valid for Sonnet 5.5:
+  - `temperature: null` (Sonnet 5.5 rejects non-default sampling values)
+  - JSON requested in the prompt, not through forced tool use (also rejected)
+  - `output_config.effort: medium`
+- **Test call.** `providers.call_llm` from `.venv` returned valid JSON in 1.2 s. The API reported `model: claude-sonnet-5-5`.
+- **Configs** for `Q26-11-12_oax_crop_breeding` (68,380 OpenAlex works; see `../openalex/log.md`):
+  - All folder names were replaced in `config_dataset.yml` and `config_analysis.yml`.
+  - `llm.theme: "Crop Breeding"`; `llm.description` lists the root and the four sub-trends.
+  - Unchanged: direct citation, largest component (`strategy: top`, `value: 1`), Louvain, threshold 0.90, subclusters for clusters of 270 or more papers.
+- **Run** (all stages, exit 0):
+  - Largest component: 51,615 of 68,380 works (75.5%), 331,705 links.
+  - 18 level-0 clusters (1–17 plus 99) and 202 subclusters. Sonnet named and described all of them; level-0 global naming used the subcluster context.
+- **Possibly off-topic subclusters,** from their names (about 1,900 papers, 3.7%), to review:
+  - Wild-plant evolution: 8-1 Hybrid Zones and Phylogenomics of Wild Species (556), 8-3 Hybrid Swarms and Reproductive Isolation in Wild Plants (252), 8-6 Polyploid Speciation and Interploidy Gene Flow (217), 8-9 Floral Trait QTL and Pollination Syndrome Evolution (155)
+  - Model plants: 10-1 Arabidopsis Natural Variation and Local Adaptation (430), 10-7 Quantitative Disease Resistance in Arabidopsis and Medicago (110)
+  - Partly animal: 4-8 Genomic Prediction in Livestock, Forages and Trees (180)
+
 ## 2026-11-12: OpenAlex datasets; scatter-plot axis and title
 
 - **OpenAlex citation networks** (`pipelines/dataset/utils/01_data_loading/01z_compute_direct_citation_network.R`).
